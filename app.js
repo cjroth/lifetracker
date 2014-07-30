@@ -1,5 +1,6 @@
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(':memory:');
+var win = require('nw.gui').Window.get();
 
 db.serialize(function() {
 
@@ -23,5 +24,10 @@ db.serialize(function() {
 db.close();
 
 window.onload = function() {
-  require('nw.gui').Window.get().show();
+  win.show();
+  win.on('resize', resizeApp);
 };
+
+function resizeApp(width, height) {
+  $('.app').width(width).height(height);
+}

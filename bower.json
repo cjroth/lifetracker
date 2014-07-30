@@ -1,0 +1,18 @@
+{
+  "name": "lifetracker",
+  "version": "0.0.0",
+  "homepage": "https://github.com/cjroth/lifetracker",
+  "authors": [
+    "Chris Roth <chris@cjroth.com>"
+  ],
+  "main": "index.html",
+  "moduleType": [
+    "node"
+  ],
+  "dependencies": {
+    "jquery": "2.1.1",
+    "bootstrap": "3.2.0",
+    "font-awesome": "~4.1.0",
+    "jquery-ui": "~1.11.0"
+  }
+}

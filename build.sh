@@ -1,1 +1,1 @@
-zip -r app.nw *.{html,js,css,json} node_modules
+zip -r app.nw *.{html,js,css,json} node_modules bower_components
