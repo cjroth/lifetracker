@@ -1,1 +1,1 @@
-zip -r app.nw *.{html,js,css,json,coffee} node_modules
+zip -r app.nw *.{html,js,css,json,coffee,jade} node_modules

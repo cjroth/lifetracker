@@ -19,8 +19,10 @@ body {
   height: 100%;
   background: #eee;
   flex-shrink: 0;
+  padding: 25px;
 }
 
 .main {
   height: 100%;
+  padding: 25px;
 }

@@ -1,6 +1,8 @@
 sqlite3 = require("sqlite3").verbose()
 db = new sqlite3.Database(":memory:")
-win = require("nw.gui").Window.get()
+jade = require("jade")
+
+$("body").html jade.renderFile("app.jade")
 
 db.serialize ->
 
@@ -17,12 +19,3 @@ db.serialize ->
   db.each "SELECT rowid id, name, type, min, max FROM variables", (err, row) ->
 
 db.close()
-
-resizeApp = (width, height) ->
-  $(".app")
-    .width width
-    .height height
-
-# window.onload = ->
-# win.show()
-win.on "resize", resizeApp
