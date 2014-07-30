@@ -3,7 +3,7 @@
   "main": "index.html",
   "window": {
     "show": false,
-    "toolbar": false,
+    "toolbar": true,
     "frame": true,
     "position": "center",
     "width": 1000,
@@ -12,6 +12,12 @@
     "min_height": 220
   },
   "dependencies": {
+    "bootflat": "^2.0.3",
+    "bootstrap": "^3.2.0",
+    "coffee-script": "jashkenas/coffeescript#1.7.0",
+    "font-awesome": "^4.1.0",
+    "jquery": "^2.1.1",
+    "jquery-ui": "^1.10.5",
     "sqlite3": "2.2.4"
   }
 }

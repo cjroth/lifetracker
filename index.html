@@ -2,13 +2,14 @@
 <html lang="en">
   <head>
     <title>Lifetracker</title>
-    <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-    <link href="bower_components/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="node_modules/bootflat/bootflat/css/bootflat.css" rel="stylesheet">
+    <link href="node_modules/font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
   </head>
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -34,16 +35,31 @@
           </ul>
         </div>
       </div>
-    </div>
+    </nav>
 
     <div class="app">
+
       <div class="sidebar">test</div>
+
+      <div class="main">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+
+
+      </div>
+
+
     </div>
 
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="app.js"></script>
-
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/jquery-ui/jquery-ui.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="node_modules/coffee-script/extras/coffee-script.js"></script>
+    <script src="app.coffee" type="text/coffeescript"></script>
+    <script>
+      var gui = require('nw.gui')
+      onload = function() {
+        gui.Window.get().show();
+      };
+    </script>
   </body>
 </html>
