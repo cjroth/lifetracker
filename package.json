@@ -8,8 +8,8 @@
     "position": "center",
     "width": 1000,
     "height": 750,
-    "min_width": 220,
-    "min_height": 220
+    "min_width": 500,
+    "min_height": 500
   },
   "dependencies": {
     "bootflat": "^2.0.3",
@@ -19,7 +19,6 @@
     "font-awesome": "^4.1.0",
     "jade": "^1.5.0",
     "jquery": "^2.1.1",
-    "jquery-ui": "^1.10.5",
     "sqlite3": "2.2.4"
   }
 }

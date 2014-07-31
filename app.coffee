@@ -3,7 +3,6 @@ sqlite3 = require("sqlite3").verbose()
 db = new sqlite3.Database("data/database.sqlite")
 jade = require("jade")
 fs = require("fs")
-$ = window.jQuery
 
 $("body").html jade.renderFile("views/app.jade")
 $("select").selecter()
@@ -44,13 +43,13 @@ db.serialize ->
   #   $value: 8.5
   #   $timestamp: new Date().getTime()
 
-  getVariables (err, variables) ->
-    $(".sidebar").html jade.renderFile("views/sidebar.jade", variables: variables)
-
   # getEachVariable (err, variable) ->
   #   console.log 'var', arguments
 
   # getEachRecord (err, record) ->
   #   console.log 'record', arguments
+
+  getVariables (err, variables) ->
+    $(".sidebar").html jade.renderFile("views/sidebar.jade", variables: variables)
 
 db.close()
