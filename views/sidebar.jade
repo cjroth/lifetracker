@@ -1,6 +1,11 @@
 .list-group
-  //- a.list-group-item.active(href='#') Cras justo odio
+  a.btn.btn-primary.btn-block(data-toggle='modal', data-target='#modal-variable')
+    i.fa.fa-bar-chart-o
+    |  New Variable
+
+.list-group
   each variable in variables
-    a.list-group-item(href='#')= variable.name
-      //- span.badge.badge-primary 38
-      //- | Morbi leo risus
+    a.list-group-item(href='#')
+      if variable.records
+        span.badge.badge-primary= variable.records.length
+      = variable.name

@@ -2,7 +2,7 @@ body {
   margin: 0;
   overflow: hidden;
   min-height: 500px;
-  min-width: 500px;
+  min-width: 600px;
 }
 
 .app {
@@ -28,4 +28,8 @@ body {
 
 .main {
   padding: 20px;
+}
+
+nav .dropdown:hover .dropdown-menu {
+  display: block;
 }

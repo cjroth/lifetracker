@@ -1,11 +1,11 @@
-gui = require('nw.gui');
+gui = require("nw.gui");
 sqlite3 = require("sqlite3").verbose()
 db = new sqlite3.Database("data/database.sqlite")
 jade = require("jade")
 fs = require("fs")
 
 $("body").html jade.renderFile("views/app.jade")
-$("select").selecter()
+$("select").selecter cover: true
 
 createVariable = (variable, done) ->
   statement = db.prepare("INSERT INTO variables VALUES ($name, $type, $min, $max)")
