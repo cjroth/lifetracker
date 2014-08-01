@@ -5,10 +5,10 @@
 
 ul.list-group
   each variable in variables
-    li.list-group-item.variable-toggle(href='#')
+    li.list-group-item.variable-toggle(href='#', data-model=JSON.stringify(variable))
 
       .btn-group.btn-group-xs.pull-right
-        button.btn.btn-default(type='button', data-launch-modal='variable-edit', data-modal-locals=JSON.stringify(variable))
+        a.btn.btn-default(href='#edit-variable', type='button', data-dont-launch-modal='variable-edit', data-modal-locals=JSON.stringify(variable))
           i.glyphicon.glyphicon-pencil
         button.btn.btn-default(type='button', data-launch-modal='variable-delete', data-modal-locals=JSON.stringify(variable))
           i.glyphicon.glyphicon-remove

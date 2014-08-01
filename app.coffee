@@ -6,7 +6,7 @@ fs = require("fs")
 qs = require('querystring')
 
 createVariable = (data, done) ->
-  statement = db.prepare("INSERT INTO variables VALUES ($name, $type, $min, $max, $question)")
+  statement = db.prepare("insert into variables values ($name, $type, $min, $max, $question)")
   statement.run
     $name: data.name
     $question: data.question
@@ -30,26 +30,26 @@ updateVariable = (id, data, done) ->
   statement.finalize(done)
 
 createRecord = (record, done) ->
-  statement = db.prepare("INSERT INTO records VALUES ($variable_id, $value, $timestamp)")
+  statement = db.prepare("insert into records values ($variable_id, $value, $timestamp)")
   statement.run record
   statement.finalize(done)
 
 getVariables = (done) ->
-  db.all "SELECT rowid id, * FROM variables", done
+  db.all "select rowid id, * from variables order by name asc", done
 
 getEachVariable = (done) ->
-  db.each "SELECT rowid id, * FROM variables", done
+  db.each "select rowid id, * from variables order by name asc", done
 
 getRecords = (done) ->
-  db.all "SELECT rowid id, * FROM records", done
+  db.all "select rowid id, * from records", done
 
 getEachRecord = (done) ->
-  db.each "SELECT rowid id, * FROM records", done
+  db.each "select rowid id, * from records", done
 
 loadSidebar = ->
   getVariables (err, variables) ->
     $sidebar = $('.sidebar');
-    $sidebar.html jade.renderFile("views/sidebar.jade", variables: variables)
+    $sidebar.html jade.renderFile "views/sidebar.jade", variables: variables
     bindEvents($sidebar)
 
 launchModal = (modalName, options) ->
@@ -85,7 +85,18 @@ db.serialize ->
 
 bindEvents = ($element) ->
 
-  $element.find("select").selecter cover: true
+  # documentation: http://bootstrap-datepicker.readthedocs.org/en/release/index.html
+  $element.find('.datepicker').datepicker()
+
+  # documentation: http://formstone.it/components/selecter
+  $element.find('select').selecter(cover: true)
+
+  $element.find('[data-toggle="popover"]').popover()
+
+  $element.find('[data-dismiss="popover"]').on 'click', ->
+    id = $(@).parents('.popover').attr('id')
+    $trigger = $('[aria-describedby="' + id + '"]')
+    $trigger.popover('hide')
 
   $element.find('[data-launch-modal]').on 'click', (event) ->
     event.stopPropagation()
@@ -132,10 +143,21 @@ bindEvents = ($element) ->
       loadSidebar()
     return false
 
-  $element.find('.variable-toggle').on 'click', (event) ->
-    console.log 'clicked'
-    $(this).toggleClass('active')
-    return false
+  $element.find('.variable-toggle').each (i) ->
+    $e = $ @
+    $e.popover
+      trigger: 'manual'
+      content: jade.renderFile('views/test-form.jade', $e.data('model'))
+      html: true
+    $e.on 'click', ->
+      $e.toggleClass('active')
+      return false
+    $e.find '[href="#edit-variable"]'
+      .on 'click', ->
+        $e.popover('toggle')
+        $popover = $('#' + $e.attr('aria-describedby'))
+        bindEvents($popover)
+        return false
 
 $('body').html jade.renderFile('views/app.jade')
 

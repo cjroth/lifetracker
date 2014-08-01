@@ -8,14 +8,26 @@ nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
         span.icon-bar
       a.navbar-brand(href='#') Lifetracker
     .navbar-collapse.collapse
-      ul.nav.navbar-nav.navbar-right
-        li.dropdown
-          a.dropdown-toggle(href='#')
-            span.fa.fa-plus
-          ul.dropdown-menu(role='menu')
-            li
-              a(href='#') Sleep
-            li
-              a(href='#') Caffeine
-            li
-              a(href='#') Happiness
+
+      //- ul.nav.navbar-nav.navbar-right
+      //-   li.dropdown
+      //-     a.dropdown-toggle(href='#')
+      //-       span.fa.fa-plus
+      //-     ul.dropdown-menu(role='menu')
+      //-       li
+      //-         a(href='#') Sleep
+      //-       li
+      //-         a(href='#') Caffeine
+      //-       li
+      //-         a(href='#') Happiness
+
+      form.navbar-form.navbar-right
+
+        .datepicker.input-group.input-daterange(data-date-orientation='top right')
+          input.form-control(type='text', name='start')
+          input.form-control(type='text', name='end')
+
+        //- .input-group
+          input.form-control.datepicker(type='text', data-date-orientation='top right')
+          input.form-control.datepicker(type='text', data-date-orientation='top right', data-date-multidate='true', data-date-today-btn='true')
+          span.input-group-addon: i.glyphicon.glyphicon-calendar

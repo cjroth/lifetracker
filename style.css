@@ -34,10 +34,24 @@ nav .dropdown:hover .dropdown-menu {
   display: block;
 }
 
+nav .datepicker input {
+  width: auto !important;
+  padding-left: 10px;
+}
+
 .variable-toggle .btn-group {
   display: none;
 }
 
 .variable-toggle:hover .btn-group {
   display: inline-block;
+}
+
+
+/* this is how we can tweak the popover position */
+.popover {
+  margin-top: 65px;
+}
+.popover .arrow {
+  top: 30px !important;
 }
