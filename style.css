@@ -33,3 +33,11 @@ body {
 nav .dropdown:hover .dropdown-menu {
   display: block;
 }
+
+.variable-toggle .btn-group {
+  display: none;
+}
+
+.variable-toggle:hover .btn-group {
+  display: inline-block;
+}

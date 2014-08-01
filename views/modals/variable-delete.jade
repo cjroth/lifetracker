@@ -1,0 +1,16 @@
+#modal-variable.modal
+  .modal-dialog.modal-sm
+    .modal-content
+      form(name='variable-delete')
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+          h4.modal-title Delete #{name}?
+        .modal-body
+
+          input(name='id', type='hidden', value=id)
+
+          p Are you sure? You will loose all of the data for #{name}.
+
+        .modal-footer
+          button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+          button.btn.btn-danger(type='submit') Delete

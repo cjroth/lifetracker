@@ -1,11 +1,18 @@
 .list-group
-  a.btn.btn-primary.btn-block(data-toggle='modal', data-target='#modal-variable')
+  button.btn.btn-primary.btn-block(data-launch-modal='variable-create')
     i.fa.fa-bar-chart-o
     |  New Variable
 
-.list-group
+ul.list-group
   each variable in variables
-    a.list-group-item(href='#')
+    li.list-group-item.variable-toggle(href='#')
+
+      .btn-group.btn-group-xs.pull-right
+        button.btn.btn-default(type='button', data-launch-modal='variable-edit', data-modal-locals=JSON.stringify(variable))
+          i.glyphicon.glyphicon-pencil
+        button.btn.btn-default(type='button', data-launch-modal='variable-delete', data-modal-locals=JSON.stringify(variable))
+          i.glyphicon.glyphicon-remove
+
       if variable.records
         span.badge.badge-primary= variable.records.length
       = variable.name
