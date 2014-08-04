@@ -1,5 +1,7 @@
 {
   "name": "lifetracker",
+  "description": "track yo life",
+  "version": "alpha",
   "main": "index.html",
   "window": {
     "show": true,

@@ -1,3 +1,7 @@
+textarea { 
+  resize: none; 
+}
+
 body {
   margin: 0;
   overflow: hidden;
@@ -47,11 +51,33 @@ nav .datepicker input {
   display: inline-block;
 }
 
+.popover .row [class^='col-'] {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.popover .row {
+  width: 250px;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.popover .row:not(:last-child) {
+  margin-bottom: 10px;
+}
 
 /* this is how we can tweak the popover position */
-.popover {
+/*.popover {
   margin-top: 65px;
 }
 .popover .arrow {
   top: 30px !important;
+}*/
+
+.popover .form-group {
+  margin-bottom: 10px;
+}
+
+.popover .form-group:last-child {
+  margin-bottom: 0;
 }

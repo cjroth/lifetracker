@@ -3,16 +3,4 @@
     i.fa.fa-bar-chart-o
     |  New Variable
 
-ul.list-group
-  each variable in variables
-    li.list-group-item.variable-toggle(href='#', data-model=JSON.stringify(variable))
-
-      .btn-group.btn-group-xs.pull-right
-        a.btn.btn-default(href='#edit-variable', type='button', data-dont-launch-modal='variable-edit', data-modal-locals=JSON.stringify(variable))
-          i.glyphicon.glyphicon-pencil
-        button.btn.btn-default(type='button', data-launch-modal='variable-delete', data-modal-locals=JSON.stringify(variable))
-          i.glyphicon.glyphicon-remove
-
-      if variable.records
-        span.badge.badge-primary= variable.records.length
-      = variable.name
+ul.list-group.sidebar-variables

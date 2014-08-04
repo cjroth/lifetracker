@@ -1,0 +1,12 @@
+each variable in variables
+  li.list-group-item.variable-toggle(href='#', data-model=JSON.stringify(variable))
+
+    .btn-group.btn-group-xs.pull-right
+      a.btn.btn-default(href='#edit-variable', data-dont-launch-modal='variable-edit', data-modal-locals=JSON.stringify(variable))
+        i.glyphicon.glyphicon-pencil
+      a.btn.btn-default(href='#delete-variable', data-dont-launch-modal='variable-delete', data-modal-locals=JSON.stringify(variable))
+        i.glyphicon.glyphicon-remove
+
+    if variable.records
+      span.badge.badge-primary= variable.records.length
+    = variable.name

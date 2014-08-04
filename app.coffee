@@ -5,6 +5,17 @@ jade = require("jade")
 fs = require("fs")
 qs = require('querystring')
 
+# tray = new gui.Tray({ icon: 'icon-really-big.png' });
+
+# menu = new gui.Menu();
+# menu.append(new gui.MenuItem({ type: 'checkbox', label: 'Add note' }));
+# tray.menu = menu;
+
+win = gui.Window.get();
+nativeMenuBar = new gui.Menu({ type: "menubar" });
+nativeMenuBar.createMacBuiltin("My App");
+win.menu = nativeMenuBar;
+
 createVariable = (data, done) ->
   statement = db.prepare("insert into variables values ($name, $type, $min, $max, $question)")
   statement.run
@@ -46,11 +57,11 @@ getRecords = (done) ->
 getEachRecord = (done) ->
   db.each "select rowid id, * from records", done
 
-loadSidebar = ->
+loadSidebarVariables = ->
   getVariables (err, variables) ->
-    $sidebar = $('.sidebar');
-    $sidebar.html jade.renderFile "views/sidebar.jade", variables: variables
-    bindEvents($sidebar)
+    $sidebarVariables = $('.sidebar-variables');
+    $sidebarVariables.html jade.renderFile "views/sidebar-variables.jade", variables: variables
+    bindEvents($sidebarVariables)
 
 launchModal = (modalName, options) ->
   html = jade.renderFile('views/modals/' + modalName + '.jade', options)
@@ -81,7 +92,17 @@ db.serialize ->
   # getEachRecord (err, record) ->
   #   console.log 'record', arguments
 
-  loadSidebar()
+  loadSidebarVariables()
+
+destroyAllPopovers = (element) ->
+  $element = $ element
+  $element.find('.popover').each (i) ->
+    $popover = $(@)
+    id = $popover.attr('id')
+    $trigger = $('[aria-describedby="' + id + '"]')
+    $trigger.popover('destroy')
+    # $popover.remove()
+    # $trigger.removeAttr('aria-describedby')
 
 bindEvents = ($element) ->
 
@@ -96,7 +117,7 @@ bindEvents = ($element) ->
   $element.find('[data-dismiss="popover"]').on 'click', ->
     id = $(@).parents('.popover').attr('id')
     $trigger = $('[aria-describedby="' + id + '"]')
-    $trigger.popover('hide')
+    $trigger.popover('destroy')
 
   $element.find('[data-launch-modal]').on 'click', (event) ->
     event.stopPropagation()
@@ -114,47 +135,81 @@ bindEvents = ($element) ->
         # @todo handle error...
         return
       $form.parents('.modal').modal('hide')
-      loadSidebar()
+      loadSidebarVariables()
     return false
 
   $element.find('form[name="variable-delete"]').on 'submit', (event) ->
+
     $form = $ @
     data = $form.serialize()
     data = qs.parse(data)
+
     # @todo validate here...
+
     deleteVariable data.id, (err) ->
+
       if err
         # @todo handle error...
         return
-      $form.parents('.modal').modal('hide')
-      loadSidebar()
+
+      # hide the popover...
+      id = $form.parents('.popover').attr('id')
+      $trigger = $('[aria-describedby="' + id + '"]')
+
+      loadSidebarVariables()
+      destroyAllPopovers('.sidebar')
+
     return false
 
   $element.find('form[name="variable-edit"]').on 'submit', (event) ->
+
     $form = $ @
     data = $form.serialize()
     data = qs.parse(data)
+
     # @todo validate here...
+
     updateVariable data.id, data, (err) ->
+
       if err
         # @todo handle error...
         return
-      $form.parents('.modal').modal('hide')
-      loadSidebar()
+
+      loadSidebarVariables()
+      destroyAllPopovers('.sidebar')
+
     return false
 
   $element.find('.variable-toggle').each (i) ->
+
     $e = $ @
-    $e.popover
-      trigger: 'manual'
-      content: jade.renderFile('views/test-form.jade', $e.data('model'))
-      html: true
+
     $e.on 'click', ->
       $e.toggleClass('active')
       return false
+
+    $e.find '[href="#delete-variable"]'
+      .on 'click', ->
+        destroyAllPopovers('.sidebar')
+        $e.popover
+          trigger: 'manual'
+          container: '.sidebar'
+          content: jade.renderFile('views/delete-variable-popover.jade', $e.data('model'))
+          html: true
+        $e.popover('show')
+        $popover = $('#' + $e.attr('aria-describedby'))
+        bindEvents($popover)
+        return false
+
     $e.find '[href="#edit-variable"]'
       .on 'click', ->
-        $e.popover('toggle')
+        destroyAllPopovers('.sidebar')
+        $e.popover
+          trigger: 'manual'
+          container: '.sidebar'
+          content: jade.renderFile('views/edit-variable-popover.jade', $e.data('model'))
+          html: true
+        $e.popover('show')
         $popover = $('#' + $e.attr('aria-describedby'))
         bindEvents($popover)
         return false
