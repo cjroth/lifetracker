@@ -1,6 +1,10 @@
 .list-group
-  button.btn.btn-primary.btn-block(data-launch-modal='variable-create')
+  a.btn.btn-primary.btn-block(href='#create-variable')
     i.fa.fa-bar-chart-o
     |  New Variable
+
+  .popover-create-variable-container
+    include create-variable-popover
+
 
 ul.list-group.sidebar-variables

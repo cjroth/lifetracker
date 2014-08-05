@@ -30,6 +30,10 @@ body {
   overflow: scroll;
 }
 
+.sidebar .popover .row {
+  width: 250px;
+}
+
 .main {
   padding: 20px;
 }
@@ -57,7 +61,6 @@ nav .datepicker input {
 }
 
 .popover .row {
-  width: 250px;
   margin-left: -10px;
   margin-right: -10px;
 }
@@ -80,4 +83,30 @@ nav .datepicker input {
 
 .popover .form-group:last-child {
   margin-bottom: 0;
+}
+
+.popover-datepicker {
+  left: auto;
+  top: 63px;
+  right: 10px;
+  display: none;
+  max-width: none;
+}
+
+.popover-datepicker > .arrow {
+  right: 4px !important;
+  left: auto !important;
+}
+
+.popover-datepicker .datepicker > div {
+  display: inline-block;
+}
+
+.popover-create-variable {
+  left: 287px;
+  top: 27px;
+}
+
+.popover-create-variable > .arrow {
+  top: 60px !important;
 }

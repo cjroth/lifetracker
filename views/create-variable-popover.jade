@@ -1,0 +1,36 @@
+.popover.right.popover-create-variable
+  .arrow
+  .popover-content
+    
+    form(name='create-variable')
+
+      .row
+        .col-xs-12
+          input.form-control(name='name', type='text', placeholder='Variable (ex: "Sleep")')
+
+      .row
+        .col-xs-12
+          textarea.form-control(name='question', placeholder='Question (ex: "How much sleep did you get last night?")')
+
+      .row
+        .col-xs-12
+          select.form-control(name='type')
+            option(value='scale') Scale
+            option(value='boolean') True/False
+            option(value='number') Number
+
+      .row
+        .col-xs-6
+          input.form-control(name='min', type='text', placeholder='Min (ex: "0")')
+        .col-xs-6
+          input.form-control(name='max', type='text', placeholder='Max (ex: "24")')
+
+      .row
+        .col-xs-12
+          input.form-control(name='units', type='text', placeholder='Units (ex: "hours")')
+
+      .row
+        .col-xs-6
+          button.btn.btn-default.btn-block(type='button', data-dismiss='popover') Cancel
+        .col-xs-6
+          button.btn.btn-primary.btn-block(type='submit') Save

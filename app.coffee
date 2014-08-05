@@ -101,13 +101,11 @@ destroyAllPopovers = (element) ->
     id = $popover.attr('id')
     $trigger = $('[aria-describedby="' + id + '"]')
     $trigger.popover('destroy')
-    # $popover.remove()
-    # $trigger.removeAttr('aria-describedby')
+
+    # hide any popovers that were not created with the `.popover()` method
+    $element.find('.popover').hide()
 
 bindEvents = ($element) ->
-
-  # documentation: http://bootstrap-datepicker.readthedocs.org/en/release/index.html
-  $element.find('.datepicker').datepicker()
 
   # documentation: http://formstone.it/components/selecter
   $element.find('select').selecter(cover: true)
@@ -115,9 +113,11 @@ bindEvents = ($element) ->
   $element.find('[data-toggle="popover"]').popover()
 
   $element.find('[data-dismiss="popover"]').on 'click', ->
-    id = $(@).parents('.popover').attr('id')
+    $popover = $(@).parents('.popover')
+    id = $popover.attr('id')
     $trigger = $('[aria-describedby="' + id + '"]')
     $trigger.popover('destroy')
+    $popover.hide()
 
   $element.find('[data-launch-modal]').on 'click', (event) ->
     event.stopPropagation()
@@ -125,17 +125,28 @@ bindEvents = ($element) ->
     data = $(this).data('modal-locals')
     launchModal(modalName, data)
 
-  $element.find('form[name="variable"]').on 'submit', (event) ->
+  $element.find('form[name="create-variable"]').on 'submit', (event) ->
+
     $form = $ @
     data = $(this).serialize()
     data = qs.parse(data)
+
     # @todo validate here...
+
     createVariable data, (err) ->
+
       if err
         # @todo handle error...
         return
-      $form.parents('.modal').modal('hide')
+
+      $form.parents('.popover').hide()
       loadSidebarVariables()
+
+      $container = $('.popover-create-variable-container')
+      html = jade.renderFile('views/create-variable-popover.jade')
+      $container.html(html)
+      bindEvents($container)
+
     return false
 
   $element.find('form[name="variable-delete"]').on 'submit', (event) ->
@@ -196,6 +207,7 @@ bindEvents = ($element) ->
           container: '.sidebar'
           content: jade.renderFile('views/delete-variable-popover.jade', $e.data('model'))
           html: true
+          animation: false
         $e.popover('show')
         $popover = $('#' + $e.attr('aria-describedby'))
         bindEvents($popover)
@@ -209,10 +221,32 @@ bindEvents = ($element) ->
           container: '.sidebar'
           content: jade.renderFile('views/edit-variable-popover.jade', $e.data('model'))
           html: true
+          animation: false
         $e.popover('show')
         $popover = $('#' + $e.attr('aria-describedby'))
         bindEvents($popover)
         return false
+
+  $element.find('[href="#toggle-datepicker"]').each (i) ->
+
+    $e = $(@)
+
+    # documentation: http://bootstrap-datepicker.readthedocs.org/en/release/index.html
+    $element.find('.datepicker').datepicker(
+      inputs: $('.range-start, .range-end')
+    )
+
+    $e.on 'click', ->
+      $('.popover-datepicker').toggle()
+
+  $element.find('[href="#create-variable"]').each (i) ->
+
+    $e = $(@)
+
+    $e.on 'click', ->
+      destroyAllPopovers('.sidebar')
+      $('.popover-create-variable').toggle()
+      return false
 
 $('body').html jade.renderFile('views/app.jade')
 
