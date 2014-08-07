@@ -5,16 +5,18 @@ jade = require("jade")
 fs = require("fs")
 qs = require('querystring')
 
+# window.less = logLevel: 1, env: 'production'
+
 # tray = new gui.Tray({ icon: 'icon-really-big.png' });
 
 # menu = new gui.Menu();
 # menu.append(new gui.MenuItem({ type: 'checkbox', label: 'Add note' }));
 # tray.menu = menu;
 
-win = gui.Window.get();
-nativeMenuBar = new gui.Menu({ type: "menubar" });
-nativeMenuBar.createMacBuiltin("My App");
-win.menu = nativeMenuBar;
+# win = gui.Window.get();
+# nativeMenuBar = new gui.Menu({ type: "menubar" });
+# nativeMenuBar.createMacBuiltin("My App");
+# win.menu = nativeMenuBar;
 
 createVariable = (data, done) ->
   statement = db.prepare("insert into variables values ($name, $type, $min, $max, $question)")
@@ -238,7 +240,8 @@ bindEvents = ($element) ->
 
     $e.on 'click', ->
       $('.popover-datepicker').toggle()
-
+      return false
+      
   $element.find('[href="#create-variable"]').each (i) ->
 
     $e = $(@)
