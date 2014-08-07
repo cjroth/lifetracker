@@ -1,13 +1,14 @@
 
 <div class="navbar-header pull-left"><a href="#" class="navbar-brand">Lifetracker</a></div>
-<div class="navbar-header pull-right"><a href="#toggle-datepicker" type="button" class="btn btn-link navbar-btn"><i class="glyphicon glyphicon-calendar"></i></a><a href="#" type="button" class="btn btn-link navbar-btn"><i class="glyphicon glyphicon-plus"></i></a></div>
-<div class="popover bottom popover-datepicker"></div>
-<div class="arrow"></div>
-<div class="popover-content">
-  <div class="row">
-    <div class="datepicker">
-      <div class="range-start"></div>
-      <div class="range-end"></div>
+<div class="navbar-header pull-right"><a ng-click="showDatepicker = !showDatepicker" class="btn btn-link navbar-btn"><i class="glyphicon glyphicon-calendar"></i></a><a href="#" class="btn btn-link navbar-btn"><i class="glyphicon glyphicon-plus"></i></a></div>
+<div ng-show="showDatepicker" class="popover bottom popover-datepicker">
+  <div class="arrow"></div>
+  <div class="popover-content">
+    <div class="row">
+      <div class="datepicker">
+        <div class="range-start"></div>
+        <div class="range-end"></div>
+      </div>
     </div>
   </div>
 </div>

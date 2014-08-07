@@ -1,10 +1,8 @@
 .list-group
-  a.btn.btn-primary.btn-block(href='#create-variable')
+  a.btn.btn-primary.btn-block(ng-click='showCreateVariablePopover = !showCreateVariablePopover')
     i.fa.fa-bar-chart-o
     |  New Variable
 
-  .popover-create-variable-container
-    include create-variable-popover
-
+  include create-variable-popover
 
 ul.list-group.sidebar-variables

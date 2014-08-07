@@ -2,13 +2,13 @@
   a.navbar-brand(href='#') Lifetracker
 
 .navbar-header.pull-right
-  a.btn.btn-link.navbar-btn(href='#toggle-datepicker', type='button'): i.glyphicon.glyphicon-calendar
-  a.btn.btn-link.navbar-btn(href='#', type='button'): i.glyphicon.glyphicon-plus
+  a.btn.btn-link.navbar-btn(ng-click='showDatepicker = !showDatepicker'): i.glyphicon.glyphicon-calendar
+  a.btn.btn-link.navbar-btn(href='#'): i.glyphicon.glyphicon-plus
 
-.popover.bottom.popover-datepicker
-.arrow
-.popover-content
-  .row
-    .datepicker
-      .range-start
-      .range-end
+.popover.bottom.popover-datepicker(ng-show='showDatepicker')
+  .arrow
+  .popover-content
+    .row
+      .datepicker
+        .range-start
+        .range-end

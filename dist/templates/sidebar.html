@@ -1,52 +1,50 @@
 
-<div class="list-group"><a href="#create-variable" class="btn btn-primary btn-block"><i class="fa fa-bar-chart-o"></i> New Variable</a>
-  <div class="popover-create-variable-container">
-    <div class="popover right popover-create-variable">
-      <div class="arrow"></div>
-      <div class="popover-content">
-        <form name="create-variable">
-          <div class="row">
-            <div class="col-xs-12">
-              <input name="name" type="text" placeholder="Variable (ex: &quot;Sleep&quot;)" class="form-control"/>
-            </div>
+<div class="list-group"><a ng-click="showCreateVariablePopover = !showCreateVariablePopover" class="btn btn-primary btn-block"><i class="fa fa-bar-chart-o"></i> New Variable</a>
+  <div ng-show="showCreateVariablePopover" class="popover right popover-create-variable">
+    <div class="arrow"></div>
+    <div class="popover-content">
+      <form name="create-variable">
+        <div class="row">
+          <div class="col-xs-12">
+            <input name="name" type="text" placeholder="Variable (ex: &quot;Sleep&quot;)" class="form-control"/>
           </div>
-          <div class="row">
-            <div class="col-xs-12">
-              <textarea name="question" placeholder="Question (ex: &quot;How much sleep did you get last night?&quot;)" class="form-control"></textarea>
-            </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <textarea name="question" placeholder="Question (ex: &quot;How much sleep did you get last night?&quot;)" class="form-control"></textarea>
           </div>
-          <div class="row">
-            <div class="col-xs-12">
-              <select name="type" class="form-control">
-                <option value="scale">Scale</option>
-                <option value="boolean">True/False</option>
-                <option value="number">Number</option>
-              </select>
-            </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <select id="select" name="type" ng-model="variable.type" class="form-control">
+              <option value="scale">Scale</option>
+              <option value="boolean">True/False</option>
+              <option value="number">Number</option>
+            </select>
           </div>
-          <div class="row">
-            <div class="col-xs-6">
-              <input name="min" type="text" placeholder="Min (ex: &quot;0&quot;)" class="form-control"/>
-            </div>
-            <div class="col-xs-6">
-              <input name="max" type="text" placeholder="Max (ex: &quot;24&quot;)" class="form-control"/>
-            </div>
+        </div>
+        <div ng-show="variable.type == &quot;number&quot;" class="row">
+          <div class="col-xs-6">
+            <input name="min" type="text" placeholder="Min (ex: &quot;0&quot;)" class="form-control"/>
           </div>
-          <div class="row">
-            <div class="col-xs-12">
-              <input name="units" type="text" placeholder="Units (ex: &quot;hours&quot;)" class="form-control"/>
-            </div>
+          <div class="col-xs-6">
+            <input name="max" type="text" placeholder="Max (ex: &quot;24&quot;)" class="form-control"/>
           </div>
-          <div class="row">
-            <div class="col-xs-6">
-              <button type="button" data-dismiss="popover" class="btn btn-default btn-block">Cancel</button>
-            </div>
-            <div class="col-xs-6">
-              <button type="submit" class="btn btn-primary btn-block">Save</button>
-            </div>
+        </div>
+        <div ng-show="variable.type == &quot;number&quot;" class="row">
+          <div class="col-xs-12">
+            <input name="units" type="text" placeholder="Units (ex: &quot;hours&quot;)" class="form-control"/>
           </div>
-        </form>
-      </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <button type="button" ng-click="showCreateVariablePopover = false" class="btn btn-default btn-block">Cancel</button>
+          </div>
+          <div class="col-xs-6">
+            <button type="submit" class="btn btn-primary btn-block">Save</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>

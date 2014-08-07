@@ -1,4 +1,4 @@
-.popover.right.popover-create-variable
+.popover.right.popover-create-variable(ng-show='showCreateVariablePopover')
   .arrow
   .popover-content
     
@@ -14,23 +14,23 @@
 
       .row
         .col-xs-12
-          select.form-control(name='type')
+          select.form-control(id="select", name='type', ng-model='variable.type')
             option(value='scale') Scale
             option(value='boolean') True/False
             option(value='number') Number
 
-      .row
+      .row(ng-show='variable.type == "number"')
         .col-xs-6
           input.form-control(name='min', type='text', placeholder='Min (ex: "0")')
         .col-xs-6
           input.form-control(name='max', type='text', placeholder='Max (ex: "24")')
 
-      .row
+      .row(ng-show='variable.type == "number"')
         .col-xs-12
           input.form-control(name='units', type='text', placeholder='Units (ex: "hours")')
 
       .row
         .col-xs-6
-          button.btn.btn-default.btn-block(type='button', data-dismiss='popover') Cancel
+          button.btn.btn-default.btn-block(type='button', ng-click='showCreateVariablePopover = false') Cancel
         .col-xs-6
           button.btn.btn-primary.btn-block(type='submit') Save

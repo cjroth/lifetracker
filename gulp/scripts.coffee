@@ -44,23 +44,36 @@ $     = require('gulp-load-plugins')()
 #     .pipe $.coffee(bare: true)
 #     .pipe gulp.dest(paths.devFolder + '/js/')
 
+paths =
+  scripts: 'scripts/**/*.coffee'
+  templates: 'views/**/*.jade'
+  index: 'index.jade'
+
 gulp.task 'build:scripts', ->
   gulp
-    .src 'scripts/**/*.coffee'
+    .src paths.scripts
     .pipe $.coffee(bare: true)
     # .pipe $.angularFilesort()
     .pipe gulp.dest('dist/scripts')
 
 gulp.task 'build:templates', ->
   gulp
-    .src ['views/**/*.jade']
+    .src paths.templates
     .pipe $.jade(pretty: true)
     .pipe gulp.dest('dist/templates')
 
 gulp.task 'build:index', ->
   gulp
-    .src 'index.jade'
+    .src paths.index
     .pipe $.jade(pretty: true)
     .pipe gulp.dest('dist')
+
+gulp.task 'build:watch', ->
+  gulp
+    .watch [
+      paths.scripts
+      paths.templates
+      paths.index
+    ], ['build']
 
 gulp.task 'build', ['build:scripts', 'build:templates', 'build:index']

@@ -18,6 +18,14 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
       }
     }
   });
-}).controller('MainController', function($scope) {}).controller('NavController', function($scope) {}).controller('SidebarController', function($scope) {}).run(function($state) {
+}).controller('MainController', function($scope) {}).controller('NavController', function($scope) {
+  $('.datepicker').datepicker({
+    inputs: $('.range-start, .range-end')
+  });
+}).controller('SidebarController', function($scope) {
+  $scope.variable = {
+    type: 'scale'
+  };
+}).run(function($state) {
   return $state.go('lifetracker');
 });

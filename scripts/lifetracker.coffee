@@ -25,9 +25,22 @@ angular
     return
 
   .controller 'NavController', ($scope) ->
+
+    # initialize the datepicker
+    $('.datepicker').datepicker
+      inputs: $('.range-start, .range-end')
+
     return
 
   .controller 'SidebarController', ($scope) ->
+
+    $scope.variable =
+      type: 'scale'
+
+    # initialize the selecter in the "create variable" popover
+    # documentation: http://formstone.it/components/selecter
+    # $('select').selecter(cover: true)
+
     return
 
   .run ($state) ->
