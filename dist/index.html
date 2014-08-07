@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="lifetracker">
+  <head>
+    <title>Lifetracker</title>
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="../node_modules/bootflat/bootflat/js/jquery.fs.selecter.min.js"></script>
+    <script src="../node_modules/coffee-script/extras/coffee-script.js"></script>
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../node_modules/angular-ui-router/release/angular-ui-router.js"></script>
+    <link href="../bower_components/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet">
+    <script src="../bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <link rel="stylesheet/less" type="text/css" href="../styles.less">
+    <script src="scripts/lifetracker.js"></script>
+    <script src="../livereload.coffee" type="text/coffeescript"></script>
+    <script>less = { logLevel: 1 };</script>
+    <script src="../bower_components/less/dist/less-1.7.4.js"></script>
+    <link href="../node_modules/bootflat/bootflat/css/bootflat.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav ui-view="nav" role="navigation" class="navbar navbar-inverse navbar-fixed-top"></nav>
+    <div class="app">
+      <div ui-view="sidebar" class="sidebar"></div>
+      <div ui-view="main" class="main"></div>
+    </div>
+  </body>
+</html>
