@@ -1,6 +1,7 @@
 angular
   .module 'lifetracker', [
     'ui.router'
+    'ui.bootstrap'
   ]
 
 angular
@@ -21,6 +22,60 @@ angular
             templateUrl: 'templates/sidebar.html'
             controller: 'SidebarController'
 
+  .factory 'db', ->
+
+    sqlite3 = require("sqlite3").verbose()
+    db = new sqlite3.Database("data/database.sqlite")
+
+    return db
+
+  .factory 'store', (db) ->
+
+    store =
+
+      createVariable: (data, done) ->
+        statement = db.prepare("insert into variables values ($name, $type, $min, $max, $question)")
+        statement.run
+          $name: data.name
+          $question: data.question
+          $type: data.type
+          $min: data.min
+          $max: data.max
+        statement.finalize(done)
+
+      deleteVariable: (id, done) ->
+        statement = db.prepare("delete from variables where rowid = $id")
+        statement.run
+          $id: id
+        statement.finalize(done)
+
+      updateVariable: (id, data, done) ->
+        statement = db.prepare("update variables set name = $name, question = $question where rowid = $id")
+        statement.run
+          $id: id
+          $name: data.name
+          $question: data.question
+        statement.finalize(done)
+
+      createRecord: (record, done) ->
+        statement = db.prepare("insert into records values ($variable_id, $value, $timestamp)")
+        statement.run record
+        statement.finalize(done)
+
+      getVariables: (done) ->
+        db.all "select rowid id, * from variables order by name asc", done
+
+      getEachVariable: (done) ->
+        db.each "select rowid id, * from variables order by name asc", done
+
+      getRecords: (done) ->
+        db.all "select rowid id, * from records", done
+
+      getEachRecord: (done) ->
+        db.each "select rowid id, * from records", done
+
+    return store
+
   .controller 'MainController', ($scope) ->
     return
 
@@ -32,14 +87,45 @@ angular
 
     return
 
-  .controller 'SidebarController', ($scope) ->
-
-    $scope.variable =
-      type: 'scale'
+  .controller 'SidebarController', ($scope, store) ->
 
     # initialize the selecter in the "create variable" popover
     # documentation: http://formstone.it/components/selecter
     # $('select').selecter(cover: true)
+
+    store.getVariables (err, variables) ->
+      if err
+        # @todo handle err
+        return
+      $scope.variables = variables
+      $scope.$digest()
+
+    $scope.toggleEditVariablePopover = (variable, $event) ->
+      console.log 'clicked', $event
+      
+
+    $scope.CreateVariablePopover =
+      visible: false
+
+    return
+
+  .controller 'CreateVariablePopoverController', ($rootScope, $scope, store) ->
+
+    $scope.variable = type: 'scale'
+
+    $scope.save = ->
+
+      variable = angular.copy $scope.variable
+
+      store.createVariable variable, (err) ->
+
+        if err
+          # @todo handle error
+          return
+
+        $scope.CreateVariablePopover.visible = false
+        $scope.variables.push variable
+        $rootScope.$digest()
 
     return
 

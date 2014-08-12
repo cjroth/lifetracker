@@ -68,7 +68,7 @@ gulp.task 'build:index', ->
     .pipe $.jade(pretty: true)
     .pipe gulp.dest('dist')
 
-gulp.task 'build:watch', ->
+gulp.task 'build:watch', ['build'], ->
   gulp
     .watch [
       paths.scripts
