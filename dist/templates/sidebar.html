@@ -50,7 +50,7 @@
 </div>
 <ul class="list-group sidebar-variables">
   <li ng-repeat="variable in variables | orderBy:&quot;name&quot;" class="list-group-item variable-toggle">
-    <div class="btn-group btn-group-xs pull-right"><a ng-click="toggleEditVariablePopover(variable)" popover="&lt;h1&gt;test&lt;/h1&gt;" popover-placement="right" class="btn btn-default"><i class="glyphicon glyphicon-pencil"></i></a><a ng-click="toggleDeleteVariablePopover(variable)" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></a></div><span class="badge badge-primary">{{variable.records.length}}</span><span class="name">{{variable.name}}</span>
+    <div class="btn-group btn-group-xs pull-right"><a edit-variable="edit-variable" class="btn btn-default"><i class="glyphicon glyphicon-pencil"></i></a><a ng-click="toggleDeleteVariablePopover(variable)" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></a></div><span class="badge badge-primary">{{variable.records.length}}</span><span class="name">{{variable.name}}</span>
     <div ng-show="variable.editing" class="popover right popover-create-variable">
       <div class="arrow"></div>
       <div class="popover-content">

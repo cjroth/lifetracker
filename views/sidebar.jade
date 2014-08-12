@@ -9,7 +9,7 @@ ul.list-group.sidebar-variables
   li.list-group-item.variable-toggle(ng-repeat='variable in variables | orderBy:"name"')
 
     .btn-group.btn-group-xs.pull-right
-      a.btn.btn-default(ng-click='toggleEditVariablePopover(variable)', popover='<h1>test</h1>', popover-placement='right')
+      a.btn.btn-default(edit-variable)
         i.glyphicon.glyphicon-pencil
       a.btn.btn-default(ng-click='toggleDeleteVariablePopover(variable)')
         i.glyphicon.glyphicon-remove

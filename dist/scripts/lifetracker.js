@@ -76,6 +76,26 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     }
   };
   return store;
+}).directive('editVariable', function() {
+  var link;
+  link = function(scope, element, attrs) {
+    var $element;
+    $element = $(element);
+    element.on('click', function() {
+      $('.sidebar .popover').hide();
+      return element.popover({
+        trigger: 'manual',
+        container: '.sidebar',
+        content: 'test',
+        html: true,
+        animation: false
+      }).popover('show');
+    });
+  };
+  return {
+    restrict: 'A',
+    link: link
+  };
 }).controller('MainController', function($scope) {}).controller('NavController', function($scope) {
   $('.datepicker').datepicker({
     inputs: $('.range-start, .range-end')

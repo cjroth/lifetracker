@@ -76,6 +76,17 @@ angular
 
     return store
 
+  .directive 'editVariable', ->
+    link = (scope, element, attrs) ->
+      $element = $(element)
+      element.on 'click', ->
+        
+      return
+    return {
+      restrict: 'A'
+      link: link
+    }
+
   .controller 'MainController', ($scope) ->
     return
 
