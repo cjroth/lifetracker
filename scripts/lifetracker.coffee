@@ -1,7 +1,9 @@
 angular
   .module 'lifetracker', [
+    'ngSanitize'
+    'ngAnimate'
     'ui.router'
-    'ui.bootstrap'
+    'mgcrea.ngStrap'
   ]
 
 angular
@@ -111,14 +113,26 @@ angular
       $scope.variables = variables
       $scope.$digest()
 
-    $scope.toggleEditVariablePopover = (variable, $event) ->
-      console.log 'clicked', $event
-      
-
     $scope.CreateVariablePopover =
       visible: false
 
     return
+
+  .controller 'EditVariablePopoverController', ($rootScope, $scope, store) ->
+
+    $scope.form = angular.copy($scope.variable)
+
+    $scope.save = ->
+
+      store.updateVariable $scope.form.id, $scope.form, (err) ->
+
+        if err
+          # @todo handle error
+          return
+
+        angular.extend($scope.variable, $scope.form)
+        $scope.$hide()
+        $rootScope.$digest()
 
   .controller 'CreateVariablePopoverController', ($rootScope, $scope, store) ->
 

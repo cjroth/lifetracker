@@ -49,41 +49,7 @@
   </div>
 </div>
 <ul class="list-group sidebar-variables">
-  <li ng-repeat="variable in variables | orderBy:&quot;name&quot;" class="list-group-item variable-toggle">
-    <div class="btn-group btn-group-xs pull-right"><a edit-variable="edit-variable" class="btn btn-default"><i class="glyphicon glyphicon-pencil"></i></a><a ng-click="toggleDeleteVariablePopover(variable)" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></a></div><span class="badge badge-primary">{{variable.records.length}}</span><span class="name">{{variable.name}}</span>
-    <div ng-show="variable.editing" class="popover right popover-create-variable">
-      <div class="arrow"></div>
-      <div class="popover-content">
-        <form name="variable-edit">
-          <input name="id" type="hidden" class="form-control"/>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <input name="name" type="text" placeholder="Variable Name (ex: &quot;Sleep&quot;)" class="form-control"/>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <textarea name="question" placeholder="Question (ex: &quot;How much sleep did you get last night?&quot;)" class="form-control"></textarea>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group">
-                <button type="button" data-dismiss="popover" class="btn btn-default btn-block">Cancel</button>
-              </div>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Save</button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+  <li ng-repeat="variable in variables | orderBy:&quot;name&quot;" data-var="{{variable.id}}" class="list-group-item variable-toggle">
+    <div class="btn-group btn-group-xs pull-right"><a bs-popover="bs-popover" data-container="body" data-target="[data-var=&quot;{{variable.id}}&quot;]" data-content-template="templates/edit-variable-popover.html" data-animation="am-flip-x" class="btn btn-default"><i class="glyphicon glyphicon-pencil"></i></a><a ng-click="toggleDeleteVariablePopover(variable)" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></a></div><span class="badge badge-primary">{{variable.records.length}}</span><span class="name">{{variable.name}}</span>
   </li>
 </ul>

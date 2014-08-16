@@ -1,4 +1,4 @@
-angular.module('lifetracker', ['ui.router', 'ui.bootstrap']);
+angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.ngStrap']);
 
 angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider) {
   return $stateProvider.state('lifetracker', {
@@ -81,16 +81,7 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
   link = function(scope, element, attrs) {
     var $element;
     $element = $(element);
-    element.on('click', function() {
-      $('.sidebar .popover').hide();
-      return element.popover({
-        trigger: 'manual',
-        container: '.sidebar',
-        content: 'test',
-        html: true,
-        animation: false
-      }).popover('show');
-    });
+    element.on('click', function() {});
   };
   return {
     restrict: 'A',
@@ -108,11 +99,20 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     $scope.variables = variables;
     return $scope.$digest();
   });
-  $scope.toggleEditVariablePopover = function(variable, $event) {
-    return console.log('clicked', $event);
-  };
   $scope.CreateVariablePopover = {
     visible: false
+  };
+}).controller('EditVariablePopoverController', function($rootScope, $scope, store) {
+  $scope.form = angular.copy($scope.variable);
+  return $scope.save = function() {
+    return store.updateVariable($scope.form.id, $scope.form, function(err) {
+      if (err) {
+        return;
+      }
+      angular.extend($scope.variable, $scope.form);
+      $scope.$hide();
+      return $rootScope.$digest();
+    });
   };
 }).controller('CreateVariablePopoverController', function($rootScope, $scope, store) {
   $scope.variable = {
