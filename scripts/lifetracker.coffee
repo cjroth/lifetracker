@@ -4,7 +4,6 @@ angular
     'ngAnimate'
     'ui.router'
     'mgcrea.ngStrap'
-    'mgo-angular-wizard'
     'ui.bootstrap-slider'
     'toggle-switch'
   ]
@@ -31,10 +30,14 @@ angular
       .state 'wizard',
         url: '/wizard/:id'
         resolve:
-          variable: ($rootScope, $stateParams) ->
-            if !$stateParams.id?
-              return _.findWhere(variables, id: $stateParams.id)
-            return variables[0]
+          variables: ($rootScope, store, $q) ->
+            deferred = $q.defer()
+            store.getVariables (err, variables) ->
+              deferred.resolve(variables)
+            return deferred.promise
+          variable: ($rootScope, $stateParams, variables) ->
+            if !$stateParams.id? then $stateParams.id = variables[0].id
+            return _.findWhere(variables, id: ~~$stateParams.id)
         views:
           'main@':
             templateUrl: 'templates/wizard.html'
@@ -132,7 +135,6 @@ angular
     return
 
   .controller 'WizardController', ($scope, variable) ->
-    console.log 'v', variable
     $scope.variable = variable
     $scope.record = {}
     return
@@ -151,9 +153,12 @@ angular
 
     return
 
-  .controller 'WizardSidebarController', ($scope, store) ->
+  .controller 'WizardSidebarController', ($state, $scope, variable) ->
 
-    # ...
+    $scope.goTo = (variable) ->
+      $state.go('wizard', id: variable.id)
+
+    $scope.currentVariable = variable
 
     return
 
@@ -210,4 +215,4 @@ angular
     return
 
   .run ($state) ->
-    $state.go('wizard')
+    $state.go('wizard', id: 3)

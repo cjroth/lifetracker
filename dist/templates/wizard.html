@@ -1,2 +1,5 @@
 
-<p>{{variable.name}}</p>
+<h2>{{variable.name}}</h2>
+<p ng-show="variable.question">{{variable.question}}</p>
+<ng-include src="&quot;templates/&quot; + variable.type + &quot;-input.html&quot;"></ng-include>
+<button type="submit" wz-next="" class="btn btn-primary">Continue</button>

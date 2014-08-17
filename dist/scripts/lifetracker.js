@@ -1,4 +1,4 @@
-angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.ngStrap', 'mgo-angular-wizard', 'ui.bootstrap-slider', 'toggle-switch']);
+angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.ngStrap', 'ui.bootstrap-slider', 'toggle-switch']);
 
 angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider) {
   return $stateProvider.state('default', {
@@ -20,13 +20,21 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
   }).state('wizard', {
     url: '/wizard/:id',
     resolve: {
-      variable: function($rootScope, $stateParams) {
+      variables: function($rootScope, store, $q) {
+        var deferred;
+        deferred = $q.defer();
+        store.getVariables(function(err, variables) {
+          return deferred.resolve(variables);
+        });
+        return deferred.promise;
+      },
+      variable: function($rootScope, $stateParams, variables) {
         if ($stateParams.id == null) {
-          return _.findWhere(variables, {
-            id: $stateParams.id
-          });
+          $stateParams.id = variables[0].id;
         }
-        return variables[0];
+        return _.findWhere(variables, {
+          id: ~~$stateParams.id
+        });
       }
     },
     views: {
@@ -135,14 +143,20 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     return $rootScope.$digest();
   });
 }).controller('MainController', function($scope) {}).controller('WizardController', function($scope, variable) {
-  console.log('v', variable);
   $scope.variable = variable;
   $scope.record = {};
 }).controller('NavController', function($scope) {
   $('.datepicker').datepicker({
     inputs: $('.range-start, .range-end')
   });
-}).controller('SidebarController', function($scope, store) {}).controller('WizardSidebarController', function($scope, store) {}).controller('EditVariablePopoverController', function($rootScope, $scope, store) {
+}).controller('SidebarController', function($scope, store) {}).controller('WizardSidebarController', function($state, $scope, variable) {
+  $scope.goTo = function(variable) {
+    return $state.go('wizard', {
+      id: variable.id
+    });
+  };
+  $scope.currentVariable = variable;
+}).controller('EditVariablePopoverController', function($rootScope, $scope, store) {
   $scope.form = angular.copy($scope.variable);
   return $scope.save = function() {
     return store.updateVariable($scope.form.id, $scope.form, function(err) {
@@ -185,5 +199,7 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     });
   };
 }).run(function($state) {
-  return $state.go('wizard');
+  return $state.go('wizard', {
+    id: 3
+  });
 });

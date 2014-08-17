@@ -1,34 +1,4 @@
-p {{variable.name}}
-
-//- wizard(on-finish='finishedWizard()')
-//-   wz-step(title='{{variable.name}}', ng-repeat='variable in variables')
-//-     h2 {{variable.name}}
-//-     p(ng-show='variable.question') {{variable.question}}
-
-//-     .row
-//-       .col-md-2
-//-       .col-md-8
-
-//-         toggle-switch(
-//-           ng-if='variable.type == "boolean"'
-//-           model='record.value'
-//-           on-label="Yes"
-//-           off-label="No"
-//-         )
-
-//-         slider(
-//-           ng-if='variable.type == "scale"'
-//-           ng-model='record.value'
-//-           min='0'
-//-           step='1'
-//-           max='10'
-//-         )
-
-//-         .input-group.input-group-lg(ng-if='variable.type == "number"')
-//-           input.form-control(
-//-             type='text'
-//-             ng-model='record.value'
-//-           )
-//-           span.input-group-addon(ng-if='variable.units') {{variable.units}}
-
-//-     button.btn.btn-primary(type='submit', wz-next='') Continue
+h2 {{variable.name}}
+p(ng-show='variable.question') {{variable.question}}
+ng-include(src='"templates/" + variable.type + "-input.html"')
+button.btn.btn-primary(type='submit', wz-next='') Continue

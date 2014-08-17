@@ -1,4 +1,4 @@
 
 <ul class="list-group sidebar-variables">
-  <li ng-repeat="variable in variables | orderBy: &quot;name&quot;" data-var="{{variable.id}}" class="list-group-item variable-toggle"><span class="badge badge-primary">{{variable.records.length}}</span><span class="name">{{variable.name}}</span></li>
+  <li ng-repeat="variable in variables | orderBy: &quot;name&quot;" data-var="{{variable.id}}" ng-class="{ active: currentVariable.id == variable.id }" ng-click="goTo(variable)" class="list-group-item variable-toggle"><span class="badge badge-primary">{{variable.records.length}}</span><span class="name">{{variable.name}}</span></li>
 </ul>
