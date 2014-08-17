@@ -1,0 +1,9 @@
+ul.list-group.sidebar-variables
+
+  li.list-group-item.variable-toggle(
+    ng-repeat='variable in variables | orderBy: "name"'
+    data-var='{{variable.id}}'
+  )
+
+    span.badge.badge-primary {{variable.records.length}}
+    span.name {{variable.name}}

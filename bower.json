@@ -29,6 +29,7 @@
     "lodash": "~2.4.1",
     "underscore": "~1.6.0",
     "angular-wizard": "~0.4.0",
-    "angular-bootstrap-slider": "~0.0.5"
+    "angular-bootstrap-slider": "~0.0.5",
+    "angular-toggle-switch": "~0.3.2"
   }
 }

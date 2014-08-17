@@ -1,4 +1,4 @@
-angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.ngStrap', 'mgo-angular-wizard', 'ui.bootstrap-slider']);
+angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.ngStrap', 'mgo-angular-wizard', 'ui.bootstrap-slider', 'toggle-switch']);
 
 angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider) {
   return $stateProvider.state('default', {
@@ -18,7 +18,17 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
       }
     }
   }).state('wizard', {
-    url: '/wizard',
+    url: '/wizard/:id',
+    resolve: {
+      variable: function($rootScope, $stateParams) {
+        if ($stateParams.id == null) {
+          return _.findWhere(variables, {
+            id: $stateParams.id
+          });
+        }
+        return variables[0];
+      }
+    },
     views: {
       'main@': {
         templateUrl: 'templates/wizard.html',
@@ -29,8 +39,8 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
         controller: 'NavController'
       },
       'sidebar@': {
-        templateUrl: 'templates/sidebar.html',
-        controller: 'SidebarController'
+        templateUrl: 'templates/wizard-sidebar.html',
+        controller: 'WizardSidebarController'
       }
     }
   });
@@ -82,7 +92,17 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
       return statement.finalize(done);
     },
     getVariables: function(done) {
-      return db.all("select rowid id, * from variables order by name asc", done);
+      return db.all("select rowid id, * from variables order by name asc", function(err, vars) {
+        var variable, variables, _i, _len, _results;
+        variables = [];
+        _results = [];
+        for (_i = 0, _len = vars.length; _i < _len; _i++) {
+          variable = vars[_i];
+          variables.push(variable);
+          _results.push(done(err, variables));
+        }
+        return _results;
+      });
     },
     getEachVariable: function(done) {
       return db.each("select rowid id, * from variables order by name asc", done);
@@ -114,13 +134,15 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     $rootScope.variables = variables;
     return $rootScope.$digest();
   });
-}).controller('MainController', function($scope) {}).controller('WizardController', function($scope) {
+}).controller('MainController', function($scope) {}).controller('WizardController', function($scope, variable) {
+  console.log('v', variable);
+  $scope.variable = variable;
   $scope.record = {};
 }).controller('NavController', function($scope) {
   $('.datepicker').datepicker({
     inputs: $('.range-start, .range-end')
   });
-}).controller('SidebarController', function($scope, store) {}).controller('EditVariablePopoverController', function($rootScope, $scope, store) {
+}).controller('SidebarController', function($scope, store) {}).controller('WizardSidebarController', function($scope, store) {}).controller('EditVariablePopoverController', function($rootScope, $scope, store) {
   $scope.form = angular.copy($scope.variable);
   return $scope.save = function() {
     return store.updateVariable($scope.form.id, $scope.form, function(err) {

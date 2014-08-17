@@ -1,12 +1,2 @@
 
-<wizard on-finish="finishedWizard()">
-  <wz-step title="{{variable.name}}" ng-repeat="variable in variables">
-    <h2>{{variable.name}}</h2>
-    <p ng-show="variable.question">{{variable.question}}</p>
-    <slider ng-if="variable.type == &quot;scale&quot;" ng-model="record.value" min="0" step="1" max="10"></slider>
-    <div ng-if="variable.type == &quot;number&quot;" class="input-group">
-      <input type="text" ng-model="record.value" class="form-control"/><span ng-if="variable.units" class="input-group-addon">{{variable.units}}</span>
-    </div>
-    <button type="submit" wz-next="" class="btn btn-primary">Continue</button>
-  </wz-step>
-</wizard>
+<p>{{variable.name}}</p>

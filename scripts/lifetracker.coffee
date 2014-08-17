@@ -6,6 +6,7 @@ angular
     'mgcrea.ngStrap'
     'mgo-angular-wizard'
     'ui.bootstrap-slider'
+    'toggle-switch'
   ]
 
 angular
@@ -28,7 +29,12 @@ angular
             controller: 'SidebarController'
 
       .state 'wizard',
-        url: '/wizard'
+        url: '/wizard/:id'
+        resolve:
+          variable: ($rootScope, $stateParams) ->
+            if !$stateParams.id?
+              return _.findWhere(variables, id: $stateParams.id)
+            return variables[0]
         views:
           'main@':
             templateUrl: 'templates/wizard.html'
@@ -37,8 +43,8 @@ angular
             templateUrl: 'templates/nav.html'
             controller: 'NavController'
           'sidebar@':
-            templateUrl: 'templates/sidebar.html'
-            controller: 'SidebarController'
+            templateUrl: 'templates/wizard-sidebar.html'
+            controller: 'WizardSidebarController'
 
   .factory 'db', ->
 
@@ -85,7 +91,11 @@ angular
         statement.finalize(done)
 
       getVariables: (done) ->
-        db.all "select rowid id, * from variables order by name asc", done
+        db.all "select rowid id, * from variables order by name asc", (err, vars) ->
+          variables = []
+          for variable in vars
+            variables.push variable
+            done(err, variables)
 
       getEachVariable: (done) ->
         db.each "select rowid id, * from variables order by name asc", done
@@ -121,7 +131,9 @@ angular
   .controller 'MainController', ($scope) ->
     return
 
-  .controller 'WizardController', ($scope) ->
+  .controller 'WizardController', ($scope, variable) ->
+    console.log 'v', variable
+    $scope.variable = variable
     $scope.record = {}
     return
 
@@ -134,6 +146,12 @@ angular
     return
 
   .controller 'SidebarController', ($scope, store) ->
+
+    # ...
+
+    return
+
+  .controller 'WizardSidebarController', ($scope, store) ->
 
     # ...
 
