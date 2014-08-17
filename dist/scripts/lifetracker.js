@@ -1,23 +1,24 @@
 angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.ngStrap', 'ui.bootstrap-slider', 'toggle-switch']);
 
 angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider) {
-  return $stateProvider.state('default', {
-    url: '/',
+  return $stateProvider.state('root', {
+    abstract: true,
     views: {
-      'main@': {
-        templateUrl: 'templates/main.html',
-        controller: 'MainController'
-      },
       'nav@': {
         templateUrl: 'templates/nav.html',
         controller: 'NavController'
-      },
-      'sidebar@': {
-        templateUrl: 'templates/sidebar.html',
-        controller: 'SidebarController'
+      }
+    }
+  }).state('default', {
+    parent: 'root',
+    url: '/',
+    views: {
+      'body@': {
+        templateUrl: 'templates/default/default.html'
       }
     }
   }).state('wizard', {
+    parent: 'root',
     url: '/wizard/:id',
     resolve: {
       variables: function($rootScope, store, $q) {
@@ -38,17 +39,16 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
       }
     },
     views: {
-      'main@': {
-        templateUrl: 'templates/wizard.html',
-        controller: 'WizardController'
+      'body@': {
+        templateUrl: 'templates/wizard/wizard.html'
       },
-      'nav@': {
-        templateUrl: 'templates/nav.html',
-        controller: 'NavController'
-      },
-      'sidebar@': {
-        templateUrl: 'templates/wizard-sidebar.html',
+      'sidebar@body': {
+        templateUrl: 'templates/wizard/sidebar.html',
         controller: 'WizardSidebarController'
+      },
+      'main@body': {
+        templateUrl: 'templates/wizard/main.html',
+        controller: 'WizardMainController'
       }
     }
   });
@@ -142,20 +142,20 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     $rootScope.variables = variables;
     return $rootScope.$digest();
   });
-}).controller('MainController', function($scope) {}).controller('WizardController', function($scope, variable) {
-  $scope.variable = variable;
-  $scope.record = {};
 }).controller('NavController', function($scope) {
   $('.datepicker').datepicker({
     inputs: $('.range-start, .range-end')
   });
-}).controller('SidebarController', function($scope, store) {}).controller('WizardSidebarController', function($state, $scope, variable) {
+}).controller('DefaultSidebarController', function($scope, store) {}).controller('DefaultMainController', function($scope) {}).controller('WizardSidebarController', function($state, $scope, variable) {
   $scope.goTo = function(variable) {
     return $state.go('wizard', {
       id: variable.id
     });
   };
   $scope.currentVariable = variable;
+}).controller('WizardMainController', function($scope, variable) {
+  $scope.variable = variable;
+  $scope.record = {};
 }).controller('EditVariablePopoverController', function($rootScope, $scope, store) {
   $scope.form = angular.copy($scope.variable);
   return $scope.save = function() {
@@ -199,7 +199,7 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     });
   };
 }).run(function($state) {
-  return $state.go('wizard', {
+  return $state.go('default', {
     id: 3
   });
 });

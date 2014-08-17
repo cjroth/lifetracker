@@ -1,0 +1,58 @@
+
+<div class="sidebar">
+  <div class="list-group"><a ng-click="CreateVariablePopover.visible = !CreateVariablePopover.visible" class="btn btn-primary btn-block"><i class="fa fa-bar-chart-o"></i> New Variable</a>
+    <div ng-controller="CreateVariablePopoverController" ng-show="CreateVariablePopover.visible" class="popover right create-variable-popover">
+      <div class="arrow"></div>
+      <div class="popover-content">
+        <form ng-submit="save()">
+          <div class="row">
+            <div class="col-xs-12">
+              <input ng-model="variable.name" type="text" placeholder="Variable (ex: &quot;Sleep&quot;)" class="form-control"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <textarea ng-model="variable.question" placeholder="Question (ex: &quot;How much sleep did you get last night?&quot;)" class="form-control"></textarea>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <select ng-model="variable.type" name="type" class="form-control">
+                <option value="scale">Scale</option>
+                <option value="boolean">Yes/No</option>
+                <option value="number">Number</option>
+              </select>
+            </div>
+          </div>
+          <div ng-show="variable.type == &quot;number&quot;" class="row">
+            <div class="col-xs-6">
+              <input ng-model="variable.min" name="min" type="text" placeholder="Min (ex: &quot;0&quot;)" class="form-control"/>
+            </div>
+            <div class="col-xs-6">
+              <input ng-model="variable.max" name="max" type="text" placeholder="Max (ex: &quot;24&quot;)" class="form-control"/>
+            </div>
+          </div>
+          <div ng-show="variable.type == &quot;number&quot;" class="row">
+            <div class="col-xs-12">
+              <input ng-model="variable.units" name="units" type="text" placeholder="Units (ex: &quot;hours&quot;)" class="form-control"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <button type="button" ng-click="CreateVariablePopover.visible = false" class="btn btn-default btn-block">Cancel</button>
+            </div>
+            <div class="col-xs-6">
+              <button type="submit" class="btn btn-primary btn-block">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <ul class="list-group sidebar-variables">
+    <li ng-repeat="variable in variables | orderBy: &quot;name&quot;" data-var="{{variable.id}}" ng-click="variable.selected = !variable.selected" ng-class="variable.selected ? &quot;active&quot; : &quot;&quot;" class="list-group-item variable-toggle">
+      <div class="btn-group btn-group-xs pull-right"><a bs-popover="bs-popover" data-container="body" data-target="[data-var=&quot;{{variable.id}}&quot;]" data-template="templates/edit-variable-popover.html" data-animation="" ng-click="$event.stopPropagation()" class="btn btn-default"><i class="glyphicon glyphicon-pencil"></i></a><a bs-popover="bs-popover" data-container="body" data-target="[data-var=&quot;{{variable.id}}&quot;]" data-template="templates/delete-variable-popover.html" data-animation="" ng-click="$event.stopPropagation()" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></a></div><span class="badge badge-primary">{{variable.records.length}}</span><span class="name">{{variable.name}}</span>
+    </li>
+  </ul>
+</div>
+<div class="main">test {{awesome}}</div>

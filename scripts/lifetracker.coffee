@@ -14,20 +14,22 @@ angular
 
     $stateProvider
 
-      .state 'default',
-        url: '/'
+      .state 'root',
+        abstract: true
         views:
-          'main@':
-            templateUrl: 'templates/main.html'
-            controller: 'MainController'
           'nav@':
             templateUrl: 'templates/nav.html'
             controller: 'NavController'
-          'sidebar@':
-            templateUrl: 'templates/sidebar.html'
-            controller: 'SidebarController'
+
+      .state 'default',
+        parent: 'root'
+        url: '/'
+        views:
+          'body@':
+            templateUrl: 'templates/default/default.html'
 
       .state 'wizard',
+        parent: 'root'
         url: '/wizard/:id'
         resolve:
           variables: ($rootScope, store, $q) ->
@@ -39,15 +41,15 @@ angular
             if !$stateParams.id? then $stateParams.id = variables[0].id
             return _.findWhere(variables, id: ~~$stateParams.id)
         views:
-          'main@':
-            templateUrl: 'templates/wizard.html'
-            controller: 'WizardController'
-          'nav@':
-            templateUrl: 'templates/nav.html'
-            controller: 'NavController'
-          'sidebar@':
-            templateUrl: 'templates/wizard-sidebar.html'
+          'body@':
+            templateUrl: 'templates/wizard/wizard.html'
+          'sidebar@body':
+            templateUrl: 'templates/wizard/sidebar.html'
             controller: 'WizardSidebarController'
+          'main@body':
+            templateUrl: 'templates/wizard/main.html'
+            controller: 'WizardMainController'
+
 
   .factory 'db', ->
 
@@ -131,14 +133,6 @@ angular
       $rootScope.variables = variables
       $rootScope.$digest()
 
-  .controller 'MainController', ($scope) ->
-    return
-
-  .controller 'WizardController', ($scope, variable) ->
-    $scope.variable = variable
-    $scope.record = {}
-    return
-
   .controller 'NavController', ($scope) ->
 
     # initialize the datepicker
@@ -147,10 +141,13 @@ angular
 
     return
 
-  .controller 'SidebarController', ($scope, store) ->
+  .controller 'DefaultSidebarController', ($scope, store) ->
 
     # ...
 
+    return
+
+  .controller 'DefaultMainController', ($scope) ->
     return
 
   .controller 'WizardSidebarController', ($state, $scope, variable) ->
@@ -159,6 +156,13 @@ angular
       $state.go('wizard', id: variable.id)
 
     $scope.currentVariable = variable
+
+    return
+
+  .controller 'WizardMainController', ($scope, variable) ->
+
+    $scope.variable = variable
+    $scope.record = {}
 
     return
 
@@ -215,4 +219,4 @@ angular
     return
 
   .run ($state) ->
-    $state.go('wizard', id: 3)
+    $state.go('default', id: 3)
