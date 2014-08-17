@@ -4,6 +4,13 @@
 
 @icon-font-path: "node_modules/bootstrap/fonts/";
 
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  cursor: default !important;
+
+}
+
 textarea { 
   resize: none; 
 }
@@ -99,7 +106,7 @@ nav .datepicker input {
   margin-bottom: 0;
 }
 
-.popover-datepicker {
+.datepicker-popover {
   display: block;
   left: auto;
   top: 54px;
@@ -107,23 +114,27 @@ nav .datepicker input {
   max-width: none;
 }
 
-.popover-datepicker > .arrow {
+.datepicker-popover > .arrow {
   right: 37px !important;
   left: auto !important;
 }
 
-.popover-datepicker .datepicker > div {
+.datepicker-popover .datepicker > div {
   display: inline-block;
 }
 
-.popover-create-variable {
+.create-variable-popover {
   display: block;
   left: 287px;
   top: 27px;
 }
 
-.popover-create-variable > .arrow {
+.create-variable-popover > .arrow {
   top: 60px !important;
+}
+
+.edit-variable-popover {
+  width: 300px;
 }
 
 .test {

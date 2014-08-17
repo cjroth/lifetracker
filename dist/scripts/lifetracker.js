@@ -1,7 +1,7 @@
-angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.ngStrap']);
+angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.ngStrap', 'mgo-angular-wizard', 'ui.bootstrap-slider']);
 
 angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider) {
-  return $stateProvider.state('lifetracker', {
+  return $stateProvider.state('default', {
     url: '/',
     views: {
       'main@': {
@@ -17,24 +17,43 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
         controller: 'SidebarController'
       }
     }
+  }).state('wizard', {
+    url: '/wizard',
+    views: {
+      'main@': {
+        templateUrl: 'templates/wizard.html',
+        controller: 'WizardController'
+      },
+      'nav@': {
+        templateUrl: 'templates/nav.html',
+        controller: 'NavController'
+      },
+      'sidebar@': {
+        templateUrl: 'templates/sidebar.html',
+        controller: 'SidebarController'
+      }
+    }
   });
 }).factory('db', function() {
   var db, sqlite3;
   sqlite3 = require("sqlite3").verbose();
   db = new sqlite3.Database("data/database.sqlite");
+  db.run("CREATE TABLE if not exists variables (name TEXT, type TEXT, min FLOAT, max FLOAT, question TEXT, units TEXT)");
+  db.run("CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp INTEGER)");
   return db;
 }).factory('store', function(db) {
   var store;
   store = {
     createVariable: function(data, done) {
       var statement;
-      statement = db.prepare("insert into variables values ($name, $type, $min, $max, $question)");
+      statement = db.prepare("insert into variables values ($name, $type, $min, $max, $question, $units)");
       statement.run({
         $name: data.name,
         $question: data.question,
         $type: data.type,
         $min: data.min,
-        $max: data.max
+        $max: data.max,
+        $units: data.units
       });
       return statement.finalize(done);
     },
@@ -87,22 +106,21 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     restrict: 'A',
     link: link
   };
-}).controller('MainController', function($scope) {}).controller('NavController', function($scope) {
-  $('.datepicker').datepicker({
-    inputs: $('.range-start, .range-end')
-  });
-}).controller('SidebarController', function($scope, store) {
-  store.getVariables(function(err, variables) {
+}).run(function($rootScope, store) {
+  return store.getVariables(function(err, variables) {
     if (err) {
       return;
     }
-    $scope.variables = variables;
-    return $scope.$digest();
+    $rootScope.variables = variables;
+    return $rootScope.$digest();
   });
-  $scope.CreateVariablePopover = {
-    visible: false
-  };
-}).controller('EditVariablePopoverController', function($rootScope, $scope, store) {
+}).controller('MainController', function($scope) {}).controller('WizardController', function($scope) {
+  $scope.record = {};
+}).controller('NavController', function($scope) {
+  $('.datepicker').datepicker({
+    inputs: $('.range-start, .range-end')
+  });
+}).controller('SidebarController', function($scope, store) {}).controller('EditVariablePopoverController', function($rootScope, $scope, store) {
   $scope.form = angular.copy($scope.variable);
   return $scope.save = function() {
     return store.updateVariable($scope.form.id, $scope.form, function(err) {
@@ -114,10 +132,23 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
       return $rootScope.$digest();
     });
   };
+}).controller('DeleteVariablePopoverController', function($rootScope, $scope, store) {
+  return $scope["delete"] = function() {
+    return store.deleteVariable($scope.variable.id, function(err) {
+      if (err) {
+        return;
+      }
+      $rootScope.variables = _.without($rootScope.variables, $scope.variable);
+      $scope.$hide();
+      return $rootScope.$digest();
+    });
+  };
 }).controller('CreateVariablePopoverController', function($rootScope, $scope, store) {
-  $scope.variable = {
+  var defaults;
+  defaults = {
     type: 'scale'
   };
+  $scope.variable = angular.copy(defaults);
   $scope.save = function() {
     var variable;
     variable = angular.copy($scope.variable);
@@ -127,9 +158,10 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
       }
       $scope.CreateVariablePopover.visible = false;
       $scope.variables.push(variable);
-      return $rootScope.$digest();
+      $rootScope.$digest();
+      return $scope.variable = angular.copy(defaults);
     });
   };
 }).run(function($state) {
-  return $state.go('lifetracker');
+  return $state.go('wizard');
 });

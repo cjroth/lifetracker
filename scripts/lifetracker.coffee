@@ -4,6 +4,8 @@ angular
     'ngAnimate'
     'ui.router'
     'mgcrea.ngStrap'
+    'mgo-angular-wizard'
+    'ui.bootstrap-slider'
   ]
 
 angular
@@ -11,7 +13,8 @@ angular
   .config ($urlRouterProvider, $stateProvider) ->
 
     $stateProvider
-      .state 'lifetracker',
+
+      .state 'default',
         url: '/'
         views:
           'main@':
@@ -24,10 +27,26 @@ angular
             templateUrl: 'templates/sidebar.html'
             controller: 'SidebarController'
 
+      .state 'wizard',
+        url: '/wizard'
+        views:
+          'main@':
+            templateUrl: 'templates/wizard.html'
+            controller: 'WizardController'
+          'nav@':
+            templateUrl: 'templates/nav.html'
+            controller: 'NavController'
+          'sidebar@':
+            templateUrl: 'templates/sidebar.html'
+            controller: 'SidebarController'
+
   .factory 'db', ->
 
     sqlite3 = require("sqlite3").verbose()
     db = new sqlite3.Database("data/database.sqlite")
+
+    db.run "CREATE TABLE if not exists variables (name TEXT, type TEXT, min FLOAT, max FLOAT, question TEXT, units TEXT)"
+    db.run "CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp INTEGER)"
 
     return db
 
@@ -36,13 +55,14 @@ angular
     store =
 
       createVariable: (data, done) ->
-        statement = db.prepare("insert into variables values ($name, $type, $min, $max, $question)")
+        statement = db.prepare("insert into variables values ($name, $type, $min, $max, $question, $units)")
         statement.run
           $name: data.name
           $question: data.question
           $type: data.type
           $min: data.min
           $max: data.max
+          $units: data.units
         statement.finalize(done)
 
       deleteVariable: (id, done) ->
@@ -89,7 +109,20 @@ angular
       link: link
     }
 
+  .run ($rootScope, store) ->
+
+    store.getVariables (err, variables) ->
+      if err
+        # @todo handle err
+        return
+      $rootScope.variables = variables
+      $rootScope.$digest()
+
   .controller 'MainController', ($scope) ->
+    return
+
+  .controller 'WizardController', ($scope) ->
+    $scope.record = {}
     return
 
   .controller 'NavController', ($scope) ->
@@ -102,19 +135,7 @@ angular
 
   .controller 'SidebarController', ($scope, store) ->
 
-    # initialize the selecter in the "create variable" popover
-    # documentation: http://formstone.it/components/selecter
-    # $('select').selecter(cover: true)
-
-    store.getVariables (err, variables) ->
-      if err
-        # @todo handle err
-        return
-      $scope.variables = variables
-      $scope.$digest()
-
-    $scope.CreateVariablePopover =
-      visible: false
+    # ...
 
     return
 
@@ -134,9 +155,24 @@ angular
         $scope.$hide()
         $rootScope.$digest()
 
+  .controller 'DeleteVariablePopoverController', ($rootScope, $scope, store) ->
+
+    $scope.delete = ->
+
+      store.deleteVariable $scope.variable.id, (err) ->
+
+        if err
+          # @todo handle error
+          return
+
+        $rootScope.variables = _.without($rootScope.variables, $scope.variable)
+        $scope.$hide()
+        $rootScope.$digest()
+
   .controller 'CreateVariablePopoverController', ($rootScope, $scope, store) ->
 
-    $scope.variable = type: 'scale'
+    defaults = type: 'scale'
+    $scope.variable = angular.copy(defaults)
 
     $scope.save = ->
 
@@ -151,8 +187,9 @@ angular
         $scope.CreateVariablePopover.visible = false
         $scope.variables.push variable
         $rootScope.$digest()
+        $scope.variable = angular.copy(defaults)
 
     return
 
   .run ($state) ->
-    $state.go('lifetracker')
+    $state.go('wizard')

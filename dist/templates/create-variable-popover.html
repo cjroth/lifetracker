@@ -1,16 +1,16 @@
 
-<div ng-controller="CreateVariablePopoverController" ng-show="CreateVariablePopover.visible" class="popover right popover-create-variable">
+<div ng-controller="CreateVariablePopoverController" ng-show="CreateVariablePopover.visible" class="popover right create-variable-popover">
   <div class="arrow"></div>
   <div class="popover-content">
-    <form ng-submit="save()" name="create-variable">
+    <form ng-submit="save()">
       <div class="row">
         <div class="col-xs-12">
-          <input ng-model="variable.name" name="name" type="text" placeholder="Variable (ex: &quot;Sleep&quot;)" class="form-control"/>
+          <input ng-model="variable.name" type="text" placeholder="Variable (ex: &quot;Sleep&quot;)" class="form-control"/>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-12">
-          <textarea ng-model="variable.question" name="question" placeholder="Question (ex: &quot;How much sleep did you get last night?&quot;)" class="form-control"></textarea>
+          <textarea ng-model="variable.question" placeholder="Question (ex: &quot;How much sleep did you get last night?&quot;)" class="form-control"></textarea>
         </div>
       </div>
       <div class="row">

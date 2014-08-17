@@ -6,13 +6,31 @@
   include create-variable-popover
 
 ul.list-group.sidebar-variables
-  li.list-group-item.variable-toggle(ng-repeat='variable in variables | orderBy:"name"', data-var='{{variable.id}}')
+
+  li.list-group-item.variable-toggle(
+    ng-repeat='variable in variables | orderBy: "name"'
+    data-var='{{variable.id}}'
+    ng-click='variable.selected = !variable.selected'
+    ng-class='variable.selected ? "active" : ""'
+  )
 
     .btn-group.btn-group-xs.pull-right
-      a.btn.btn-default(bs-popover, data-container='body', data-target='[data-var="{{variable.id}}"]', data-content-template='templates/edit-variable-popover.html', data-animation='am-flip-x')
-        i.glyphicon.glyphicon-pencil
-      a.btn.btn-default(ng-click='toggleDeleteVariablePopover(variable)')
-        i.glyphicon.glyphicon-remove
+      a.btn.btn-default(
+        bs-popover
+        data-container='body'
+        data-target='[data-var="{{variable.id}}"]'
+        data-template='templates/edit-variable-popover.html'
+        data-animation=''
+        ng-click='$event.stopPropagation()'
+      ): i.glyphicon.glyphicon-pencil
+      a.btn.btn-default(
+        bs-popover
+        data-container='body'
+        data-target='[data-var="{{variable.id}}"]'
+        data-template='templates/delete-variable-popover.html'
+        data-animation=''
+        ng-click='$event.stopPropagation()'
+      ): i.glyphicon.glyphicon-remove
 
     span.badge.badge-primary {{variable.records.length}}
     span.name {{variable.name}}

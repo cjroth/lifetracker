@@ -1,7 +1,7 @@
 
-<div class="navbar-header pull-left"><a href="#" class="navbar-brand">Lifetracker</a></div>
-<div class="navbar-header pull-right"><a ng-click="showDatepicker = !showDatepicker" class="btn btn-link navbar-btn"><i class="glyphicon glyphicon-calendar"></i></a><a href="#" class="btn btn-link navbar-btn"><i class="glyphicon glyphicon-plus"></i></a></div>
-<div ng-show="showDatepicker" class="popover bottom popover-datepicker">
+<div class="navbar-header pull-left"><a ui-sref="default" class="navbar-brand">Lifetracker</a></div>
+<div class="navbar-header pull-right"><a ng-click="showDatepicker = !showDatepicker" class="btn btn-link navbar-btn"><i class="glyphicon glyphicon-calendar"></i></a><a ui-sref="wizard" class="btn btn-link navbar-btn"><i class="glyphicon glyphicon-plus"></i></a></div>
+<div ng-show="showDatepicker" class="popover bottom datepicker-popover">
   <div class="arrow"></div>
   <div class="popover-content">
     <div class="row">
