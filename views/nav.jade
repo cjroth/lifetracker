@@ -2,8 +2,9 @@
   a.navbar-brand(ui-sref='default') Lifetracker
 
 .navbar-header.pull-right
+  a.btn.btn-link.navbar.-btn(ui-sref='default', ui-sref-active='active'): i.glyphicon.glyphicon-signal
   a.btn.btn-link.navbar-btn(ng-click='showDatepicker = !showDatepicker'): i.glyphicon.glyphicon-calendar
-  a.btn.btn-link.navbar-btn(ui-sref='wizard'): i.glyphicon.glyphicon-plus
+  a.btn.btn-link.navbar-btn(ui-sref='wizard', ui-sref-active='active'): i.glyphicon.glyphicon-plus
 
 .popover.bottom.datepicker-popover(ng-show='showDatepicker')
   .arrow
