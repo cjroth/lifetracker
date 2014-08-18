@@ -3,8 +3,23 @@
 
 .navbar-header.pull-right
   a.btn.btn-link.navbar-btn(ng-click='showDatepicker = !showDatepicker'): i.glyphicon.glyphicon-calendar
-  a.btn.btn-link.navbar.-btn(ui-sref='default', ui-sref-active='active'): i.glyphicon.glyphicon-signal
-  a.btn.btn-link.navbar-btn(ui-sref='wizard', ui-sref-active='active'): i.glyphicon.glyphicon-plus
+  a.btn.btn-link.navbar.-btn(
+    ui-sref='default'
+    ui-sref-active='active'
+    bs-tooltip=''
+    data-title='View Charts'
+    data-placement='bottom'
+    data-animation='none'
+  ): i.glyphicon.glyphicon-signal
+  a.btn.btn-link.navbar-btn(
+    ui-sref='wizard'
+    ui-sref-active='active'
+    ui-sref-opts='{ reload: true }'
+    bs-tooltip=''
+    data-title='Record Data'
+    data-placement='bottom'
+    data-animation='none'
+  ): i.glyphicon.glyphicon-plus
 
 .popover.bottom.datepicker-popover(ng-show='showDatepicker')
   .arrow

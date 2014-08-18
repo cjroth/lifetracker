@@ -19,7 +19,7 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     }
   }).state('wizard', {
     parent: 'root',
-    url: '/wizard/:id',
+    url: '/wizard',
     resolve: {
       variables: function($rootScope, store, $q) {
         var deferred;
@@ -28,27 +28,37 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
           return deferred.resolve(variables);
         });
         return deferred.promise;
-      },
-      variable: function($rootScope, $stateParams, variables) {
-        if ($stateParams.id == null) {
-          $stateParams.id = variables[0].id;
+      }
+    },
+    views: {
+      'body@': {
+        templateUrl: 'templates/wizard/wizard.html',
+        controller: function($state, variables) {
+          if ($state.current.name === 'wizard') {
+            return $state.go('wizard.step', {
+              id: variables[0].id
+            });
+          }
         }
+      }
+    }
+  }).state('wizard.step', {
+    url: '/:id',
+    resolve: {
+      variable: function($state, $rootScope, $stateParams, variables) {
         return _.findWhere(variables, {
           id: ~~$stateParams.id
         });
       }
     },
     views: {
-      'body@': {
-        templateUrl: 'templates/wizard/wizard.html'
+      'main@body': {
+        templateUrl: 'templates/wizard/main.html',
+        controller: 'WizardMainController'
       },
       'sidebar@body': {
         templateUrl: 'templates/wizard/sidebar.html',
         controller: 'WizardSidebarController'
-      },
-      'main@body': {
-        templateUrl: 'templates/wizard/main.html',
-        controller: 'WizardMainController'
       }
     }
   });
@@ -143,12 +153,13 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     return $rootScope.$digest();
   });
 }).controller('NavController', function($scope) {
+  $scope.shit = {};
   $('.datepicker').datepicker({
     inputs: $('.range-start, .range-end')
   });
 }).controller('DefaultSidebarController', function($scope, store) {}).controller('DefaultMainController', function($scope) {}).controller('WizardSidebarController', function($state, $scope, variable) {
   $scope.goTo = function(variable) {
-    return $state.go('wizard', {
+    return $state.go('wizard.step', {
       id: variable.id
     });
   };

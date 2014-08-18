@@ -30,26 +30,31 @@ angular
 
       .state 'wizard',
         parent: 'root'
-        url: '/wizard/:id'
+        url: '/wizard'
         resolve:
           variables: ($rootScope, store, $q) ->
             deferred = $q.defer()
             store.getVariables (err, variables) ->
               deferred.resolve(variables)
             return deferred.promise
-          variable: ($rootScope, $stateParams, variables) ->
-            if !$stateParams.id? then $stateParams.id = variables[0].id
-            return _.findWhere(variables, id: ~~$stateParams.id)
         views:
           'body@':
             templateUrl: 'templates/wizard/wizard.html'
-          'sidebar@body':
-            templateUrl: 'templates/wizard/sidebar.html'
-            controller: 'WizardSidebarController'
+            controller: ($state, variables) ->
+              if $state.current.name is 'wizard' then $state.go('wizard.step', id: variables[0].id)
+
+      .state 'wizard.step',
+        url: '/:id'
+        resolve:
+          variable: ($state, $rootScope, $stateParams, variables) ->
+            return _.findWhere(variables, id: ~~$stateParams.id)
+        views:
           'main@body':
             templateUrl: 'templates/wizard/main.html'
             controller: 'WizardMainController'
-
+          'sidebar@body':
+            templateUrl: 'templates/wizard/sidebar.html'
+            controller: 'WizardSidebarController'
 
   .factory 'db', ->
 
@@ -135,6 +140,8 @@ angular
 
   .controller 'NavController', ($scope) ->
 
+    $scope.shit = {}
+
     # initialize the datepicker
     $('.datepicker').datepicker
       inputs: $('.range-start, .range-end')
@@ -153,7 +160,7 @@ angular
   .controller 'WizardSidebarController', ($state, $scope, variable) ->
 
     $scope.goTo = (variable) ->
-      $state.go('wizard', id: variable.id)
+      $state.go('wizard.step', id: variable.id)
 
     $scope.currentVariable = variable
 

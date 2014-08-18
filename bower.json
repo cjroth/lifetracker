@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "angular-strap": "cjroth/angular-strap#master",
-    "angular": "~1.2.22",
+    "angular": "1.2.22",
     "angular-ui-router": "~0.2.10",
     "bootstrap-datepicker": "~1.3.0",
     "less": "~1.7.4",
@@ -30,6 +30,7 @@
     "underscore": "~1.6.0",
     "angular-wizard": "~0.4.0",
     "angular-bootstrap-slider": "~0.0.5",
-    "angular-toggle-switch": "~0.3.2"
+    "angular-toggle-switch": "~0.3.2",
+    "angular-route": "~1.2.22"
   }
 }
