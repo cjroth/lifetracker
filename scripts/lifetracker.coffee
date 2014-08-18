@@ -43,6 +43,18 @@ angular
             controller: ($state, variables) ->
               if $state.current.name is 'wizard' then $state.go('wizard.step', id: variables[0].id)
 
+      .state 'wizard.done',
+        url: '/done'
+        resolve:
+          variable: -> null
+        views:
+          'main@body':
+            templateUrl: 'templates/wizard/done.html'
+            # controller: 'WizardDoneController'
+          'sidebar@body':
+            templateUrl: 'templates/wizard/sidebar.html'
+            controller: 'WizardSidebarController'
+
       .state 'wizard.step',
         url: '/:id'
         resolve:
@@ -166,7 +178,24 @@ angular
 
     return
 
-  .controller 'WizardMainController', ($scope, variable) ->
+  .controller 'WizardMainController', ($scope, $state, variable, variables) ->
+
+    index = variables.indexOf(variable)
+    next = variables[index + 1]
+    $scope.progress = index / variables.length * 100
+
+    $scope.skip = ->
+      if next
+        $state.go('wizard.step', id: next.id)
+      else
+        $state.go('wizard.done')
+
+    $scope.continue = ->
+      # save data here...
+      if next
+        $state.go('wizard.step', id: next.id)
+      else
+        $state.go('wizard.done')
 
     $scope.variable = variable
     $scope.record = {}

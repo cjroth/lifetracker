@@ -42,6 +42,22 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
         }
       }
     }
+  }).state('wizard.done', {
+    url: '/done',
+    resolve: {
+      variable: function() {
+        return null;
+      }
+    },
+    views: {
+      'main@body': {
+        templateUrl: 'templates/wizard/done.html'
+      },
+      'sidebar@body': {
+        templateUrl: 'templates/wizard/sidebar.html',
+        controller: 'WizardSidebarController'
+      }
+    }
   }).state('wizard.step', {
     url: '/:id',
     resolve: {
@@ -164,7 +180,29 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     });
   };
   $scope.currentVariable = variable;
-}).controller('WizardMainController', function($scope, variable) {
+}).controller('WizardMainController', function($scope, $state, variable, variables) {
+  var index, next;
+  index = variables.indexOf(variable);
+  next = variables[index + 1];
+  $scope.progress = index / variables.length * 100;
+  $scope.skip = function() {
+    if (next) {
+      return $state.go('wizard.step', {
+        id: next.id
+      });
+    } else {
+      return $state.go('wizard.done');
+    }
+  };
+  $scope["continue"] = function() {
+    if (next) {
+      return $state.go('wizard.step', {
+        id: next.id
+      });
+    } else {
+      return $state.go('wizard.done');
+    }
+  };
   $scope.variable = variable;
   $scope.record = {};
 }).controller('EditVariablePopoverController', function($rootScope, $scope, store) {
