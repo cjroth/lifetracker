@@ -31,6 +31,7 @@
     "angular-wizard": "~0.4.0",
     "angular-bootstrap-slider": "~0.0.5",
     "angular-toggle-switch": "~0.3.2",
-    "angular-route": "~1.2.22"
+    "angular-route": "~1.2.22",
+    "async": "~0.9.0"
   }
 }

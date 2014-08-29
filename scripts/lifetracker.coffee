@@ -154,9 +154,9 @@ angular
       $rootScope.variables = variables
       $rootScope.$digest()
 
-  .controller 'NavController', ($scope) ->
+  .controller 'NavController', ($scope, $state) ->
 
-    $scope.shit = {}
+    $scope.$state = $state
 
     # initialize the datepicker
     $('.datepicker').datepicker
@@ -187,9 +187,12 @@ angular
     index = variables.indexOf(variable)
     next = variables[index + 1]
     previous = variables[index - 1]
+
     $scope.progress = index / variables.length * 100
     $scope.variable = variable
     $scope.record = $scope.records[variable.id] || { variable: variable }
+
+    if variable.type is 'scale' then $scope.record.value ?= 5
 
     $scope.$watch 'record', ->
       $scope.records[variable.id] = $scope.record
@@ -217,28 +220,17 @@ angular
 
     $scope.done = ->
 
-      console.log 'grrr', $scope.records
-
-      for key, record of $scope.records
-
-        console.log 'reocrd2', record
-
-
-        if not record.variable then continue
-
-        console.log 'reocrd', record
-
+      async.each _.toArray($scope.records), (record, done) ->
 
         data = 
           variable_id: record.variable.id
           value: if record.variable.type is 'boolean' then !!record.value else parseFloat record.value
 
-        console.log 'storing', data
+        store.createRecord(data, done)
 
-        store.createRecord data, (err) ->
-          # if err
-            # @todo handle error
-      # $state.go('default')
+      , (err) ->
+
+        $state.go('default')
 
     return
 

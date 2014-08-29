@@ -5,7 +5,7 @@
   a.btn.btn-link.navbar-btn(ng-click='showDatepicker = !showDatepicker'): i.glyphicon.glyphicon-calendar
   a.btn.btn-link.navbar.-btn(
     ui-sref='default'
-    ui-sref-active='active'
+    ng-class='{ active: $state.includes("default") }'
     bs-tooltip=''
     data-title='View Charts'
     data-placement='bottom'
@@ -13,7 +13,7 @@
   ): i.glyphicon.glyphicon-signal
   a.btn.btn-link.navbar-btn(
     ui-sref='wizard'
-    ui-sref-active='active'
+    ng-class='{ active: $state.includes("wizard") }'
     ui-sref-opts='{ reload: true }'
     bs-tooltip=''
     data-title='Record Data'

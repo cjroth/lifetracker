@@ -2,7 +2,7 @@
 <div class="navbar-header pull-left">
   <div class="navbar-brand">Lifetracker</div>
 </div>
-<div class="navbar-header pull-right"><a ng-click="showDatepicker = !showDatepicker" class="btn btn-link navbar-btn"><i class="glyphicon glyphicon-calendar"></i></a><a ui-sref="default" ui-sref-active="active" bs-tooltip="" data-title="View Charts" data-placement="bottom" data-animation="none" class="btn btn-link navbar -btn"><i class="glyphicon glyphicon-signal"></i></a><a ui-sref="wizard" ui-sref-active="active" ui-sref-opts="{ reload: true }" bs-tooltip="" data-title="Record Data" data-placement="bottom" data-animation="none" class="btn btn-link navbar-btn"><i class="glyphicon glyphicon-plus"></i></a></div>
+<div class="navbar-header pull-right"><a ng-click="showDatepicker = !showDatepicker" class="btn btn-link navbar-btn"><i class="glyphicon glyphicon-calendar"></i></a><a ui-sref="default" ng-class="{ active: $state.includes(&quot;default&quot;) }" bs-tooltip="" data-title="View Charts" data-placement="bottom" data-animation="none" class="btn btn-link navbar -btn"><i class="glyphicon glyphicon-signal"></i></a><a ui-sref="wizard" ng-class="{ active: $state.includes(&quot;wizard&quot;) }" ui-sref-opts="{ reload: true }" bs-tooltip="" data-title="Record Data" data-placement="bottom" data-animation="none" class="btn btn-link navbar-btn"><i class="glyphicon glyphicon-plus"></i></a></div>
 <div ng-show="showDatepicker" class="popover bottom datepicker-popover">
   <div class="arrow"></div>
   <div class="popover-content">

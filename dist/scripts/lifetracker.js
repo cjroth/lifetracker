@@ -174,8 +174,8 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     $rootScope.variables = variables;
     return $rootScope.$digest();
   });
-}).controller('NavController', function($scope) {
-  $scope.shit = {};
+}).controller('NavController', function($scope, $state) {
+  $scope.$state = $state;
   $('.datepicker').datepicker({
     inputs: $('.range-start, .range-end')
   });
@@ -187,7 +187,7 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
   };
   $scope.currentVariable = variable;
 }).controller('WizardMainController', function($scope, $state, variable, variables) {
-  var index, next, previous;
+  var index, next, previous, _base;
   index = variables.indexOf(variable);
   next = variables[index + 1];
   previous = variables[index - 1];
@@ -196,6 +196,11 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
   $scope.record = $scope.records[variable.id] || {
     variable: variable
   };
+  if (variable.type === 'scale') {
+    if ((_base = $scope.record).value == null) {
+      _base.value = 5;
+    }
+  }
   $scope.$watch('record', function() {
     return $scope.records[variable.id] = $scope.record;
   });
@@ -226,25 +231,16 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
   }
 }).controller('WizardDoneController', function($scope, $state, store, variable, variables) {
   $scope.done = function() {
-    var data, key, record, _ref, _results;
-    console.log('grrr', $scope.records);
-    _ref = $scope.records;
-    _results = [];
-    for (key in _ref) {
-      record = _ref[key];
-      console.log('reocrd2', record);
-      if (!record.variable) {
-        continue;
-      }
-      console.log('reocrd', record);
+    return async.each(_.toArray($scope.records), function(record, done) {
+      var data;
       data = {
         variable_id: record.variable.id,
         value: record.variable.type === 'boolean' ? !!record.value : parseFloat(record.value)
       };
-      console.log('storing', data);
-      _results.push(store.createRecord(data, function(err) {}));
-    }
-    return _results;
+      return store.createRecord(data, done);
+    }, function(err) {
+      return $state.go('default');
+    });
   };
 }).controller('EditVariablePopoverController', function($rootScope, $scope, store) {
   $scope.form = angular.copy($scope.variable);
