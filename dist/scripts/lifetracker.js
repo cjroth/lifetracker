@@ -33,7 +33,8 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     views: {
       'body@': {
         templateUrl: 'templates/wizard/wizard.html',
-        controller: function($state, variables) {
+        controller: function($scope, $state, variables) {
+          $scope.records = {};
           if ($state.current.name === 'wizard') {
             return $state.go('wizard.step', {
               id: variables[0].id
@@ -51,7 +52,8 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     },
     views: {
       'main@body': {
-        templateUrl: 'templates/wizard/done.html'
+        templateUrl: 'templates/wizard/done.html',
+        controller: 'WizardDoneController'
       },
       'sidebar@body': {
         templateUrl: 'templates/wizard/sidebar.html',
@@ -83,7 +85,7 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
   sqlite3 = require("sqlite3").verbose();
   db = new sqlite3.Database("data/database.sqlite");
   db.run("CREATE TABLE if not exists variables (name TEXT, type TEXT, min FLOAT, max FLOAT, question TEXT, units TEXT)");
-  db.run("CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp INTEGER)");
+  db.run("CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
   return db;
 }).factory('store', function(db) {
   var store;
@@ -119,10 +121,14 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
       });
       return statement.finalize(done);
     },
-    createRecord: function(record, done) {
+    createRecord: function(data, done) {
       var statement;
       statement = db.prepare("insert into records values ($variable_id, $value, $timestamp)");
-      statement.run(record);
+      statement.run({
+        $variable_id: data.variable_id,
+        $value: data.value,
+        $timestamp: data.timestamp
+      });
       return statement.finalize(done);
     },
     getVariables: function(done) {
@@ -181,10 +187,18 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
   };
   $scope.currentVariable = variable;
 }).controller('WizardMainController', function($scope, $state, variable, variables) {
-  var index, next;
+  var index, next, previous;
   index = variables.indexOf(variable);
   next = variables[index + 1];
+  previous = variables[index - 1];
   $scope.progress = index / variables.length * 100;
+  $scope.variable = variable;
+  $scope.record = $scope.records[variable.id] || {
+    variable: variable
+  };
+  $scope.$watch('record', function() {
+    return $scope.records[variable.id] = $scope.record;
+  });
   $scope.skip = function() {
     if (next) {
       return $state.go('wizard.step', {
@@ -203,8 +217,35 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
       return $state.go('wizard.done');
     }
   };
-  $scope.variable = variable;
-  $scope.record = {};
+  if (previous) {
+    $scope.previous = function() {
+      return $state.go('wizard.step', {
+        id: previous.id
+      });
+    };
+  }
+}).controller('WizardDoneController', function($scope, $state, store, variable, variables) {
+  $scope.done = function() {
+    var data, key, record, _ref, _results;
+    console.log('grrr', $scope.records);
+    _ref = $scope.records;
+    _results = [];
+    for (key in _ref) {
+      record = _ref[key];
+      console.log('reocrd2', record);
+      if (!record.variable) {
+        continue;
+      }
+      console.log('reocrd', record);
+      data = {
+        variable_id: record.variable.id,
+        value: record.variable.type === 'boolean' ? !!record.value : parseFloat(record.value)
+      };
+      console.log('storing', data);
+      _results.push(store.createRecord(data, function(err) {}));
+    }
+    return _results;
+  };
 }).controller('EditVariablePopoverController', function($rootScope, $scope, store) {
   $scope.form = angular.copy($scope.variable);
   return $scope.save = function() {

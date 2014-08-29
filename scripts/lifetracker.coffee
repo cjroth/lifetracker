@@ -40,7 +40,8 @@ angular
         views:
           'body@':
             templateUrl: 'templates/wizard/wizard.html'
-            controller: ($state, variables) ->
+            controller: ($scope, $state, variables) ->
+              $scope.records = {}
               if $state.current.name is 'wizard' then $state.go('wizard.step', id: variables[0].id)
 
       .state 'wizard.done',
@@ -50,7 +51,7 @@ angular
         views:
           'main@body':
             templateUrl: 'templates/wizard/done.html'
-            # controller: 'WizardDoneController'
+            controller: 'WizardDoneController'
           'sidebar@body':
             templateUrl: 'templates/wizard/sidebar.html'
             controller: 'WizardSidebarController'
@@ -74,7 +75,7 @@ angular
     db = new sqlite3.Database("data/database.sqlite")
 
     db.run "CREATE TABLE if not exists variables (name TEXT, type TEXT, min FLOAT, max FLOAT, question TEXT, units TEXT)"
-    db.run "CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp INTEGER)"
+    db.run "CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)" 
 
     return db
 
@@ -107,9 +108,12 @@ angular
           $question: data.question
         statement.finalize(done)
 
-      createRecord: (record, done) ->
+      createRecord: (data, done) ->
         statement = db.prepare("insert into records values ($variable_id, $value, $timestamp)")
-        statement.run record
+        statement.run
+          $variable_id: data.variable_id
+          $value: data.value
+          $timestamp: data.timestamp
         statement.finalize(done)
 
       getVariables: (done) ->
@@ -182,7 +186,13 @@ angular
 
     index = variables.indexOf(variable)
     next = variables[index + 1]
+    previous = variables[index - 1]
     $scope.progress = index / variables.length * 100
+    $scope.variable = variable
+    $scope.record = $scope.records[variable.id] || { variable: variable }
+
+    $scope.$watch 'record', ->
+      $scope.records[variable.id] = $scope.record
 
     $scope.skip = ->
       if next
@@ -191,14 +201,44 @@ angular
         $state.go('wizard.done')
 
     $scope.continue = ->
-      # save data here...
+
       if next
         $state.go('wizard.step', id: next.id)
       else
         $state.go('wizard.done')
 
-    $scope.variable = variable
-    $scope.record = {}
+    if previous
+      $scope.previous = ->
+        $state.go('wizard.step', id: previous.id)
+
+    return
+
+  .controller 'WizardDoneController', ($scope, $state, store, variable, variables) ->
+
+    $scope.done = ->
+
+      console.log 'grrr', $scope.records
+
+      for key, record of $scope.records
+
+        console.log 'reocrd2', record
+
+
+        if not record.variable then continue
+
+        console.log 'reocrd', record
+
+
+        data = 
+          variable_id: record.variable.id
+          value: if record.variable.type is 'boolean' then !!record.value else parseFloat record.value
+
+        console.log 'storing', data
+
+        store.createRecord data, (err) ->
+          # if err
+            # @todo handle error
+      # $state.go('default')
 
     return
 
