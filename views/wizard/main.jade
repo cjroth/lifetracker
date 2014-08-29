@@ -4,6 +4,13 @@ h2 {{variable.name}}
 p(ng-show='variable.question') {{variable.question}}
 ng-include(src='"templates/" + variable.type + "-input.html"')
 
-button.btn.btn-primary(ng-show='previous', ng-click='previous()') Previous
-button.btn.btn-primary(ng-click='continue()') Continue
-button.btn.btn-primary(ng-click='skip()') Skip
+footer
+  .pull-left
+    button.btn.btn-lg.btn-primary(ng-show='previous', ng-click='previous()')
+      i.glyphicon.glyphicon-chevron-left
+      |  Previous
+  .pull-right
+    button.btn.btn-lg.btn-primary(ng-click='skip()') Skip
+    button.btn.btn-lg.btn-primary(ng-click='continue()')
+      | Continue 
+      i.glyphicon.glyphicon-chevron-right
