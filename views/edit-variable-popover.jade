@@ -1,21 +1,32 @@
-form(name='variable-edit')
+.popover.right.edit-variable-popover(ng-controller='EditVariablePopoverController')
+  .arrow
+  .popover-content
+        
+    form(name='variable-edit', ng-submit='save()')
 
-  input.form-control(name='id', type='hidden', value=id)
+      .row
+        .col-md-12
+          .form-group
+            input.form-control(
+              name='name'
+              type='text'
+              placeholder='Variable Name (ex: "Sleep")'
+              ng-model='form.name'
+            )
 
-  .row
-    .col-md-12
-      .form-group
-        input.form-control(name='name', type='text', value=name, placeholder='Variable Name (ex: "Sleep")')
+      .row
+        .col-md-12
+          .form-group
+            textarea.form-control(
+              name='question'
+              placeholder='Question (ex: "How much sleep did you get last night?")'
+              ng-model='form.question'
+            )
 
-  .row
-    .col-md-12
-      .form-group
-        textarea.form-control(name='question', placeholder='Question (ex: "How much sleep did you get last night?")')= question
-
-  .row
-    .col-xs-6
-      .form-group
-        button.btn.btn-default.btn-block(type='button', data-dismiss='popover') Cancel
-    .col-xs-6
-      .form-group
-        button.btn.btn-primary.btn-block(type='submit') Save
+      .row
+        .col-xs-6
+          .form-group
+            button.btn.btn-default.btn-block(type='button', ng-click='$hide()') Cancel
+        .col-xs-6
+          .form-group
+            button.btn.btn-primary.btn-block(type='submit') Save

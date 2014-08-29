@@ -26,6 +26,7 @@ createVariable = (data, done) ->
     $type: data.type
     $min: data.min
     $max: data.max
+    $units: data.units
   statement.finalize(done)
 
 deleteVariable = (id, done) ->
@@ -76,7 +77,7 @@ launchModal = (modalName, options) ->
 
 db.serialize ->
 
-  db.run "CREATE TABLE if not exists variables (name TEXT, type TEXT, min FLOAT, max FLOAT, question TEXT)"
+  db.run "CREATE TABLE if not exists variables (name TEXT, type TEXT, min FLOAT, max FLOAT, question TEXT, units TEXT)"
   db.run "CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp INTEGER)"
 
   # createVariable

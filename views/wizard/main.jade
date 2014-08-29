@@ -1,0 +1,9 @@
+.progress: .progress-bar(style='width: {{progress}}%')
+
+h2 {{variable.name}}
+p(ng-show='variable.question') {{variable.question}}
+ng-include(src='"templates/" + variable.type + "-input.html"')
+
+button.btn.btn-primary(ng-show='previous', ng-click='previous()') Previous
+button.btn.btn-primary(ng-click='continue()') Continue
+button.btn.btn-primary(ng-click='skip()') Skip

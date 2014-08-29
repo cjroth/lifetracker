@@ -1,8 +1,8 @@
 {
   "name": "lifetracker",
   "description": "track yo life",
-  "version": "alpha",
-  "main": "index.html",
+  "version": "0.0.1",
+  "main": "dist/index.html",
   "window": {
     "show": true,
     "toolbar": true,
@@ -14,13 +14,20 @@
     "min_height": 500
   },
   "dependencies": {
+    "angular-ui-router": "^0.2.10",
     "bootflat": "^2.0.3",
     "bootstrap": "^3.2.0",
     "chokidar": "^0.8.2",
     "coffee-script": "jashkenas/coffeescript#1.7.0",
     "font-awesome": "^4.1.0",
+    "gulp": "^3.8.7",
+    "gulp-angular-filesort": "^1.0.3",
+    "gulp-coffee": "^2.1.1",
+    "gulp-jade": "^0.7.0",
+    "gulp-load-plugins": "^0.5.3",
     "jade": "^1.5.0",
     "jquery": "^2.1.1",
+    "require-dir": "^0.1.0",
     "sqlite3": "2.2.4"
   }
 }

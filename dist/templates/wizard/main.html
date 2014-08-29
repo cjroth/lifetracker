@@ -1,0 +1,10 @@
+
+<div class="progress">
+  <div style="width: {{progress}}%" class="progress-bar"></div>
+</div>
+<h2>{{variable.name}}</h2>
+<p ng-show="variable.question">{{variable.question}}</p>
+<ng-include src="&quot;templates/&quot; + variable.type + &quot;-input.html&quot;"></ng-include>
+<button ng-show="previous" ng-click="previous()" class="btn btn-primary">Previous</button>
+<button ng-click="continue()" class="btn btn-primary">Continue</button>
+<button ng-click="skip()" class="btn btn-primary">Skip</button>

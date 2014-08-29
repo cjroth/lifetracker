@@ -1,36 +1,58 @@
-.popover.right.popover-create-variable
+.popover.right.create-variable-popover(ng-controller='CreateVariablePopoverController', ng-show='CreateVariablePopover.visible')
   .arrow
   .popover-content
     
-    form(name='create-variable')
+    form(ng-submit='save()')
 
       .row
         .col-xs-12
-          input.form-control(name='name', type='text', placeholder='Variable (ex: "Sleep")')
+          input.form-control(
+            ng-model='variable.name'
+            type='text'
+            placeholder='Variable (ex: "Sleep")'
+          )
 
       .row
         .col-xs-12
-          textarea.form-control(name='question', placeholder='Question (ex: "How much sleep did you get last night?")')
+          textarea.form-control(
+            ng-model='variable.question'
+            placeholder='Question (ex: "How much sleep did you get last night?")'
+          )
 
       .row
         .col-xs-12
-          select.form-control(name='type')
+          select.form-control(ng-model='variable.type', name='type')
             option(value='scale') Scale
-            option(value='boolean') True/False
+            option(value='boolean') Yes/No
             option(value='number') Number
 
-      .row
+      .row(ng-show='variable.type == "number"')
         .col-xs-6
-          input.form-control(name='min', type='text', placeholder='Min (ex: "0")')
+          input.form-control(
+            ng-model='variable.min'
+            name='min'
+            type='text'
+            placeholder='Min (ex: "0")'
+          )
         .col-xs-6
-          input.form-control(name='max', type='text', placeholder='Max (ex: "24")')
+          input.form-control(
+            ng-model='variable.max'
+            name='max'
+            type='text'
+            placeholder='Max (ex: "24")'
+          )
 
-      .row
+      .row(ng-show='variable.type == "number"')
         .col-xs-12
-          input.form-control(name='units', type='text', placeholder='Units (ex: "hours")')
+          input.form-control(
+            ng-model='variable.units'
+            name='units'
+            type='text'
+            placeholder='Units (ex: "hours")'
+          )
 
       .row
         .col-xs-6
-          button.btn.btn-default.btn-block(type='button', data-dismiss='popover') Cancel
+          button.btn.btn-default.btn-block(type='button', ng-click='CreateVariablePopover.visible = false') Cancel
         .col-xs-6
           button.btn.btn-primary.btn-block(type='submit') Save

@@ -1,0 +1,11 @@
+ul.list-group.sidebar-variables
+
+  li.list-group-item.variable-toggle(
+    ng-repeat='variable in variables | orderBy: "name"'
+    data-var='{{variable.id}}'
+    ng-class='{ active: currentVariable.id == variable.id }'
+    ng-click='goTo(variable)'
+  )
+
+    span.badge.badge-primary {{variable.records.length}}
+    span.name {{variable.name}}
