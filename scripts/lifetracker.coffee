@@ -27,6 +27,7 @@ angular
         views:
           'body@':
             templateUrl: 'templates/default/default.html'
+            controller: 'DefaultMainController'
 
       .state 'wizard',
         parent: 'root'
@@ -75,7 +76,7 @@ angular
     db = new sqlite3.Database("data/database.sqlite")
 
     db.run "CREATE TABLE if not exists variables (name TEXT, type TEXT, min FLOAT, max FLOAT, question TEXT, units TEXT)"
-    db.run "CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)" 
+    db.run "CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp TIMESTAMP)" 
 
     return db
 
@@ -113,7 +114,7 @@ angular
         statement.run
           $variable_id: data.variable_id
           $value: data.value
-          $timestamp: data.timestamp
+          $timestamp: data.timestamp || (new Date).getTime()
         statement.finalize(done)
 
       getVariables: (done) ->
@@ -170,7 +171,88 @@ angular
 
     return
 
-  .controller 'DefaultMainController', ($scope) ->
+  .controller 'DefaultMainController', ($scope, store) ->
+
+    store.getRecords (err, records) ->
+
+      rows = []
+      x = []
+
+      row1 = ['x']
+
+      for variable in $scope.variables
+
+        row1.push(variable.id)
+
+      rows.push(row1)
+
+      for record in records
+        x.push(record.timestamp)
+
+      x = _.uniq(x)
+
+      for timestamp in x
+
+        row = [timestamp]
+
+        for variable in $scope.variables
+
+          value = 0
+
+          # column = [variable.name]
+
+          for record in records
+
+            if record.variable_id is variable.id and record.timestamp is timestamp
+
+              value = record.value
+
+          row.push(value)
+
+        rows.push(row)
+
+      #       x.push(record.timestamp)
+      #       column.push(record.value)
+      #     columns.push(column)
+
+      # columns.push(_.uniq(x))
+
+      console.log(rows)
+
+      # return
+      #   # [
+      #   #   # ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
+      #   #   ['data1', 30, 200, 100, 400, 150, 250],
+      #   #   ['data2', 130, 340, 200, 500, 250, 350]
+      #   # ]
+
+      chart = c3.generate({
+        bindto: '#main'
+        data: {
+          x: 'x',
+          xFormat: '%Y%m%d',
+          rows: rows
+        },
+        legend: {
+          item: {
+            onclick: ->
+              console.log 'wtf', arguments
+          }
+        },
+        axis: {
+          x: {
+            type: 'timeseries',
+            tick: {
+              format: '%Y-%m-%d'
+            }
+          }
+        }
+      })
+
+      $scope.chart = chart
+
+      window.chart = chart
+
     return
 
   .controller 'WizardSidebarController', ($state, $scope, variable) ->
