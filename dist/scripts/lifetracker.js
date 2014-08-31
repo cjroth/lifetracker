@@ -180,66 +180,52 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
   $('.datepicker').datepicker({
     inputs: $('.range-start, .range-end')
   });
-}).controller('DefaultSidebarController', function($scope, store) {}).controller('DefaultMainController', function($scope, store) {
+}).controller('DefaultSidebarController', function($scope, store) {}).controller('DefaultMainController', function($scope, store, $window) {
   store.getRecords(function(err, records) {
-    var chart, record, row, row1, rows, timestamp, value, variable, x, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1;
-    rows = [];
-    x = [];
-    row1 = ['x'];
+    var colors, graph, gui, i, record, series, seriesData, timezoneOffset, variable, win, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
+    colors = ['red', 'blue', 'green'];
+    seriesData = {};
+    series = [];
+    timezoneOffset = (new Date).getTimezoneOffset() * 60;
     _ref = $scope.variables;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       variable = _ref[_i];
-      row1.push(variable.id);
+      seriesData[variable.id] = [];
     }
-    rows.push(row1);
     for (_j = 0, _len1 = records.length; _j < _len1; _j++) {
       record = records[_j];
-      x.push(record.timestamp);
+      seriesData[record.variable_id].push({
+        x: record.timestamp / 1000 - timezoneOffset,
+        y: record.value
+      });
     }
-    x = _.uniq(x);
-    for (_k = 0, _len2 = x.length; _k < _len2; _k++) {
-      timestamp = x[_k];
-      row = [timestamp];
-      _ref1 = $scope.variables;
-      for (_l = 0, _len3 = _ref1.length; _l < _len3; _l++) {
-        variable = _ref1[_l];
-        value = 0;
-        for (_m = 0, _len4 = records.length; _m < _len4; _m++) {
-          record = records[_m];
-          if (record.variable_id === variable.id && record.timestamp === timestamp) {
-            value = record.value;
-          }
-        }
-        row.push(value);
-      }
-      rows.push(row);
+    _ref1 = $scope.variables;
+    for (i = _k = 0, _len2 = _ref1.length; _k < _len2; i = ++_k) {
+      variable = _ref1[i];
+      series.push({
+        color: colors[i],
+        data: seriesData[variable.id]
+      });
     }
-    console.log(rows);
-    chart = c3.generate({
-      bindto: '#main',
-      data: {
-        x: 'x',
-        xFormat: '%Y%m%d',
-        rows: rows
-      },
-      legend: {
-        item: {
-          onclick: function() {
-            return console.log('wtf', arguments);
-          }
-        }
-      },
-      axis: {
-        x: {
-          type: 'timeseries',
-          tick: {
-            format: '%Y-%m-%d'
-          }
-        }
-      }
+    graph = new Rickshaw.Graph({
+      element: document.getElementById('chart'),
+      width: $('.main').width(),
+      height: $('.main').height(),
+      renderer: 'line',
+      series: series
     });
-    $scope.chart = chart;
-    return window.chart = chart;
+    gui = require('nw.gui');
+    win = gui.Window.get().on('resize', function() {
+      graph.configure({
+        width: $('.main').width(),
+        height: $('.main').height()
+      });
+      return graph.render();
+    });
+    new Rickshaw.Graph.Axis.Time({
+      graph: graph
+    });
+    return graph.render();
   });
 }).controller('WizardSidebarController', function($state, $scope, variable) {
   $scope.goTo = function(variable) {

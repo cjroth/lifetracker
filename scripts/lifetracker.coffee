@@ -171,87 +171,49 @@ angular
 
     return
 
-  .controller 'DefaultMainController', ($scope, store) ->
+  .controller 'DefaultMainController', ($scope, store, $window) ->
 
     store.getRecords (err, records) ->
 
-      rows = []
-      x = []
-
-      row1 = ['x']
+      colors = ['red', 'blue', 'green']
+      seriesData = {}
+      series = []
+      timezoneOffset = (new Date).getTimezoneOffset() * 60
 
       for variable in $scope.variables
-
-        row1.push(variable.id)
-
-      rows.push(row1)
+        seriesData[variable.id] = []
 
       for record in records
-        x.push(record.timestamp)
+        seriesData[record.variable_id].push(x: record.timestamp / 1000 - timezoneOffset, y: record.value)
 
-      x = _.uniq(x)
+      for variable, i in $scope.variables
+        series.push
+          color: colors[i]
+          data: seriesData[variable.id]
 
-      for timestamp in x
+      graph = new Rickshaw.Graph( {
+        element: document.getElementById('chart'),
+        width: $('.main').width(),
+        height: $('.main').height(),
+        renderer: 'line',
+        series: series
+      } )
 
-        row = [timestamp]
+      # @todo access this through dependency injection
+      gui = require('nw.gui');
+      win = gui.Window.get().on 'resize', ->
 
-        for variable in $scope.variables
+        graph.configure({
+          width: $('.main').width(),
+          height: $('.main').height(),
+        });
+        graph.render();
 
-          value = 0
+      new Rickshaw.Graph.Axis.Time({
+        graph: graph
+      });
 
-          # column = [variable.name]
-
-          for record in records
-
-            if record.variable_id is variable.id and record.timestamp is timestamp
-
-              value = record.value
-
-          row.push(value)
-
-        rows.push(row)
-
-      #       x.push(record.timestamp)
-      #       column.push(record.value)
-      #     columns.push(column)
-
-      # columns.push(_.uniq(x))
-
-      console.log(rows)
-
-      # return
-      #   # [
-      #   #   # ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
-      #   #   ['data1', 30, 200, 100, 400, 150, 250],
-      #   #   ['data2', 130, 340, 200, 500, 250, 350]
-      #   # ]
-
-      chart = c3.generate({
-        bindto: '#main'
-        data: {
-          x: 'x',
-          xFormat: '%Y%m%d',
-          rows: rows
-        },
-        legend: {
-          item: {
-            onclick: ->
-              console.log 'wtf', arguments
-          }
-        },
-        axis: {
-          x: {
-            type: 'timeseries',
-            tick: {
-              format: '%Y-%m-%d'
-            }
-          }
-        }
-      })
-
-      $scope.chart = chart
-
-      window.chart = chart
+      graph.render()
 
     return
 
