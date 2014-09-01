@@ -53,7 +53,6 @@ gulp.task 'build:scripts', ->
   gulp
     .src paths.scripts
     .pipe $.coffee(bare: true)
-    # .pipe $.angularFilesort()
     .pipe gulp.dest('dist/scripts')
 
 gulp.task 'build:templates', ->
@@ -62,10 +61,16 @@ gulp.task 'build:templates', ->
     .pipe $.jade(pretty: true)
     .pipe gulp.dest('dist/templates')
 
-gulp.task 'build:index', ->
+gulp.task 'build:index', ['build:scripts'], ->
   gulp
     .src paths.index
     .pipe $.jade(pretty: true)
+    .pipe($.inject(
+      gulp
+        .src(['./dist/scripts/**/*.js'])
+        .pipe($.angularFilesort())
+      , relative: true, ignorePath: '/dist'
+    ))
     .pipe gulp.dest('dist')
 
 gulp.task 'build:watch', ['build'], ->
@@ -76,4 +81,4 @@ gulp.task 'build:watch', ['build'], ->
       paths.index
     ], ['build']
 
-gulp.task 'build', ['build:scripts', 'build:templates', 'build:index']
+gulp.task 'build', ['build:templates', 'build:index']

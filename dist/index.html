@@ -3,7 +3,6 @@
   <head>
     <title>Lifetracker</title>
     <script src="../node_modules/jquery/dist/jquery.js"></script>
-    <script src="../node_modules/coffee-script/extras/coffee-script.js"></script>
     <script src="../bower_components/angular/angular.js"></script>
     <script src="../node_modules/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="../bower_components/seiyria-bootstrap-slider/js/bootstrap-slider.js"></script>
@@ -26,10 +25,22 @@
     <script src="../bower_components/d3/d3.min.js"></script>
     <script src="../bower_components/rickshaw/rickshaw.min.js"></script>
     <link href="../bower_components/rickshaw/rickshaw.min.css" rel="stylesheet">
+    <script src="../bower_components/lodash/dist/lodash.js"></script>
     <script src="../bower_components/underscore/underscore.js"></script>
     <link rel="stylesheet/less" type="text/css" href="../styles.less">
-    <script src="scripts/lifetracker.js"></script>
-    <script src="../livereload.coffee" type="text/coffeescript"></script>
+    <!-- inject:js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/wizard/sidebar-controller.js"></script>
+    <script src="scripts/wizard/main-controller.js"></script>
+    <script src="scripts/default/sidebar-controller.js"></script>
+    <script src="scripts/default/main-controller.js"></script>
+    <script src="scripts/common/edit-variable-popover-controller.js"></script>
+    <script src="scripts/common/delete-variable-popover-controller.js"></script>
+    <script src="scripts/common/create-variable-popover-controller.js"></script>
+    <script src="scripts/store-factory.js"></script>
+    <script src="scripts/nav-controller.js"></script>
+    <script src="scripts/db-factory.js"></script>
+    <!-- endinject -->
     <script>less = { logLevel: 1 };</script>
     <script src="../bower_components/less/dist/less-1.7.4.js"></script>
     <link href="../node_modules/bootflat/bootflat/css/bootflat.css" rel="stylesheet">
