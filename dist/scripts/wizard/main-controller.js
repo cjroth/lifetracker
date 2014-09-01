@@ -1,5 +1,6 @@
-angular.module('lifetracker').controller('WizardMainController', function($scope, $state, variable, variables) {
-  var index, next, previous, _base;
+angular.module('lifetracker').controller('WizardMainController', function($rootScope, $scope, $state, variable) {
+  var index, next, previous, variables, _base;
+  variables = $rootScope.variables;
   index = variables.indexOf(variable);
   next = variables[index + 1];
   previous = variables[index - 1];
@@ -35,23 +36,10 @@ angular.module('lifetracker').controller('WizardMainController', function($scope
     }
   };
   if (previous) {
-    $scope.previous = function() {
+    return $scope.previous = function() {
       return $state.go('wizard.step', {
         id: previous.id
       });
     };
   }
-}).controller('WizardDoneController', function($scope, $state, store, variable, variables) {
-  $scope.done = function() {
-    return async.each(_.toArray($scope.records), function(record, done) {
-      var data;
-      data = {
-        variable_id: record.variable.id,
-        value: record.variable.type === 'boolean' ? !!record.value : parseFloat(record.value)
-      };
-      return store.createRecord(data, done);
-    }, function(err) {
-      return $state.go('default');
-    });
-  };
 });

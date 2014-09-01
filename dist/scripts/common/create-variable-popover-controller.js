@@ -13,6 +13,9 @@ angular.module('lifetracker').controller('CreateVariablePopoverController', func
       }
       $scope.CreateVariablePopover.visible = false;
       $rootScope.variables.push(variable);
+      $rootScope.variables.sort(function(a, b) {
+        return a.name.toLowerCase() > b.name.toLowerCase();
+      });
       $rootScope.$digest();
       return $scope.variable = angular.copy(defaults);
     });

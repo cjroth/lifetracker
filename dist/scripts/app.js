@@ -11,7 +11,9 @@ angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.n
             variable = variables[_i];
             variable.selected = true;
           }
-          $rootScope.variables = variables;
+          $rootScope.variables = variables.sort(function(a, b) {
+            return a.name.toLowerCase() > b.name.toLowerCase();
+          });
           return deferred.resolve(variables);
         });
         return deferred.promise;
@@ -42,24 +44,14 @@ angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.n
   }).state('wizard', {
     parent: 'root',
     url: '/wizard',
-    resolve: {
-      variables: function($rootScope, store, $q) {
-        var deferred;
-        deferred = $q.defer();
-        store.getVariables(function(err, variables) {
-          return deferred.resolve(variables);
-        });
-        return deferred.promise;
-      }
-    },
     views: {
       'body@': {
         templateUrl: 'templates/wizard/wizard.html',
-        controller: function($scope, $state, variables) {
+        controller: function($rootScope, $scope, $state) {
           $scope.records = {};
           if ($state.current.name === 'wizard') {
             return $state.go('wizard.step', {
-              id: variables[0].id
+              id: $rootScope.variables[0].id
             });
           }
         }

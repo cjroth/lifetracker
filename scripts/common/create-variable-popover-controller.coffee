@@ -17,5 +17,6 @@ angular
 
         $scope.CreateVariablePopover.visible = false
         $rootScope.variables.push(variable)
+        $rootScope.variables.sort (a, b) -> a.name.toLowerCase() > b.name.toLowerCase()
         $rootScope.$digest()
         $scope.variable = angular.copy(defaults)

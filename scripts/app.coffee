@@ -19,7 +19,7 @@ angular
             store.getVariables (err, variables) ->
               for variable in variables
                 variable.selected = true
-              $rootScope.variables = variables
+              $rootScope.variables = variables.sort (a, b) -> a.name.toLowerCase() > b.name.toLowerCase()
               deferred.resolve(variables)
             return deferred.promise
         views:
@@ -43,18 +43,18 @@ angular
       .state 'wizard',
         parent: 'root'
         url: '/wizard'
-        resolve:
-          variables: ($rootScope, store, $q) ->
-            deferred = $q.defer()
-            store.getVariables (err, variables) ->
-              deferred.resolve(variables)
-            return deferred.promise
+        # resolve:
+        #   variables: ($rootScope, store, $q) ->
+        #     deferred = $q.defer()
+        #     store.getVariables (err, variables) ->
+        #       deferred.resolve(variables)
+        #     return deferred.promise
         views:
           'body@':
             templateUrl: 'templates/wizard/wizard.html'
-            controller: ($scope, $state, variables) ->
+            controller: ($rootScope, $scope, $state) ->
               $scope.records = {}
-              if $state.current.name is 'wizard' then $state.go('wizard.step', id: variables[0].id)
+              if $state.current.name is 'wizard' then $state.go('wizard.step', id: $rootScope.variables[0].id)
 
       .state 'wizard.done',
         url: '/done'
