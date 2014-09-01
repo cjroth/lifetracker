@@ -45,15 +45,13 @@ angular.module('lifetracker').factory('store', function(db) {
     },
     getVariables: function(done) {
       return db.all("select rowid id, * from variables where deleted_at is null order by name asc", function(err, vars) {
-        var variable, variables, _i, _len, _results;
+        var variable, variables, _i, _len;
         variables = [];
-        _results = [];
         for (_i = 0, _len = vars.length; _i < _len; _i++) {
           variable = vars[_i];
           variables.push(variable);
-          _results.push(done(err, variables));
         }
-        return _results;
+        return done(err, variables);
       });
     },
     getEachVariable: function(done) {

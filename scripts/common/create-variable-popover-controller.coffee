@@ -16,6 +16,6 @@ angular
           return
 
         $scope.CreateVariablePopover.visible = false
-        $scope.variables.push variable
+        $rootScope.variables.push variable
         $rootScope.$digest()
         $scope.variable = angular.copy(defaults)

@@ -1,6 +1,17 @@
 angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.ngStrap', 'ui.bootstrap-slider', 'toggle-switch']).config(function($urlRouterProvider, $stateProvider) {
   return $stateProvider.state('root', {
     abstract: true,
+    resolve: {
+      variables: function($rootScope, store, $q) {
+        var deferred;
+        deferred = $q.defer();
+        store.getVariables(function(err, variables) {
+          $rootScope.variables = variables;
+          return deferred.resolve(variables);
+        });
+        return deferred.promise;
+      }
+    },
     views: {
       'nav@': {
         templateUrl: 'templates/nav.html',

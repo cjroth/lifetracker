@@ -5,7 +5,7 @@ angular.module('lifetracker').controller('EditVariablePopoverController', functi
       if (err) {
         return;
       }
-      angular.extend($scope.variable, $scope.form);
+      angular.extend($rootScope.variable, $scope.form);
       $scope.$hide();
       return $rootScope.$digest();
     });

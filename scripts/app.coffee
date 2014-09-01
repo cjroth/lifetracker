@@ -13,6 +13,13 @@ angular
 
       .state 'root',
         abstract: true
+        resolve:
+          variables: ($rootScope, store, $q) ->
+            deferred = $q.defer()
+            store.getVariables (err, variables) ->
+              $rootScope.variables = variables
+              deferred.resolve(variables)
+            return deferred.promise
         views:
           'nav@':
             templateUrl: 'templates/nav.html'

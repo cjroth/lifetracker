@@ -1,15 +1,15 @@
-angular.module('lifetracker').controller('DefaultMainController', function($scope, store, $window) {
-  $scope.$watch('variables', function() {
+angular.module('lifetracker').controller('DefaultMainController', function($scope, $rootScope, store, $window) {
+  $rootScope.$watch('variables', function() {
     return store.getRecords(function(err, records) {
       var colors, graph, gui, i, record, series, seriesData, timezoneOffset, variable, win, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
+      if (!$('#chart').length) {
+        return;
+      }
       colors = ['red', 'blue', 'green'];
       seriesData = {};
       series = [];
       timezoneOffset = (new Date).getTimezoneOffset() * 60;
-      if ($scope.variables == null) {
-        $scope.variables = [];
-      }
-      _ref = $scope.variables;
+      _ref = $rootScope.variables;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         variable = _ref[_i];
         seriesData[variable.id] = [];
@@ -23,7 +23,7 @@ angular.module('lifetracker').controller('DefaultMainController', function($scop
           });
         }
       }
-      _ref2 = $scope.variables;
+      _ref2 = $rootScope.variables;
       for (i = _k = 0, _len2 = _ref2.length; _k < _len2; i = ++_k) {
         variable = _ref2[i];
         series.push({

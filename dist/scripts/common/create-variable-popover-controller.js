@@ -12,7 +12,7 @@ angular.module('lifetracker').controller('CreateVariablePopoverController', func
         return;
       }
       $scope.CreateVariablePopover.visible = false;
-      $scope.variables.push(variable);
+      $rootScope.variables.push(variable);
       $rootScope.$digest();
       return $scope.variable = angular.copy(defaults);
     });

@@ -43,7 +43,7 @@ angular
           variables = []
           for variable in vars
             variables.push variable
-            done(err, variables)
+          done(err, variables)
 
       getEachVariable: (done) ->
         db.each "select rowid id, * from variables where deleted_at is null order by name asc", done

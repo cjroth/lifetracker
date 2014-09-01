@@ -12,6 +12,6 @@ angular
           # @todo handle error
           return
 
-        angular.extend($scope.variable, $scope.form)
+        angular.extend($rootScope.variable, $scope.form)
         $scope.$hide()
         $rootScope.$digest()
