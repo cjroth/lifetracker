@@ -14,12 +14,12 @@ angular
       .state 'root',
         abstract: true
         resolve:
-          variables: ($rootScope, store, $q) ->
+          variables: ($rootScope, store, $q, variableSorter) ->
             deferred = $q.defer()
             store.getVariables (err, variables) ->
               for variable in variables
                 variable.selected = true
-              $rootScope.variables = variables.sort (a, b) -> a.name.toLowerCase() > b.name.toLowerCase()
+              $rootScope.variables = variables.sort(variableSorter)
               deferred.resolve(variables)
             return deferred.promise
         views:
@@ -43,12 +43,6 @@ angular
       .state 'wizard',
         parent: 'root'
         url: '/wizard'
-        # resolve:
-        #   variables: ($rootScope, store, $q) ->
-        #     deferred = $q.defer()
-        #     store.getVariables (err, variables) ->
-        #       deferred.resolve(variables)
-        #     return deferred.promise
         views:
           'body@':
             templateUrl: 'templates/wizard/wizard.html'
@@ -81,14 +75,4 @@ angular
             templateUrl: 'templates/wizard/sidebar.html'
             controller: 'WizardSidebarController'
   .run ($rootScope, $state, store) ->
-
-    # store.getVariables (err, variables) ->
-    #   if err
-    #     # @todo handle err
-    #     return
-    #   $rootScope.variables = variables
-    #   for variable in $rootScope.variables
-    #     variable.selected = true
-    #   $rootScope.$digest()
-
     $state.go('default', id: 3)
