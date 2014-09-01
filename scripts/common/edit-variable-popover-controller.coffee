@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'EditVariablePopoverController', ($rootScope, $scope, store) ->
+  .controller 'EditVariablePopoverController', ($rootScope, $scope, store, variableSorter) ->
 
     $scope.form = angular.copy($scope.variable)
 
@@ -12,6 +12,7 @@ angular
           # @todo handle error
           return
 
-        angular.extend($rootScope.variable, $scope.form)
+        angular.extend($scope.variable, $scope.form)
         $scope.$hide()
+        $rootScope.variables.sort(variableSorter)
         $rootScope.$digest()
