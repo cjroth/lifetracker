@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'DefaultMainController', ($scope, $rootScope, store, $window) ->
+  .controller 'DefaultMainController', ($scope, $rootScope, store, $window, gui) ->
 
     $('.datepicker').datepicker
       inputs: $('.range-start, .range-end')
@@ -10,6 +10,8 @@ angular
       scatterplot: 'fa fa-area-chart'
       line: 'fa fa-line-chart'
     $scope.chartType = $scope.chartTypes[0]
+
+    graph = {}
 
     formatData = (records) ->
 
@@ -33,66 +35,12 @@ angular
 
       return series
 
-    store.getRecords (err, records) ->
-
-      if not $('#chart').length then return
-
-      graph = new Rickshaw.Graph(
-        element: $('#chart')[0]
+    gui.Window.get().on 'resize', ->
+      graph.configure(
         width: $('.main').width()
         height: $('.main').height()
-        renderer: $scope.chartType
-        series: formatData(records)
-        dotSize: 5
       )
-
-      # @todo access this through dependency injection
-      gui = require('nw.gui');
-      win = gui.Window.get().on 'resize', ->
-
-        graph.configure(
-          width: $('.main').width()
-          height: $('.main').height()
-        )
-
-        graph.render()
-
-      new Rickshaw.Graph.Axis.Time(graph: graph)
-
       graph.render()
-
-      new Rickshaw.Graph.HoverDetail(graph: graph)
-
-      $rootScope.$watch 'variables', ->
-
-        store.getRecords (err, records) ->
-          
-          $chart = $('#chart')
-
-          if not $chart.length then return
-
-          $chart.empty()
-          $chart.replaceWith('<div id="chart"></div>')
-          $chart = $('#chart')
-
-          graph = new Rickshaw.Graph(
-            element: $chart[0]
-            width: $('.main').width()
-            height: $('.main').height()
-            renderer: $scope.chartType
-            series: formatData(records)
-            dotSize: 5
-          )
-
-          graph.render()
-
-          new Rickshaw.Graph.HoverDetail(graph: graph)
-
-
-        # if not $rootScope.variables.length
-          # @todo show no vars message
-
-      , true
 
     renderChart = ->
 
@@ -118,6 +66,9 @@ angular
         graph.render()
 
         new Rickshaw.Graph.HoverDetail(graph: graph)
+        # new Rickshaw.Graph.Axis.Time(graph: graph)
+
+    $rootScope.$watch 'variables', renderChart, true
 
     $scope.cycleChartType = ->
       $scope.chartType = $scope.chartTypes[$scope.chartTypes.indexOf($scope.chartType) + 1] || $scope.chartTypes[0]
