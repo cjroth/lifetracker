@@ -17,8 +17,10 @@ angular
           variables: ($rootScope, store, $q, variableSorter) ->
             deferred = $q.defer()
             store.getVariables (err, variables) ->
+              palette = new Rickshaw.Color.Palette(scheme: 'colorwheel')
               for variable in variables
                 variable.selected = true
+                variable.color = palette.color()
               $rootScope.variables = variables.sort(variableSorter)
               deferred.resolve(variables)
             return deferred.promise

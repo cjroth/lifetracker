@@ -7,5 +7,3 @@ angular
     # initialize the datepicker
     $('.datepicker').datepicker
       inputs: $('.range-start, .range-end')
-
-    return

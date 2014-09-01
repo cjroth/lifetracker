@@ -4,7 +4,6 @@ angular
 
     formatData = (records) ->
 
-      colors = ['red', 'blue', 'green']
       seriesData = {}
       series = []
       timezoneOffset = (new Date).getTimezoneOffset() * 60
@@ -20,7 +19,7 @@ angular
       for variable, i in variables
         series.push
           name: variable.name
-          color: colors[i]
+          color: variable.color
           data: seriesData[variable.id]
 
       return series
@@ -33,7 +32,7 @@ angular
         element: $('#chart')[0]
         width: $('.main').width()
         height: $('.main').height()
-        renderer: 'line'
+        renderer: 'scatterplot'
         series: formatData(records)
         dotSize: 5
       )
@@ -72,8 +71,9 @@ angular
             element: $chart[0]
             width: $('.main').width()
             height: $('.main').height()
-            renderer: 'line'
+            renderer: 'scatterplot'
             series: formatData(records)
+            dotSize: 5
           )
 
           graph.render()

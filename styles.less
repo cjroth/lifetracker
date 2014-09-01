@@ -81,12 +81,23 @@ nav .datepicker input {
   padding-left: 10px;
 }
 
-.variable-toggle .btn-group {
-  display: none;
-}
+.variable-toggle {
 
-.variable-toggle:hover .btn-group {
-  display: inline-block;
+  border: none;
+
+  &:not(.active) {
+    background: #e6e6e6 !important;
+    color: #000 !important;
+  }
+
+  .btn-group {
+    display: none;
+  }
+
+  &:hover .btn-group {
+    display: inline-block;
+  }
+
 }
 
 .popover .row [class^='col-'] {

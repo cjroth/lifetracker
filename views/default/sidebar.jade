@@ -12,7 +12,10 @@ ul.list-group.sidebar-variables
     data-var='{{variable.id}}'
     ng-click='select(variable)'
     ng-class='variable.selected ? "active" : ""'
+    style='background-color: {{variable.color}};'
   )
+
+    .overlay
 
     .btn-group.btn-group-xs.pull-right
       a.btn.btn-default(
