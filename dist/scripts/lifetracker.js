@@ -85,15 +85,15 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
   var db, sqlite3;
   sqlite3 = require("sqlite3").verbose();
   db = new sqlite3.Database("data/database.sqlite");
-  db.run("CREATE TABLE if not exists variables (name TEXT, type TEXT, min FLOAT, max FLOAT, question TEXT, units TEXT)");
-  db.run("CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp TIMESTAMP)");
+  db.run("CREATE TABLE if not exists variables (name TEXT, type TEXT, min FLOAT, max FLOAT, question TEXT, units TEXT, deleted_at)");
+  db.run("CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp TIMESTAMP, deleted_at TIMESTAMP)");
   return db;
 }).factory('store', function(db) {
   var store;
   store = {
     createVariable: function(data, done) {
       var statement;
-      statement = db.prepare("insert into variables values ($name, $type, $min, $max, $question, $units)");
+      statement = db.prepare("insert into variables values ($name, $type, $min, $max, $question, $units, null)");
       statement.run({
         $name: data.name,
         $question: data.question,
@@ -106,9 +106,10 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     },
     deleteVariable: function(id, done) {
       var statement;
-      statement = db.prepare("delete from variables where rowid = $id");
+      statement = db.prepare("update variables set deleted_at = $deleted_at where rowid = $id");
       statement.run({
-        $id: id
+        $id: id,
+        $deleted_at: (new Date).getTime()
       });
       return statement.finalize(done);
     },
@@ -124,7 +125,7 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     },
     createRecord: function(data, done) {
       var statement;
-      statement = db.prepare("insert into records values ($variable_id, $value, $timestamp)");
+      statement = db.prepare("insert into records values ($variable_id, $value, $timestamp, null)");
       statement.run({
         $variable_id: data.variable_id,
         $value: data.value,
@@ -133,7 +134,7 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
       return statement.finalize(done);
     },
     getVariables: function(done) {
-      return db.all("select rowid id, * from variables order by name asc", function(err, vars) {
+      return db.all("select rowid id, * from variables where deleted_at is null order by name asc", function(err, vars) {
         var variable, variables, _i, _len, _results;
         variables = [];
         _results = [];
@@ -146,13 +147,13 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
       });
     },
     getEachVariable: function(done) {
-      return db.each("select rowid id, * from variables order by name asc", done);
+      return db.each("select rowid id, * from variables where deleted_at is null order by name asc", done);
     },
     getRecords: function(done) {
-      return db.all("select rowid id, * from records", done);
+      return db.all("select rowid id, * from records where deleted_at is null", done);
     },
     getEachRecord: function(done) {
-      return db.each("select rowid id, * from records", done);
+      return db.each("select rowid id, * from records where deleted_at is null", done);
     }
   };
   return store;
@@ -181,51 +182,58 @@ angular.module('lifetracker').config(function($urlRouterProvider, $stateProvider
     inputs: $('.range-start, .range-end')
   });
 }).controller('DefaultSidebarController', function($scope, store) {}).controller('DefaultMainController', function($scope, store, $window) {
-  store.getRecords(function(err, records) {
-    var colors, graph, gui, i, record, series, seriesData, timezoneOffset, variable, win, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
-    colors = ['red', 'blue', 'green'];
-    seriesData = {};
-    series = [];
-    timezoneOffset = (new Date).getTimezoneOffset() * 60;
-    _ref = $scope.variables;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      variable = _ref[_i];
-      seriesData[variable.id] = [];
-    }
-    for (_j = 0, _len1 = records.length; _j < _len1; _j++) {
-      record = records[_j];
-      seriesData[record.variable_id].push({
-        x: record.timestamp / 1000 - timezoneOffset,
-        y: record.value
-      });
-    }
-    _ref1 = $scope.variables;
-    for (i = _k = 0, _len2 = _ref1.length; _k < _len2; i = ++_k) {
-      variable = _ref1[i];
-      series.push({
-        color: colors[i],
-        data: seriesData[variable.id]
-      });
-    }
-    graph = new Rickshaw.Graph({
-      element: document.getElementById('chart'),
-      width: $('.main').width(),
-      height: $('.main').height(),
-      renderer: 'line',
-      series: series
-    });
-    gui = require('nw.gui');
-    win = gui.Window.get().on('resize', function() {
-      graph.configure({
+  $scope.$watch('variables', function() {
+    return store.getRecords(function(err, records) {
+      var colors, graph, gui, i, record, series, seriesData, timezoneOffset, variable, win, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
+      colors = ['red', 'blue', 'green'];
+      seriesData = {};
+      series = [];
+      timezoneOffset = (new Date).getTimezoneOffset() * 60;
+      if ($scope.variables == null) {
+        $scope.variables = [];
+      }
+      _ref = $scope.variables;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        variable = _ref[_i];
+        seriesData[variable.id] = [];
+      }
+      for (_j = 0, _len1 = records.length; _j < _len1; _j++) {
+        record = records[_j];
+        if ((_ref1 = seriesData[record.variable_id]) != null) {
+          _ref1.push({
+            x: record.timestamp / 1000 - timezoneOffset,
+            y: record.value
+          });
+        }
+      }
+      _ref2 = $scope.variables;
+      for (i = _k = 0, _len2 = _ref2.length; _k < _len2; i = ++_k) {
+        variable = _ref2[i];
+        series.push({
+          color: colors[i],
+          data: seriesData[variable.id]
+        });
+      }
+      graph = new Rickshaw.Graph({
+        element: document.getElementById('chart'),
         width: $('.main').width(),
-        height: $('.main').height()
+        height: $('.main').height(),
+        renderer: 'line',
+        series: series
+      });
+      gui = require('nw.gui');
+      win = gui.Window.get().on('resize', function() {
+        graph.configure({
+          width: $('.main').width(),
+          height: $('.main').height()
+        });
+        return graph.render();
+      });
+      new Rickshaw.Graph.Axis.Time({
+        graph: graph
       });
       return graph.render();
     });
-    new Rickshaw.Graph.Axis.Time({
-      graph: graph
-    });
-    return graph.render();
   });
 }).controller('WizardSidebarController', function($state, $scope, variable) {
   $scope.goTo = function(variable) {

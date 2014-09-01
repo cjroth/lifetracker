@@ -75,8 +75,8 @@ angular
     sqlite3 = require("sqlite3").verbose()
     db = new sqlite3.Database("data/database.sqlite")
 
-    db.run "CREATE TABLE if not exists variables (name TEXT, type TEXT, min FLOAT, max FLOAT, question TEXT, units TEXT)"
-    db.run "CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp TIMESTAMP)" 
+    db.run "CREATE TABLE if not exists variables (name TEXT, type TEXT, min FLOAT, max FLOAT, question TEXT, units TEXT, deleted_at)"
+    db.run "CREATE TABLE if not exists records (variable_id INTEGER, value FLOAT, timestamp TIMESTAMP, deleted_at TIMESTAMP)" 
 
     return db
 
@@ -85,7 +85,7 @@ angular
     store =
 
       createVariable: (data, done) ->
-        statement = db.prepare("insert into variables values ($name, $type, $min, $max, $question, $units)")
+        statement = db.prepare("insert into variables values ($name, $type, $min, $max, $question, $units, null)")
         statement.run
           $name: data.name
           $question: data.question
@@ -96,9 +96,10 @@ angular
         statement.finalize(done)
 
       deleteVariable: (id, done) ->
-        statement = db.prepare("delete from variables where rowid = $id")
+        statement = db.prepare("update variables set deleted_at = $deleted_at where rowid = $id")
         statement.run
           $id: id
+          $deleted_at: (new Date).getTime()
         statement.finalize(done)
 
       updateVariable: (id, data, done) ->
@@ -110,7 +111,7 @@ angular
         statement.finalize(done)
 
       createRecord: (data, done) ->
-        statement = db.prepare("insert into records values ($variable_id, $value, $timestamp)")
+        statement = db.prepare("insert into records values ($variable_id, $value, $timestamp, null)")
         statement.run
           $variable_id: data.variable_id
           $value: data.value
@@ -118,20 +119,20 @@ angular
         statement.finalize(done)
 
       getVariables: (done) ->
-        db.all "select rowid id, * from variables order by name asc", (err, vars) ->
+        db.all "select rowid id, * from variables where deleted_at is null order by name asc", (err, vars) ->
           variables = []
           for variable in vars
             variables.push variable
             done(err, variables)
 
       getEachVariable: (done) ->
-        db.each "select rowid id, * from variables order by name asc", done
+        db.each "select rowid id, * from variables where deleted_at is null order by name asc", done
 
       getRecords: (done) ->
-        db.all "select rowid id, * from records", done
+        db.all "select rowid id, * from records where deleted_at is null", done
 
       getEachRecord: (done) ->
-        db.each "select rowid id, * from records", done
+        db.each "select rowid id, * from records where deleted_at is null", done
 
     return store
 
@@ -173,47 +174,51 @@ angular
 
   .controller 'DefaultMainController', ($scope, store, $window) ->
 
-    store.getRecords (err, records) ->
+    $scope.$watch 'variables', ->
 
-      colors = ['red', 'blue', 'green']
-      seriesData = {}
-      series = []
-      timezoneOffset = (new Date).getTimezoneOffset() * 60
+      store.getRecords (err, records) ->
 
-      for variable in $scope.variables
-        seriesData[variable.id] = []
+        colors = ['red', 'blue', 'green']
+        seriesData = {}
+        series = []
+        timezoneOffset = (new Date).getTimezoneOffset() * 60
 
-      for record in records
-        seriesData[record.variable_id].push(x: record.timestamp / 1000 - timezoneOffset, y: record.value)
+        $scope.variables ?= []
 
-      for variable, i in $scope.variables
-        series.push
-          color: colors[i]
-          data: seriesData[variable.id]
+        for variable in $scope.variables
+          seriesData[variable.id] = []
 
-      graph = new Rickshaw.Graph( {
-        element: document.getElementById('chart'),
-        width: $('.main').width(),
-        height: $('.main').height(),
-        renderer: 'line',
-        series: series
-      } )
+        for record in records
+          seriesData[record.variable_id]?.push(x: record.timestamp / 1000 - timezoneOffset, y: record.value)
 
-      # @todo access this through dependency injection
-      gui = require('nw.gui');
-      win = gui.Window.get().on 'resize', ->
+        for variable, i in $scope.variables
+          series.push
+            color: colors[i]
+            data: seriesData[variable.id]
 
-        graph.configure({
+        graph = new Rickshaw.Graph( {
+          element: document.getElementById('chart'),
           width: $('.main').width(),
           height: $('.main').height(),
+          renderer: 'line',
+          series: series
+        } )
+
+        # @todo access this through dependency injection
+        gui = require('nw.gui');
+        win = gui.Window.get().on 'resize', ->
+
+          graph.configure({
+            width: $('.main').width(),
+            height: $('.main').height(),
+          });
+          graph.render();
+
+        new Rickshaw.Graph.Axis.Time({
+          graph: graph
         });
-        graph.render();
 
-      new Rickshaw.Graph.Axis.Time({
-        graph: graph
-      });
-
-      graph.render()
+        graph.render()
 
     return
 
