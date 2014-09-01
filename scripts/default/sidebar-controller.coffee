@@ -1,7 +1,8 @@
 angular
   .module 'lifetracker'
-  .controller 'DefaultSidebarController', ($scope, store) ->
+  .controller 'DefaultSidebarController', ($rootScope, $scope, store) ->
 
-    # ...
+    $scope.select = (variable) ->
+      variable.selected = !variable.selected
 
     return

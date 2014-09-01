@@ -2,55 +2,78 @@ angular
   .module 'lifetracker'
   .controller 'DefaultMainController', ($scope, $rootScope, store, $window) ->
 
-    $rootScope.$watchCollection 'variables', ->
+    formatData = (records) ->
 
-      console.log 'updating chart'
+      colors = ['red', 'blue', 'green']
+      seriesData = {}
+      series = []
+      timezoneOffset = (new Date).getTimezoneOffset() * 60
 
-      if not $rootScope.variables.length
-        # @todo show no vars message
+      variables = $rootScope.variables.filter (variable) -> variable.selected
 
-      store.getRecords (err, records) ->
+      for variable in variables
+        seriesData[variable.id] = []
 
-        if not $('#chart').length then return
+      for record in records
+        seriesData[record.variable_id]?.push(x: record.timestamp / 1000 - timezoneOffset, y: record.value)
 
-        colors = ['red', 'blue', 'green']
-        seriesData = {}
-        series = []
-        timezoneOffset = (new Date).getTimezoneOffset() * 60
+      for variable, i in variables
+        series.push
+          color: colors[i]
+          data: seriesData[variable.id]
 
-        for variable in $rootScope.variables
-          seriesData[variable.id] = []
+      return series
 
-        for record in records
-          seriesData[record.variable_id]?.push(x: record.timestamp / 1000 - timezoneOffset, y: record.value)
+    store.getRecords (err, records) ->
 
-        for variable, i in $rootScope.variables
-          series.push
-            color: colors[i]
-            data: seriesData[variable.id]
+      if not $('#chart').length then return
 
-        graph = new Rickshaw.Graph( {
-          element: document.getElementById('chart'),
+      graph = new Rickshaw.Graph( {
+        element: $('#chart')[0],
+        width: $('.main').width(),
+        height: $('.main').height(),
+        renderer: 'line',
+        series: formatData(records)
+      } )
+
+      # @todo access this through dependency injection
+      gui = require('nw.gui');
+      win = gui.Window.get().on 'resize', ->
+
+        graph.configure({
           width: $('.main').width(),
           height: $('.main').height(),
-          renderer: 'line',
-          series: series
-        } )
+        });
+        graph.render()
 
-        # @todo access this through dependency injection
-        gui = require('nw.gui');
-        win = gui.Window.get().on 'resize', ->
+      new Rickshaw.Graph.Axis.Time({
+        graph: graph
+      });
 
-          graph.configure({
+      graph.render()
+
+      $rootScope.$watch 'variables', ->
+
+        store.getRecords (err, records) ->
+          
+          if not $('#chart').length then return
+
+          $('#chart').empty()
+
+          graph = new Rickshaw.Graph( {
+            element: $('#chart')[0],
             width: $('.main').width(),
             height: $('.main').height(),
-          });
-          graph.render();
+            renderer: 'line',
+            series: formatData(records)
+          } )
 
-        new Rickshaw.Graph.Axis.Time({
-          graph: graph
-        });
+          graph.render()
 
-        graph.render()
+
+        # if not $rootScope.variables.length
+          # @todo show no vars message
+
+      , true
 
     return

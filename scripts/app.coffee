@@ -17,6 +17,8 @@ angular
           variables: ($rootScope, store, $q) ->
             deferred = $q.defer()
             store.getVariables (err, variables) ->
+              for variable in variables
+                variable.selected = true
               $rootScope.variables = variables
               deferred.resolve(variables)
             return deferred.promise
@@ -31,7 +33,12 @@ angular
         views:
           'body@':
             templateUrl: 'templates/default/default.html'
+          'main@body':
+            templateUrl: 'templates/default/main.html'
             controller: 'DefaultMainController'
+          'sidebar@body':
+            templateUrl: 'templates/default/sidebar.html'
+            controller: 'DefaultSidebarController'
 
       .state 'wizard',
         parent: 'root'
@@ -75,11 +82,13 @@ angular
             controller: 'WizardSidebarController'
   .run ($rootScope, $state, store) ->
 
-    store.getVariables (err, variables) ->
-      if err
-        # @todo handle err
-        return
-      $rootScope.variables = variables
-      $rootScope.$digest()
+    # store.getVariables (err, variables) ->
+    #   if err
+    #     # @todo handle err
+    #     return
+    #   $rootScope.variables = variables
+    #   for variable in $rootScope.variables
+    #     variable.selected = true
+    #   $rootScope.$digest()
 
     $state.go('default', id: 3)

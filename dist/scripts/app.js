@@ -6,6 +6,11 @@ angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.n
         var deferred;
         deferred = $q.defer();
         store.getVariables(function(err, variables) {
+          var variable, _i, _len;
+          for (_i = 0, _len = variables.length; _i < _len; _i++) {
+            variable = variables[_i];
+            variable.selected = true;
+          }
           $rootScope.variables = variables;
           return deferred.resolve(variables);
         });
@@ -23,8 +28,15 @@ angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.n
     url: '/',
     views: {
       'body@': {
-        templateUrl: 'templates/default/default.html',
+        templateUrl: 'templates/default/default.html'
+      },
+      'main@body': {
+        templateUrl: 'templates/default/main.html',
         controller: 'DefaultMainController'
+      },
+      'sidebar@body': {
+        templateUrl: 'templates/default/sidebar.html',
+        controller: 'DefaultSidebarController'
       }
     }
   }).state('wizard', {
@@ -91,13 +103,6 @@ angular.module('lifetracker', ['ngSanitize', 'ngAnimate', 'ui.router', 'mgcrea.n
     }
   });
 }).run(function($rootScope, $state, store) {
-  store.getVariables(function(err, variables) {
-    if (err) {
-      return;
-    }
-    $rootScope.variables = variables;
-    return $rootScope.$digest();
-  });
   return $state.go('default', {
     id: 3
   });

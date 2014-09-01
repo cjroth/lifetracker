@@ -10,7 +10,7 @@ ul.list-group.sidebar-variables
   li.list-group-item.variable-toggle(
     ng-repeat='variable in variables | orderBy: "name"'
     data-var='{{variable.id}}'
-    ng-click='variable.selected = !variable.selected'
+    ng-click='select(variable)'
     ng-class='variable.selected ? "active" : ""'
   )
 
