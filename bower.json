@@ -34,6 +34,7 @@
     "angular-route": "~1.2.22",
     "async": "~0.9.0",
     "d3": "~3.4.11",
-    "rickshaw": "~1.5.0"
+    "rickshaw": "~1.5.0",
+    "font-awesome": "~4.2.0"
   }
 }

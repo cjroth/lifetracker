@@ -19,7 +19,6 @@
     "bootstrap": "^3.2.0",
     "chokidar": "^0.8.2",
     "coffee-script": "jashkenas/coffeescript#1.7.0",
-    "font-awesome": "^4.1.0",
     "gulp": "^3.8.7",
     "gulp-angular-filesort": "^1.0.4",
     "gulp-coffee": "^2.1.1",

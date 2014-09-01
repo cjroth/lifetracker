@@ -5,6 +5,12 @@ angular
     $('.datepicker').datepicker
       inputs: $('.range-start, .range-end')
 
+    $scope.chartTypes = ['scatterplot', 'line']
+    $scope.chartTypeIconClasses =
+      scatterplot: 'fa fa-area-chart'
+      line: 'fa fa-line-chart'
+    $scope.chartType = $scope.chartTypes[0]
+
     formatData = (records) ->
 
       seriesData = {}
@@ -35,7 +41,7 @@ angular
         element: $('#chart')[0]
         width: $('.main').width()
         height: $('.main').height()
-        renderer: 'scatterplot'
+        renderer: $scope.chartType
         series: formatData(records)
         dotSize: 5
       )
@@ -57,7 +63,6 @@ angular
 
       new Rickshaw.Graph.HoverDetail(graph: graph)
 
-
       $rootScope.$watch 'variables', ->
 
         store.getRecords (err, records) ->
@@ -74,7 +79,7 @@ angular
             element: $chart[0]
             width: $('.main').width()
             height: $('.main').height()
-            renderer: 'scatterplot'
+            renderer: $scope.chartType
             series: formatData(records)
             dotSize: 5
           )
@@ -89,4 +94,31 @@ angular
 
       , true
 
-    return
+    renderChart = ->
+
+      store.getRecords (err, records) ->
+        
+        $chart = $('#chart')
+
+        if not $chart.length then return
+
+        $chart.empty()
+        $chart.replaceWith('<div id="chart"></div>')
+        $chart = $('#chart')
+
+        graph = new Rickshaw.Graph(
+          element: $chart[0]
+          width: $('.main').width()
+          height: $('.main').height()
+          renderer: $scope.chartType
+          series: formatData(records)
+          dotSize: 5
+        )
+
+        graph.render()
+
+        new Rickshaw.Graph.HoverDetail(graph: graph)
+
+    $scope.cycleChartType = ->
+      $scope.chartType = $scope.chartTypes[$scope.chartTypes.indexOf($scope.chartType) + 1] || $scope.chartTypes[0]
+      renderChart()
