@@ -2,6 +2,9 @@ angular
   .module 'lifetracker'
   .controller 'DefaultMainController', ($scope, $rootScope, store, $window) ->
 
+    $('.datepicker').datepicker
+      inputs: $('.range-start, .range-end')
+
     formatData = (records) ->
 
       seriesData = {}

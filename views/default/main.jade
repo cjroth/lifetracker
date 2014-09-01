@@ -1,13 +1,19 @@
+.chart-buttons.btn-group(ng-class='{ active: showDatepicker }')
+  button.btn.btn-primary(type='button', ng-click='showDatepicker = !showDatepicker'): i.glyphicon.glyphicon-calendar
+.popover.left.datepicker-popover(ng-show='showDatepicker')
+  .arrow
+  .popover-content
+    .row
+      .datepicker
+        .range-start
+        .range-end
+
 #chart_container
 
   #chart
   #y_axis
 
 style.
-
-  .main {
-    padding: 0 !important;
-  }
 
   div, span, p, td {
     font-family: Arial, sans-serif;
