@@ -9,9 +9,7 @@ angular
 
       variable = angular.copy($scope.variable)
       variable.selected = true
-      variable.color = palette.color()
-
-      console.log palette, variable.color
+      variable.color = $rootScope.palette.color()
 
       store.createVariable variable, (err) ->
 

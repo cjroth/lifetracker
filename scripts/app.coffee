@@ -14,12 +14,13 @@ angular
       .state 'root',
         abstract: true
         resolve:
-          variables: ($rootScope, store, $q, palette, variableSorter) ->
+          variables: ($rootScope, store, $q, variableSorter) ->
             deferred = $q.defer()
             store.getVariables (err, variables) ->
+              $rootScope.palette = new Rickshaw.Color.Palette(scheme: 'colorwheel')
               for variable in variables
                 variable.selected = true
-                variable.color = palette.color()
+                variable.color = $rootScope.palette.color()
               $rootScope.variables = variables.sort(variableSorter)
               deferred.resolve(variables)
             return deferred.promise
