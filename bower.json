@@ -35,6 +35,7 @@
     "async": "~0.9.0",
     "d3": "~3.4.11",
     "rickshaw": "~1.5.0",
-    "font-awesome": "~4.2.0"
+    "font-awesome": "~4.2.0",
+    "chance": "~0.5.6"
   }
 }

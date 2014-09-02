@@ -14,10 +14,9 @@ angular
       .state 'root',
         abstract: true
         resolve:
-          variables: ($rootScope, store, $q, variableSorter) ->
+          variables: ($rootScope, store, $q, palette, variableSorter) ->
             deferred = $q.defer()
             store.getVariables (err, variables) ->
-              palette = new Rickshaw.Color.Palette(scheme: 'colorwheel')
               for variable in variables
                 variable.selected = true
                 variable.color = palette.color()
@@ -76,5 +75,6 @@ angular
           'sidebar@body':
             templateUrl: 'templates/wizard/sidebar.html'
             controller: 'WizardSidebarController'
-  .run ($rootScope, $state, store) ->
+  .run ($rootScope, $state, store, fixtures) ->
+    fixtures()
     $state.go('default', id: 3)

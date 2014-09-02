@@ -16,6 +16,8 @@ angular
     formatData = (records) ->
 
       seriesData = {}
+      maximums = {}
+      minimums = {}
       series = []
       timezoneOffset = (new Date).getTimezoneOffset() * 60
 
@@ -26,13 +28,18 @@ angular
 
       for record in records
         seriesData[record.variable_id]?.push(x: record.timestamp / 1000 - timezoneOffset, y: record.value)
+        if !maximums[record.variable_id] or record.value > maximums[record.variable_id]
+         maximums[record.variable_id] = record.value
+        if !minimums[record.variable_id] or record.value < minimums[record.variable_id]
+         minimums[record.variable_id] = record.value
 
       for variable, i in variables
-        series.push
+        series.push(
           name: variable.name
           color: variable.color
           data: seriesData[variable.id]
-
+          scale: d3.scale.linear().domain([minimums[variable.id], maximums[variable.id]]).nice()
+        )
       return series
 
     gui.Window.get().on 'resize', ->

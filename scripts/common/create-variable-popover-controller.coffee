@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'CreateVariablePopoverController', ($rootScope, $scope, store, variableSorter) ->
+  .controller 'CreateVariablePopoverController', ($rootScope, $scope, store, variableSorter, palette) ->
 
     defaults = type: 'scale'
     $scope.variable = angular.copy(defaults)
@@ -9,6 +9,9 @@ angular
 
       variable = angular.copy($scope.variable)
       variable.selected = true
+      variable.color = palette.color()
+
+      console.log palette, variable.color
 
       store.createVariable variable, (err) ->
 
