@@ -1,6 +1,20 @@
 .chart-buttons.btn-group(ng-class='{ active: showDatepicker }')
-  button.btn.btn-primary(type='button', ng-click='showDatepicker = !showDatepicker'): i.glyphicon.glyphicon-calendar
-  button.btn.btn-primary(type='button', ng-click='cycleChartType()'): i(ng-class='chartTypeIconClasses[chartType]')
+  button.btn.btn-primary(
+    type='button'
+    ng-click='toggleDatePicker()'
+    bs-tooltip=''
+    data-title='{{getPrettyDateRange()}}'
+    data-placement='top'
+    data-animation='none'
+  ): i.glyphicon.glyphicon-calendar
+  button.btn.btn-primary(
+    type='button'
+    ng-click='cycleChartType()'
+    bs-tooltip=''
+    data-title='{{chartTypeLabels[chartType]}}'
+    data-placement='top'
+    data-animation='none'
+  ): i(ng-class='chartTypeIconClasses[chartType]')
 .popover.left.datepicker-popover(ng-show='showDatepicker')
   .arrow
   .popover-content

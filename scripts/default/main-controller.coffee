@@ -1,14 +1,14 @@
 angular
   .module 'lifetracker'
-  .controller 'DefaultMainController', ($scope, $rootScope, store, $window, gui) ->
-
-    $('.datepicker').datepicker
-      inputs: $('.range-start, .range-end')
+  .controller 'DefaultMainController', ($scope, $rootScope, store, $window, gui, moment) ->
 
     $scope.chartTypes = ['scatterplot', 'line']
     $scope.chartTypeIconClasses =
       scatterplot: 'fa fa-area-chart'
       line: 'fa fa-line-chart'
+    $scope.chartTypeLabels =
+      scatterplot: 'Dots'
+      line: 'Lines'
     $scope.chartType = $scope.chartTypes[0]
 
     graph = {}
@@ -27,6 +27,11 @@ angular
         seriesData[variable.id] = []
 
       for record in records
+
+        if $scope.dateRange?
+          if $scope.dateRange.start? and record.timestamp < $scope.dateRange.start then continue
+          if $scope.dateRange.end? and record.timestamp > $scope.dateRange.end then continue
+
         seriesData[record.variable_id]?.push(x: record.timestamp / 1000 - timezoneOffset, y: record.value)
         if !maximums[record.variable_id] or record.value > maximums[record.variable_id]
          maximums[record.variable_id] = record.value
@@ -83,8 +88,36 @@ angular
         )
         # new Rickshaw.Graph.Axis.Time(graph: graph)
 
-    $rootScope.$watch 'variables', renderChart, true
+    $scope.getPrettyDateRange = ->
+      return moment($scope.dateRange.start).format('MMM Do') + ' - ' + moment($scope.dateRange.end).format('MMM Do')
 
     $scope.cycleChartType = ->
       $scope.chartType = $scope.chartTypes[$scope.chartTypes.indexOf($scope.chartType) + 1] || $scope.chartTypes[0]
       renderChart()
+
+    $scope.toggleDatePicker = ->
+      $scope.showDatepicker = not $scope.showDatepicker
+
+    $datepicker = $('.datepicker').datepicker
+      inputs: $('.range-start, .range-end')
+
+    # show one month ago until today as default date range
+    initialStartDate = new Date((new Date()).getTime() - 30 * 24 * 60 * 60 * 1000)
+    initialStartDate.setHours(0, 0, 0, 0)
+    initialEndDate = new Date()
+    initialEndDate.setHours(0, 0, 0, 0)
+    $('.range-start').datepicker('setDate', initialStartDate)
+    $('.range-end').datepicker('setDate', initialEndDate)
+
+    $scope.dateRange =
+      start: initialStartDate.getTime()
+      end: initialEndDate.getTime()
+
+    $datepicker.on 'changeDate', (event) ->
+      $scope.dateRange =
+        start: $('.range-start').datepicker('getDate').getTime()
+        end: $('.range-end').datepicker('getDate').getTime()
+      renderChart()
+      $scope.$digest()
+
+    $rootScope.$watch 'variables', renderChart, true
