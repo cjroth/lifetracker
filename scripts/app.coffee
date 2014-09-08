@@ -77,5 +77,5 @@ angular
             templateUrl: 'templates/wizard/sidebar.html'
             controller: 'WizardSidebarController'
   .run ($rootScope, $state, store, fixtures) ->
-    fixtures()
+    # fixtures()
     $state.go('default', id: 3)

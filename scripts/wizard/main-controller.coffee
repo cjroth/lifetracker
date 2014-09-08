@@ -17,13 +17,14 @@ angular
       $scope.records[variable.id] = $scope.record
 
     $scope.skip = ->
+      $scope.record.skipped = true
       if next
         $state.go('wizard.step', id: next.id)
       else
         $state.go('wizard.done')
 
     $scope.continue = ->
-
+      $scope.record.skipped = false
       if next
         $state.go('wizard.step', id: next.id)
       else

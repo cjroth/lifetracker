@@ -6,6 +6,8 @@ angular
 
       async.each _.toArray($scope.records), (record, done) ->
 
+        if record.skipped then return done()
+
         data = 
           variable_id: record.variable.id
           value: if record.variable.type is 'boolean' then !!record.value else parseFloat record.value
