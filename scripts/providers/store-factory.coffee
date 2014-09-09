@@ -56,12 +56,12 @@ angular
         db.each 'select rowid id, * from variables where deleted_at is null order by name asc', done
 
       getRecords: (done) ->
-        db.all 'select rowid id, * from records where deleted_at is null', done
+        db.all 'select rowid id, * from records where deleted_at is null order by date asc', done
 
       getRecordsForDate: (date, done) ->
         statement = db.prepare('select rowid id, * from records where date is $date and deleted_at is null')
         statement.run($date: date)
-        statement.finalize(done)
+        statement.all(done)
 
       getEachRecord: (done) ->
         db.each 'select rowid id, * from records where deleted_at is null', done

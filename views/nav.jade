@@ -11,9 +11,8 @@
     data-animation='none'
   ): i.glyphicon.glyphicon-signal
   a.btn.btn-link.navbar-btn(
-    ui-sref='wizard'
+    ng-click='goToWizard()'
     ng-class='{ active: $state.includes("wizard") }'
-    ui-sref-opts='{ reload: true }'
     bs-tooltip=''
     data-title='Record Data'
     data-placement='bottom'

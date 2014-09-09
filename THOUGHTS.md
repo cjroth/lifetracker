@@ -44,6 +44,7 @@ new data model:
   - if there is not, it will go to the wizard with a new entry
 - wizard should have a datepicker. if we change the date, it should fill in the data from that date for editing.
 
+- add bar chart and calendar view
 - store data in json file instead of sqlite 
 
 these changes will enable a new view. in addition to charts, we can show a calendar view. the calendar can show one

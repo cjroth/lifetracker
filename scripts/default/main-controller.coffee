@@ -2,7 +2,7 @@ angular
   .module 'lifetracker'
   .controller 'DefaultMainController', ($scope, $rootScope, store, $window, gui, moment) ->
 
-    $scope.chartTypes = ['scatterplot', 'line']
+    $scope.chartTypes = ['line', 'scatterplot']
     $scope.chartTypeIconClasses =
       scatterplot: 'fa fa-area-chart'
       line: 'fa fa-line-chart'
@@ -29,8 +29,8 @@ angular
       for record in records
 
         if $scope.dateRange?
-          if $scope.dateRange.start? and record.timestamp < $scope.dateRange.start then continue
-          if $scope.dateRange.end? and record.timestamp > $scope.dateRange.end then continue
+          if $scope.dateRange.start? and record.date < moment($scope.dateRange.start).format('YYYY-MM-DD') then continue
+          if $scope.dateRange.end? and record.date > moment($scope.dateRange.end).format('YYYY-MM-DD') then continue
 
         seriesData[record.variable_id]?.push(x: moment(record.date).unix(), y: record.value)
         if !maximums[record.variable_id] or record.value > maximums[record.variable_id]
@@ -109,7 +109,7 @@ angular
     initialStartDate = new Date((new Date()).getTime() - 30 * 24 * 60 * 60 * 1000)
     initialStartDate.setHours(0, 0, 0, 0)
     initialEndDate = new Date()
-    initialEndDate.setHours(0, 0, 0, 0)
+    initialEndDate.setHours(24, 0, 0, 0)
     $('.range-start').datepicker('setDate', initialStartDate)
     $('.range-end').datepicker('setDate', initialEndDate)
 

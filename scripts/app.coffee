@@ -43,21 +43,15 @@ angular
             controller: 'DefaultSidebarController'
 
       .state 'wizard',
+        abstract: true
         parent: 'root'
         url: '/wizard'
         views:
           'body@':
             templateUrl: 'templates/wizard/wizard.html'
-            controller: ($rootScope, $scope, $state, moment) ->
-              $scope.records = {}
-              if $state.current.name is 'wizard'
-                $state.go('wizard.step',
-                  variable_id: $rootScope.variables[0].id
-                  date: moment().format('YYYY-DD-MM')
-                )
 
       .state 'wizard.done',
-        url: '/done'
+        url: '/:date/done'
         resolve:
           variable: -> null
         views:
@@ -73,11 +67,19 @@ angular
         resolve:
           variable: ($state, $rootScope, $stateParams, variables) ->
             return _.findWhere(variables, id: ~~$stateParams.variable_id)
-          records: ($rootScope, store, $q, $stateParams, variableSorter) ->
+          records: (store, $q, $stateParams) ->
             deferred = $q.defer()
             store.getRecordsForDate $stateParams.date, (err, records) ->
+              if err then throw err
               deferred.resolve(records)
             return deferred.promise
+          record: (records, variable, store, $q, $stateParams) ->
+            record = _.findWhere(records, variable_id: variable.id)
+            if not record
+              record =
+                variable_id: variable.id
+                date: $stateParams.date
+            return record
         views:
           'main@body':
             templateUrl: 'templates/wizard/main.html'
