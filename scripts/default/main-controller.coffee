@@ -93,7 +93,7 @@ angular
         )
 
     $scope.getPrettyDateRange = ->
-      return moment($scope.dateRange.start).format('MMM Do') + ' - ' + moment($scope.dateRange.end).format('MMM Do')
+      return moment($scope.dateRange.start).format('MMM D') + ' - ' + moment($scope.dateRange.end).format('MMM D')
 
     $scope.cycleChartType = ->
       $scope.chartType = $scope.chartTypes[$scope.chartTypes.indexOf($scope.chartType) + 1] || $scope.chartTypes[0]

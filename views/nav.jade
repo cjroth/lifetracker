@@ -18,3 +18,10 @@
     data-placement='bottom'
     data-animation='none'
   ): i.glyphicon.glyphicon-plus
+  a.btn.btn-link.navbar-btn(
+    ng-class='{ active: $state.includes("settings") }'
+    bs-tooltip=''
+    data-title='Settings'
+    data-placement='bottom'
+    data-animation='none'
+  ): i.glyphicon.glyphicon-cog
