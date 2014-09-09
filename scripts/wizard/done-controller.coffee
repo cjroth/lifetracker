@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'WizardDoneController', ($scope, $state, store, variable) ->
+  .controller 'WizardDoneController', ($scope, $state, $stateParams, store, variable) ->
 
     $scope.done = ->
 
@@ -11,8 +11,12 @@ angular
         data = 
           variable_id: record.variable.id
           value: if record.variable.type is 'boolean' then !!record.value else parseFloat record.value
+          date: $stateParams.date
 
-        store.createRecord(data, done)
+        if record.id?
+          store.updateRecord(record.id, record.value, done)
+        else
+          store.createRecord(data, done)
 
       , (err) ->
 

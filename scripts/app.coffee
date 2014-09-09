@@ -48,9 +48,13 @@ angular
         views:
           'body@':
             templateUrl: 'templates/wizard/wizard.html'
-            controller: ($rootScope, $scope, $state) ->
+            controller: ($rootScope, $scope, $state, moment) ->
               $scope.records = {}
-              if $state.current.name is 'wizard' then $state.go('wizard.step', id: $rootScope.variables[0].id)
+              if $state.current.name is 'wizard'
+                $state.go('wizard.step',
+                  variable_id: $rootScope.variables[0].id
+                  date: moment().format('YYYY-DD-MM')
+                )
 
       .state 'wizard.done',
         url: '/done'
@@ -65,10 +69,15 @@ angular
             controller: 'WizardSidebarController'
 
       .state 'wizard.step',
-        url: '/:id'
+        url: '/:date/:variable_id'
         resolve:
           variable: ($state, $rootScope, $stateParams, variables) ->
-            return _.findWhere(variables, id: ~~$stateParams.id)
+            return _.findWhere(variables, id: ~~$stateParams.variable_id)
+          records: ($rootScope, store, $q, $stateParams, variableSorter) ->
+            deferred = $q.defer()
+            store.getRecordsForDate $stateParams.date, (err, records) ->
+              deferred.resolve(records)
+            return deferred.promise
         views:
           'main@body':
             templateUrl: 'templates/wizard/main.html'
@@ -76,6 +85,7 @@ angular
           'sidebar@body':
             templateUrl: 'templates/wizard/sidebar.html'
             controller: 'WizardSidebarController'
+
   .run ($rootScope, $state, store, fixtures) ->
     # fixtures()
     $state.go('default', id: 3)

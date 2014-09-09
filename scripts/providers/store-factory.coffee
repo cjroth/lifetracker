@@ -35,7 +35,14 @@ angular
         statement.run
           $variable_id: data.variable_id
           $value: data.value
-          $date: data.date || moment().format('YYYY-MM-DD')
+          $date: data.date
+        statement.finalize(done)
+
+      updateRecord: (id, value, done) ->
+        statement = db.prepare('update records set value = $value where rowid = $id')
+        statement.run
+          $id: id
+          $value: value
         statement.finalize(done)
 
       getVariables: (done) ->
@@ -50,6 +57,11 @@ angular
 
       getRecords: (done) ->
         db.all 'select rowid id, * from records where deleted_at is null', done
+
+      getRecordsForDate: (date, done) ->
+        statement = db.prepare('select rowid id, * from records where date is $date and deleted_at is null')
+        statement.run($date: date)
+        statement.finalize(done)
 
       getEachRecord: (done) ->
         db.each 'select rowid id, * from records where deleted_at is null', done
