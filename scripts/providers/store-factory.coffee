@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .factory 'store', (db) ->
+  .factory 'store', (db, moment) ->
 
     store =
 
@@ -31,11 +31,11 @@ angular
         statement.finalize(done)
 
       createRecord: (data, done) ->
-        statement = db.prepare('insert into records values ($variable_id, $value, $timestamp, null)')
+        statement = db.prepare('insert into records values ($variable_id, $value, $date, null)')
         statement.run
           $variable_id: data.variable_id
           $value: data.value
-          $timestamp: data.timestamp || (new Date).getTime()
+          $date: data.date || moment().format('YYYY-MM-DD')
         statement.finalize(done)
 
       getVariables: (done) ->

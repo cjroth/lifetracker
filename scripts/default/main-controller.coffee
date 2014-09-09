@@ -32,12 +32,11 @@ angular
           if $scope.dateRange.start? and record.timestamp < $scope.dateRange.start then continue
           if $scope.dateRange.end? and record.timestamp > $scope.dateRange.end then continue
 
-        seriesData[record.variable_id]?.push(x: record.timestamp / 1000 - timezoneOffset, y: record.value)
+        seriesData[record.variable_id]?.push(x: moment(record.date).unix(), y: record.value)
         if !maximums[record.variable_id] or record.value > maximums[record.variable_id]
          maximums[record.variable_id] = record.value
         if !minimums[record.variable_id] or record.value < minimums[record.variable_id]
-         minimums[record.variable_id] = record.value - .5 # make minimum slightly less than actual minimum so that
-                                                          # points don't get cut off of bottom
+         minimums[record.variable_id] = record.value
 
       for variable, i in variables
         series.push(
@@ -83,10 +82,15 @@ angular
           formatter: (series, x, y) ->
             units = if series.variable.type is 'scale' then '/ 10' else series.variable.units
             value = Math.round(y * 100) / 100 # round to 2 decimal places
-            series.name + ': ' + value + ' ' + units
+            return series.name + ': ' + value + ' ' + units
+          xFormatter: (x) ->
+            return moment(x * 1000).format('dddd, MMMM DD, YYYY')
           graph: graph
         )
-        # new Rickshaw.Graph.Axis.Time(graph: graph)
+        new Rickshaw.Graph.Axis.Time(
+          graph: graph
+          timeUnit: name: '2 hour', seconds: 3600 * 2, formatter: (d) -> moment(d).format('h:mm a')
+        )
 
     $scope.getPrettyDateRange = ->
       return moment($scope.dateRange.start).format('MMM Do') + ' - ' + moment($scope.dateRange.end).format('MMM Do')
