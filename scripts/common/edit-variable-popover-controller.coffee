@@ -7,12 +7,6 @@ angular
     $scope.save = ->
 
       store.updateVariable $scope.form.id, $scope.form, (err) ->
-
-        if err
-          # @todo handle error
-          return
-
-        angular.extend($scope.variable, $scope.form)
+        if err then throw err
+        $rootScope.reloadVariables()
         $scope.$hide()
-        $rootScope.variables.sort(variableSorter)
-        $rootScope.$digest()

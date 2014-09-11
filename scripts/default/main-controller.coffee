@@ -46,6 +46,7 @@ angular
           data: seriesData[variable.id]
           scale: d3.scale.linear().domain([minimums[variable.id], maximums[variable.id]]).nice()
         )
+
       return series
 
     gui.Window.get().on 'resize', ->

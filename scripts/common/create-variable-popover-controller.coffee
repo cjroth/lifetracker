@@ -12,13 +12,7 @@ angular
       variable.color = $rootScope.palette.color()
 
       store.createVariable variable, (err) ->
-
-        if err
-          # @todo handle error
-          return
-
+        if err then throw err
         $scope.CreateVariablePopover.visible = false
-        $rootScope.variables.push(variable)
-        $rootScope.variables.sort(variableSorter)
-        $rootScope.$digest()
+        $rootScope.reloadVariables()
         $scope.variable = angular.copy(defaults)

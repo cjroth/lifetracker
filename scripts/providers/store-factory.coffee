@@ -46,7 +46,7 @@ angular
         statement.finalize(done)
 
       getVariables: (done) ->
-        db.all 'select rowid id, * from variables where deleted_at is null order by name asc', (err, vars) ->
+        db.all 'select rowid id, * from variables where deleted_at is null order by lower(name) asc', (err, vars) ->
           variables = []
           for variable in vars
             variables.push variable

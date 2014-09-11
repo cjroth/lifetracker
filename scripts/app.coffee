@@ -65,8 +65,8 @@ angular
       .state 'wizard.step',
         url: '/:date/:variable_id'
         resolve:
-          variable: ($state, $rootScope, $stateParams, variables) ->
-            return _.findWhere(variables, id: ~~$stateParams.variable_id)
+          variable: ($state, $rootScope, $stateParams) ->
+            return _.findWhere($rootScope.variables, id: ~~$stateParams.variable_id)
           records: (store, $q, $stateParams) ->
             deferred = $q.defer()
             store.getRecordsForDate $stateParams.date, (err, records) ->
@@ -88,6 +88,16 @@ angular
             templateUrl: 'templates/wizard/sidebar.html'
             controller: 'WizardSidebarController'
 
-  .run ($rootScope, $state, store, fixtures) ->
+  .run ($rootScope, $state, store, fixtures, variableSorter) ->
     # fixtures()
     $state.go('default', id: 3)
+
+    $rootScope.reloadVariables = (done) ->
+      store.getVariables (err, variables) ->
+        $rootScope.palette = new Rickshaw.Color.Palette(scheme: 'colorwheel')
+        for variable in variables
+          variable.selected = true
+          variable.color = $rootScope.palette.color()
+        $rootScope.variables = variables.sort(variableSorter)
+        $rootScope.$digest()
+        done?()
