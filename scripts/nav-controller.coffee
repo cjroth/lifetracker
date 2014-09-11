@@ -7,5 +7,7 @@ angular
     $scope.goToWizard = ->
       $state.go('wizard.step',
         variable_id: $rootScope.variables[0].id
-        date: moment().format('YYYY-MM-DD')
+        # don't go to new day until 4am. most people will probably enter data at the end of
+        # the day sometime after midnight
+        date: moment().subtract(4, 'hours').format('YYYY-MM-DD')
       )
