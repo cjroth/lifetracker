@@ -58,11 +58,12 @@ angular
       return series
 
     gui.Window.get().on 'resize', ->
-      graph.configure(
-        width: $('.main').width()
-        height: $('.main').height()
-      )
-      graph.render()
+      # graph.configure(
+      #   width: $('.main').width()
+      #   height: $('.main').height()
+      # )
+      # graph.render()
+      renderChart()
 
     renderChart = ->
 

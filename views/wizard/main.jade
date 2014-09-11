@@ -1,16 +1,17 @@
-.progress: .progress-bar.progress-bar-striped(style='width: {{progress}}%')
+.wizard
+  .progress: .progress-bar.progress-bar-striped(style='width: {{progress}}%')
 
-h2 {{variable.name}}
-p(ng-show='variable.question') {{variable.question}}
-ng-include(src='"templates/" + variable.type + "-input.html"')
+  h2 {{variable.name}}
+  p(ng-show='variable.question') {{variable.question}}
+  ng-include(src='"templates/" + variable.type + "-input.html"')
 
-footer
-  .pull-left
-    button.btn.btn-lg.btn-primary(ng-show='previous', ng-click='previous()')
-      i.glyphicon.glyphicon-chevron-left
-      |  Previous
-  .pull-right
-    button.btn.btn-lg.btn-primary(ng-click='skip()') Skip
-    button.btn.btn-lg.btn-primary(ng-click='continue()')
-      | Continue 
-      i.glyphicon.glyphicon-chevron-right
+  footer
+    .pull-left
+      button.btn.btn-lg.btn-primary(ng-show='previous', ng-click='previous()')
+        i.glyphicon.glyphicon-chevron-left
+        |  Previous
+    .pull-right
+      button.btn.btn-lg.btn-primary(ng-click='skip()') Skip
+      button.btn.btn-lg.btn-primary(ng-click='continue()')
+        | Continue 
+        i.glyphicon.glyphicon-chevron-right

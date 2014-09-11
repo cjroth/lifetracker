@@ -1,17 +1,19 @@
-.progress: .progress-bar.progress-bar-striped(style='width: 100%')
+.wizard
 
-h2
-  i.glyphicon.glyphicon-thumbs-up
-  |  That's it
+  .progress: .progress-bar.progress-bar-striped(style='width: 100%')
 
-p Click the button to save your data.
+  h2
+    i.glyphicon.glyphicon-thumbs-up
+    |  That's it
 
-footer
-  .pull-left
-    button.btn.btn-lg.btn-primary(ng-show='previous', ng-click='previous()')
-      i.glyphicon.glyphicon-chevron-left
-      |  Previous
-  .pull-right
-    button.btn.btn-lg.btn-primary(ng-click='done()')
-      | Cool 
-      i.glyphicon.glyphicon-send
+  p Click the button to save your data.
+
+  footer
+    .pull-left
+      button.btn.btn-lg.btn-primary(ng-show='previous', ng-click='previous()')
+        i.glyphicon.glyphicon-chevron-left
+        |  Previous
+    .pull-right
+      button.btn.btn-lg.btn-primary(ng-click='done()')
+        | Cool 
+        i.glyphicon.glyphicon-send
