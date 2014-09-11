@@ -33,18 +33,26 @@ angular
           if $scope.dateRange.end? and record.date > moment($scope.dateRange.end).format('YYYY-MM-DD') then continue
 
         seriesData[record.variable_id]?.push(x: moment(record.date).unix(), y: record.value)
-        if !maximums[record.variable_id] or record.value > maximums[record.variable_id]
-         maximums[record.variable_id] = record.value
+
         if !minimums[record.variable_id] or record.value < minimums[record.variable_id]
          minimums[record.variable_id] = record.value
+        if !maximums[record.variable_id] or record.value > maximums[record.variable_id]
+         maximums[record.variable_id] = record.value
 
       for variable, i in variables
+        scale = 'linear'
+        # if variable.type is 'scale'
+        #   minimums[variable.id] = 0
+        #   maximums[variable.id] = 10
         series.push(
           name: variable.name
           variable: variable
           color: variable.color
           data: seriesData[variable.id]
-          scale: d3.scale.linear().domain([minimums[variable.id], maximums[variable.id]]).nice()
+          scale: d3
+            .scale.linear()
+            # .range([minimums[variable.id], maximums[variable.id]])
+            .nice()
         )
 
       return series
