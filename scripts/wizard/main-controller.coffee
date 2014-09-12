@@ -47,7 +47,7 @@ angular
     save = ->
       if record.id?
         store.updateRecord(record.id, record.value, onSaveComplete)
-        console.info('updating record ' + variable.name + ' record (' + record.id + '): ' + record.value)
+        console.info('updating ' + variable.name + ' record (' + record.id + '): ' + record.value)
       else
         store.createRecord(record, onSaveComplete)
         console.info('creating ' + variable.name + ' record: ' + record.value)

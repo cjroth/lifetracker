@@ -2,13 +2,14 @@ angular
   .module 'lifetracker'
   .controller 'DefaultMainController', ($scope, $rootScope, store, $window, gui, moment, settings) ->
 
-    start = {}
-    end = {}
+    start = null
+    end = null
 
-    $scope.chartTypes = ['line', 'scatterplot']
+    $scope.chartTypes = ['line', 'stack', 'scatterplot']
     $scope.chartTypeIconClasses =
-      scatterplot: 'fa fa-area-chart'
       line: 'fa fa-line-chart'
+      stack: 'fa fa-area-chart'
+      scatterplot: 'fa fa-circle'
     $scope.chartTypeLabels =
       scatterplot: 'Dots'
       line: 'Lines'
