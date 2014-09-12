@@ -4,6 +4,7 @@ $     = require('gulp-load-plugins')()
 paths =
   scripts: 'scripts/**/*.coffee'
   templates: 'views/**/*.jade'
+  stylesheets: 'styles.less'
   index: 'index.jade'
 
 gulp.task 'build:scripts', ->
@@ -17,6 +18,12 @@ gulp.task 'build:templates', ->
     .src paths.templates
     .pipe $.jade(pretty: true)
     .pipe gulp.dest('dist/templates')
+
+gulp.task 'build:stylesheets', ->
+  gulp
+    .src paths.stylesheets
+    .pipe $.less()
+    .pipe gulp.dest('dist/stylesheets')
 
 gulp.task 'build:index', ['build:scripts'], ->
   gulp
@@ -35,7 +42,8 @@ gulp.task 'build:watch', ['build'], ->
     .watch [
       paths.scripts
       paths.templates
+      paths.stylesheets
       paths.index
     ], ['build']
 
-gulp.task 'build', ['build:templates', 'build:index']
+gulp.task 'build', ['build:stylesheets', 'build:templates', 'build:index']

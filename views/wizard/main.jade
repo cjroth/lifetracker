@@ -1,7 +1,6 @@
 .wizard
-  .progress: .progress-bar.progress-bar-striped(style='width: {{progress}}%')
+  .progress: .progress-bar.progress-bar-striped(style='width: {{progress}}%'): span.title {{variable.name}}
 
-  h2 {{variable.name}}
   p(ng-show='variable.question') {{variable.question}}
   ng-include(src='"templates/" + variable.type + "-input.html"')
 

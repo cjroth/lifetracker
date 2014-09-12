@@ -37,7 +37,7 @@
     "chance": "~0.5.6",
     "moment": "~2.8.3",
     "jquery": "~2.1.1",
-    "bootflat": "*",
-    "bootstrap": "~3.2.0"
+    "bootstrap": "~3.2.0",
+    "bootflat": "bootflat/bootflat.github.io#v2.0.4"
   }
 }

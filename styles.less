@@ -1,7 +1,8 @@
-@import "node_modules/bootstrap/less/bootstrap.less";
-@import "node_modules/font-awesome/css/font-awesome.css";
+@import "bower_components/bootstrap/less/bootstrap.less";
+@import "../../bower_components/font-awesome/css/font-awesome.css";
+@import (inline) "bower_components/bootflat/bootflat/css/bootflat.css";
 
-@icon-font-path: "node_modules/bootstrap/fonts/";
+@icon-font-path: "../../bower_components/bootstrap/fonts/";
 
 * {
   -webkit-touch-callout: none;
@@ -52,6 +53,23 @@ body {
   position: relative;
   .wizard {
     padding: 20px;
+    .progress {
+      height: 60px !important;
+      &-bar {
+        line-height: 60px;
+        text-align: left;
+        .title {
+          font-size: 30px;
+          margin-left: 20px;
+          font-weight: bold;
+          text-shadow: 1px 1px 1px #9c9c9c;
+        }
+      }
+    }
+    p {
+      font-size: 25px;
+      margin: 25px 0;
+    }
   }
 }
 
@@ -272,12 +290,38 @@ footer {
   z-index: 30000;
 }
 
-h1 {
-  padding-bottom: 10px;
+h2 {
+  font-size: 36px;
+  padding-bottom: 30px !important;
   color: #414141;
   border-bottom: 1px solid #414141;
   i {
-    top: 5px;
-    margin-right: 5px;
+    top: 5px !important;
+    margin-right: 10px;
+  }
+}
+
+// h2 {
+//   font-size: 30px;
+//   color: #fff;
+//   border: none;
+//   height: 60px;
+//   padding: 10px 20px;
+//   text-shadow: 1px 1px 1px #9c9c9c;
+//   font-weight: bold;
+//   background-color: #3bafda;
+//   border-radius: 4px;
+//   i {
+//     top: 5px !important;
+//     margin-right: 10px;
+//   }
+// }
+
+.list-group-item.active {
+  &,
+  &:hover,
+  &:focus {
+    background-color: #3BAFDA;
+    border-color: #3BAFDA;
   }
 }
