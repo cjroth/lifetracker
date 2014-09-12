@@ -57,13 +57,9 @@ angular
 
       return series
 
-    gui.Window.get().on 'resize', ->
-      # graph.configure(
-      #   width: $('.main').width()
-      #   height: $('.main').height()
-      # )
-      # graph.render()
-      renderChart()
+    gui.Window.get().on 'resize', -> renderChart()
+    gui.Window.get().on 'enterFullscreen', -> renderChart()
+    gui.Window.get().on 'leaveFullscreen', -> renderChart()
 
     renderChart = ->
 
