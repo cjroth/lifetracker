@@ -1,0 +1,15 @@
+.container
+
+  h1
+    i.glyphicon.glyphicon-cog
+    | Settings
+
+  .row
+    .col-md-6
+      label
+        | Data Location
+        .input-group(name='settings-data-location-button')
+          input.form-control(type='text', ng-model='settings.dataLocation', readonly)
+          span.input-group-btn
+            button.btn.btn-primary(type='button'): i.glyphicon.glyphicon-folder-open
+        input.hidden(type='file', accept='.sqlite', name='settings-data-location')
