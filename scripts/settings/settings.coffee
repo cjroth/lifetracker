@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'SettingsController', ($scope, settings, $rootScope, $location, $window) ->
+  .controller 'SettingsController', ($scope, settings, $rootScope, db) ->
 
     $scope.settings = settings
 
@@ -11,4 +11,5 @@ angular
       $scope.settings.dataLocation = @value
       settings.dataLocation = @value
       settings.save()
-      $rootScope.reloadVariables()
+      db.add settings.dataLocation, ->
+        $rootScope.reloadVariables()
