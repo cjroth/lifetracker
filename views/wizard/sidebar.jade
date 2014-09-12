@@ -1,7 +1,12 @@
 .btn-group.btn-group-justified.date-buttons
   a.btn.btn-primary.date-buttons-previous(ng-click='goToPreviousDate()'): i.glyphicon.glyphicon-chevron-left
-  a.btn.btn-primary.text-center.date-buttons-date(type='button') {{date.pretty}}
+  a.btn.btn-primary.text-center.date-buttons-date(
+    type='button'
+    ng-click='toggleSelectDatePopover()'
+  ) {{date.pretty}}
   a.btn.btn-primary.date-buttons-next(ng-click='goToNextDate()'): i.glyphicon.glyphicon-chevron-right
+
+include ../select-date-popover
 
 ul.list-group.sidebar-variables
 

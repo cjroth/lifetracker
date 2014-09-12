@@ -20,6 +20,9 @@ angular
         date: moment($stateParams.date).add(1, 'days').format('YYYY-MM-DD')
       )
 
+    $scope.toggleSelectDatePopover = ->
+      $scope.showSelectDatePopover = not $scope.showSelectDatePopover
+
     $scope.currentVariable = variable
 
     $scope.date = pretty: moment($stateParams.date).format('ddd, MMM D')
