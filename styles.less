@@ -166,17 +166,48 @@ nav .datepicker input {
   right: 115px;
   max-width: none;
   position: fixed;
-}
-
-.datepicker-popover > .arrow {
-  right: -12px !important;
-  left: auto !important;
-  bottom: 5px !important;
-  top: auto !important;
-}
-
-.datepicker-popover .datepicker > div {
-  display: inline-block;
+  & > .arrow {
+    right: -12px !important;
+    left: auto !important;
+    bottom: 5px !important;
+    top: auto !important;
+  }
+  .datepicker {
+    & > div {
+      display: inline-block;
+      vertical-align: top;
+    }
+    & th:not(.dow):hover {
+      background-color: #3BAFDA !important;
+    }
+    & span {
+      // border-radius: 0 !important;
+    }
+    & span:hover {
+      background-color: #3BAFDA !important;
+    }
+    & span.active {
+      background-color: #656D78 !important;
+    }
+    &-days {
+      .day {
+        &.active,
+        &.selected,
+        &.range {
+          border-radius: 0;
+          background-color: #656D78;
+        }
+        &:hover {
+          border-radius: 0;
+          background-color: #3BAFDA !important;
+        }
+        &.old,
+        &.new {
+          color: #CCD1D9;
+        }
+      }
+    }
+  }
 }
 
 .create-variable-popover {
