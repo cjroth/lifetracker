@@ -11,8 +11,9 @@ angular
       stack: 'fa fa-area-chart'
       scatterplot: 'fa fa-circle'
     $scope.chartTypeLabels =
-      scatterplot: 'Dots'
       line: 'Lines'
+      stack: 'Area'
+      scatterplot: 'Dots'
     $scope.chartType = settings.chartType || $scope.chartTypes[0]
 
     graph = {}
