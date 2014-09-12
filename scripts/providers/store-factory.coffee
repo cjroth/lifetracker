@@ -16,34 +16,34 @@ angular
         statement.finalize(done)
 
       deleteVariable: (id, done) ->
-        statement = db(settings.dataLocation).prepare('update variables set deleted_at = $deleted_at where rowid = $id')
-        statement.run
+        statement = 'update variables set deleted_at = $deleted_at where rowid = $id'
+        params = 
           $id: id
           $deleted_at: (new Date).getTime()
-        statement.finalize(done)
+        db(settings.dataLocation).run(statement, params, done)
 
       updateVariable: (id, data, done) ->
-        statement = db(settings.dataLocation).prepare('update variables set name = $name, question = $question where rowid = $id')
-        statement.run
+        statement = 'update variables set name = $name, question = $question where rowid = $id'
+        params =
           $id: id
           $name: data.name
           $question: data.question
-        statement.finalize(done)
+        db(settings.dataLocation).run(statement, params, done)
 
       createRecord: (data, done) ->
-        statement = db(settings.dataLocation).prepare('insert into records values ($variable_id, $value, $date, null)')
-        statement.run
+        statement = 'insert into records values ($variable_id, $value, $date, null)'
+        params =
           $variable_id: data.variable_id
           $value: data.value
           $date: data.date
-        statement.finalize(done)
+        db(settings.dataLocation).run(statement, params, done)
 
       updateRecord: (id, value, done) ->
-        statement = db(settings.dataLocation).prepare('update records set value = $value where rowid = $id')
-        statement.run
+        statement = 'update records set value = $value where rowid = $id'
+        params =
           $id: id
           $value: value
-        statement.finalize(done)
+        db(settings.dataLocation).run(statement, params, done)
 
       getVariables: (done) ->
         db(settings.dataLocation).all 'select rowid id, * from variables where deleted_at is null order by lower(name) asc', (err, variables) ->

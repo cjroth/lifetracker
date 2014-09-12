@@ -30,7 +30,7 @@ angular
         date: $stateParams.date
       )
 
-    $scope.skip = ->
+    $scope.continue = ->
       if next
         goToNext()
       else
@@ -38,17 +38,19 @@ angular
 
     onSaveComplete = (err) ->
       if err then throw err
-      if next
-        goToNext()
-      else
-        goToDone()
+      record.id ?= @lastID
 
-    $scope.continue = ->
+    $scope.onInputLoaded = ->
+      $('[name="record"]').on('change slideStop', save)
+      return
 
+    save = ->
       if record.id?
         store.updateRecord(record.id, record.value, onSaveComplete)
+        console.info('updating record ' + variable.name + ' record (' + record.id + '): ' + record.value)
       else
         store.createRecord(record, onSaveComplete)
+        console.info('creating ' + variable.name + ' record: ' + record.value)
 
     if previous
       $scope.previous = goToPrevious

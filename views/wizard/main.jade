@@ -2,15 +2,14 @@
   .progress: .progress-bar.progress-bar-striped(style='width: {{progress}}%'): span.title {{variable.name}}
 
   p(ng-show='variable.question') {{variable.question}}
-  ng-include(src='"templates/" + variable.type + "-input.html"')
+  ng-include(src='"templates/" + variable.type + "-input.html"', onload='onInputLoaded()')
 
   footer
     .pull-left
       button.btn.btn-lg.btn-primary(ng-show='previous', ng-click='previous()')
         i.glyphicon.glyphicon-chevron-left
-        span.hidden-xs Previous
+        |  Previous
     .pull-right
-      button.btn.btn-lg.btn-primary(ng-click='skip()') Skip
       button.btn.btn-lg.btn-primary(ng-click='continue()')
-        span.hidden-xs Continue 
+        | Continue 
         i.glyphicon.glyphicon-chevron-right
