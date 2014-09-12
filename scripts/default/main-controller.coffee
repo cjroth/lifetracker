@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'DefaultMainController', ($scope, $rootScope, store, $window, gui, moment) ->
+  .controller 'DefaultMainController', ($scope, $rootScope, store, $window, gui, moment, settings) ->
 
     $scope.chartTypes = ['line', 'scatterplot']
     $scope.chartTypeIconClasses =
@@ -9,7 +9,7 @@ angular
     $scope.chartTypeLabels =
       scatterplot: 'Dots'
       line: 'Lines'
-    $scope.chartType = $scope.chartTypes[0]
+    $scope.chartType = settings.chartType || $scope.chartTypes[0]
 
     graph = {}
 
@@ -103,6 +103,8 @@ angular
 
     $scope.cycleChartType = ->
       $scope.chartType = $scope.chartTypes[$scope.chartTypes.indexOf($scope.chartType) + 1] || $scope.chartTypes[0]
+      settings.chartType = $scope.chartType
+      settings.save()
       renderChart()
 
     $scope.toggleDatePicker = ->
