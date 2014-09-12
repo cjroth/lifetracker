@@ -2,6 +2,9 @@ angular
   .module 'lifetracker'
   .controller 'DefaultMainController', ($scope, $rootScope, store, $window, gui, moment, settings) ->
 
+    start = {}
+    end = {}
+
     $scope.chartTypes = ['line', 'scatterplot']
     $scope.chartTypeIconClasses =
       scatterplot: 'fa fa-area-chart'
@@ -28,11 +31,10 @@ angular
 
       for record in records
 
-        if $scope.dateRange?
-          if $scope.dateRange.start? and record.date < moment($scope.dateRange.start).format('YYYY-MM-DD') then continue
-          if $scope.dateRange.end? and record.date > moment($scope.dateRange.end).format('YYYY-MM-DD') then continue
+        if moment(record.date).isBefore(start) then continue
+        if moment(record.date).isAfter(end) then continue
 
-        seriesData[record.variable_id]?.push(x: moment(record.date).unix(), y: record.value)
+        seriesData[record.variable_id]?.push(x: moment(record.date).valueOf(), y: record.value)
 
         if !minimums[record.variable_id] or record.value < minimums[record.variable_id]
          minimums[record.variable_id] = record.value
@@ -90,7 +92,7 @@ angular
             value = Math.round(y * 100) / 100 # round to 2 decimal places
             return series.name + ': ' + value + ' ' + units
           xFormatter: (x) ->
-            return moment(x * 1000).format('dddd, MMMM DD, YYYY')
+            return moment(x).format('dddd, MMMM DD, YYYY')
           graph: graph
         )
         new Rickshaw.Graph.Axis.Time(
@@ -99,7 +101,7 @@ angular
         )
 
     $scope.getPrettyDateRange = ->
-      return moment($scope.dateRange.start).format('MMM D') + ' - ' + moment($scope.dateRange.end).format('MMM D')
+      return start.format('MMM D') + ' - ' + end.format('MMM D')
 
     $scope.cycleChartType = ->
       $scope.chartType = $scope.chartTypes[$scope.chartTypes.indexOf($scope.chartType) + 1] || $scope.chartTypes[0]
@@ -114,21 +116,18 @@ angular
       inputs: $('.range-start, .range-end')
 
     # show one month ago until today as default date range
-    initialStartDate = new Date((new Date()).getTime() - 30 * 24 * 60 * 60 * 1000)
-    initialStartDate.setHours(0, 0, 0, 0)
-    initialEndDate = new Date()
-    initialEndDate.setHours(0, 0, 0, 0)
-    $('.range-start').datepicker('setDate', initialStartDate)
-    $('.range-end').datepicker('setDate', initialEndDate)
+    
+    start = moment({ h: 0, m: 0, s: 0, ms: 0 }).subtract(settings.dateRangeSize || 30, 'days')
+    end = moment({ h: 0, m: 0, s: 0, ms: 0 })
 
-    $scope.dateRange =
-      start: initialStartDate.getTime()
-      end: initialEndDate.getTime()
+    $('.range-start').datepicker('setDate', new Date(start))
+    $('.range-end').datepicker('setDate', new Date(end))
 
     $datepicker.on 'changeDate', (event) ->
-      $scope.dateRange =
-        start: $('.range-start').datepicker('getDate').getTime()
-        end: $('.range-end').datepicker('getDate').getTime()
+      start = moment($('.range-start').datepicker('getDate'))
+      end = moment($('.range-end').datepicker('getDate'))
+      settings.dateRangeSize = end.diff(start, 'days')
+      settings.save()
       renderChart()
       $scope.$digest()
 
