@@ -46,17 +46,15 @@ angular
         statement.finalize(done)
 
       getVariables: (done) ->
-        db(settings.dataLocation).all 'select rowid id, * from variables where deleted_at is null order by lower(name) asc', (err, vars) ->
-          variables = []
-          for variable in vars
-            variables.push variable
-          done(err, variables)
+        db(settings.dataLocation).all 'select rowid id, * from variables where deleted_at is null order by lower(name) asc', (err, variables) ->
+          done(err, variables or [])
 
       getEachVariable: (done) ->
         db(settings.dataLocation).each 'select rowid id, * from variables where deleted_at is null order by name asc', done
 
       getRecords: (done) ->
-        db(settings.dataLocation).all 'select rowid id, * from records where deleted_at is null order by date asc', done
+        db(settings.dataLocation).all 'select rowid id, * from records where deleted_at is null order by date asc', (err, records) ->
+          done(err, records or [])
 
       getRecordsForDate: (date, done) ->
         statement = db(settings.dataLocation).prepare('select rowid id, * from records where date is $date and deleted_at is null')

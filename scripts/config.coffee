@@ -91,11 +91,12 @@ angular
             templateUrl: 'templates/settings/settings.html'
             controller: 'SettingsController'
 
-  .run ($rootScope, $state, store, fixtures, variableSorter, settings) ->
+  .run ($rootScope, $state, store, fixtures, variableSorter, settings, db) ->
 
     # fixtures()
-    
-    $state.go('default', id: 3)
+
+    db.add settings.dataLocation, ->
+      $state.go('default', id: 3)
 
     $rootScope.reloadVariables = (done) ->
       store.getVariables (err, variables) ->
