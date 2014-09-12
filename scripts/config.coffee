@@ -96,7 +96,7 @@ angular
     # fixtures()
 
     db.add settings.dataLocation, ->
-      $state.go('default', id: 3)
+      $state.go('default')
 
     $rootScope.reloadVariables = (done) ->
       store.getVariables (err, variables) ->

@@ -115,7 +115,7 @@ angular
     initialStartDate = new Date((new Date()).getTime() - 30 * 24 * 60 * 60 * 1000)
     initialStartDate.setHours(0, 0, 0, 0)
     initialEndDate = new Date()
-    initialEndDate.setHours(24, 0, 0, 0)
+    initialEndDate.setHours(0, 0, 0, 0)
     $('.range-start').datepicker('setDate', initialStartDate)
     $('.range-end').datepicker('setDate', initialEndDate)
 
