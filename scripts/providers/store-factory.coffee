@@ -5,15 +5,15 @@ angular
     store =
 
       createVariable: (data, done) ->
-        statement = db(settings.dataLocation).prepare('insert into variables values ($name, $type, $min, $max, $question, $units, null)')
-        statement.run
+        statement = 'insert into variables values ($name, $type, $min, $max, $question, $units, null)'
+        params =
           $name: data.name
           $question: data.question
           $type: data.type
           $min: data.min
           $max: data.max
           $units: data.units
-        statement.finalize(done)
+        db(settings.dataLocation).run(statement, params, done)
 
       deleteVariable: (id, done) ->
         statement = 'update variables set deleted_at = $deleted_at where rowid = $id'

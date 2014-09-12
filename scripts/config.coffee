@@ -9,12 +9,12 @@ angular
       .state 'root',
         abstract: true
         resolve:
-          variables: ($rootScope, store, $q, variableSorter) ->
+          variables: ($rootScope, store, $q, variableSorter, settings) ->
             deferred = $q.defer()
             store.getVariables (err, variables) ->
               $rootScope.palette = new Rickshaw.Color.Palette(scheme: 'colorwheel')
               for variable in variables
-                variable.selected = true
+                variable.selected = _.contains(settings.selected, variable.id)
                 variable.color = $rootScope.palette.color()
               $rootScope.variables = variables.sort(variableSorter)
               deferred.resolve(variables)
@@ -102,7 +102,7 @@ angular
       store.getVariables (err, variables) ->
         $rootScope.palette = new Rickshaw.Color.Palette(scheme: 'colorwheel')
         for variable in variables
-          variable.selected = true
+          variable.selected = _.contains(settings.selected, variable.id)
           variable.color = $rootScope.palette.color()
         $rootScope.variables = variables.sort(variableSorter)
         $rootScope.$digest()

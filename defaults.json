@@ -1,3 +1,4 @@
 {
-  "dataLocation": "data/database.sqlite"
+  "dataLocation": "data/database.sqlite",
+  "selected": []
 }
