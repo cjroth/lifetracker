@@ -91,15 +91,15 @@ nav {
 
   }
 
-}
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
 
-nav .dropdown:hover .dropdown-menu {
-  display: block;
-}
+  .datepicker input {
+    width: auto !important;
+    padding-left: 10px;
+  }
 
-nav .datepicker input {
-  width: auto !important;
-  padding-left: 10px;
 }
 
 .variable-toggle {
@@ -121,42 +121,31 @@ nav .datepicker input {
 
 }
 
-.popover .row [class^='col-'] {
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-.popover .row {
-  margin-left: -10px;
-  margin-right: -10px;
-}
-
-.popover .row:not(:last-child) {
-  margin-bottom: 10px;
-}
-
-/* this is how we can tweak the popover position */
-/*.popover {
-  margin-top: 65px;
-}
-.popover .arrow {
-  top: 30px !important;
-}*/
-
-.popover .selecter {
-  color: #333;
-}
-
-.selecter.cover .selecter-options {
-  border: none;
-}
-
-.popover .form-group {
-  margin-bottom: 10px;
-}
-
-.popover .form-group:last-child {
-  margin-bottom: 0;
+.popover {
+  .row {
+    margin-left: -10px;
+    margin-right: -10px;
+    & [class^='col-'] {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
+  .form-group {
+    margin-bottom: 10px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  // this is the selecter thingy.
+  // .selecter {
+  //   color: #333;
+  //   &.cover &-options {
+  //     border: none;
+  //   }
+  // }
 }
 
 .datepicker-popover {
@@ -214,6 +203,9 @@ nav .datepicker input {
   left: 287px;
   top: 27px;
   position: fixed;
+  & > .arrow {
+    top: 60px !important;
+  }
 }
 
 .select-date-popover {
@@ -221,10 +213,6 @@ nav .datepicker input {
   left: auto;
   top: 55px;
   position: absolute;
-}
-
-.create-variable-popover > .arrow {
-  top: 60px !important;
 }
 
 .edit-variable-popover {
@@ -271,13 +259,6 @@ nav .datepicker input {
   }
 
 }
-
-// /*
-//  * fix weird bug
-//  */
-// .tooltip.ng-hide {
-//   display: block !important;
-// }
 
 footer {
   position: absolute;
