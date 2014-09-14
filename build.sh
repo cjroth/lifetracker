@@ -1,1 +1,2 @@
-zip -r app.nw *.{html,js,css,json,coffee,jade} node_modules
+zip -r app.nw dist node_modules bower_components package.json defaults.json data
+mv app.nw Lifetracker.app/Contents/Resources/

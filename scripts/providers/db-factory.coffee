@@ -2,12 +2,16 @@ angular
   .module 'lifetracker'
   .factory 'db', ->
 
+    path = require('path')
     sqlite3 = require('sqlite3').verbose()
+    gui = require('nw.gui')
     dbs = {}
 
     db = (dataLocation) -> dbs[dataLocation]
 
     db.add = (dataLocation, done) ->
+
+      console.debug('adding database: ' + path.resolve(gui.App.dataPath, dataLocation))
 
       database = new sqlite3.Database(dataLocation)
 
