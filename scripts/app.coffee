@@ -5,4 +5,5 @@ angular.module 'lifetracker', [
   'mgcrea.ngStrap'
   'ui.bootstrap-slider'
   'toggle-switch'
+  'angular-intro'
 ]

@@ -25,8 +25,6 @@
     "angular-animate": "~1.2.22",
     "bootstrap-additions": "~0.2.3",
     "angular-motion": "~0.3.3",
-    "lodash": "~2.4.1",
-    "underscore": "~1.6.0",
     "angular-bootstrap-slider": "cjroth/angular-bootstrap-slider#master",
     "angular-toggle-switch": "~0.3.2",
     "angular-route": "~1.2.22",
@@ -38,6 +36,8 @@
     "moment": "~2.8.3",
     "jquery": "~2.1.1",
     "bootstrap": "~3.2.0",
-    "bootflat": "bootflat/bootflat.github.io#v2.0.4"
+    "bootflat": "bootflat/bootflat.github.io#v2.0.4",
+    "angular-intro.js": "~1.1.2",
+    "underscore": "~1.7.0"
   }
 }
