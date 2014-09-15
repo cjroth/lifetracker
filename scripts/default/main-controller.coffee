@@ -69,6 +69,8 @@ angular
 
       store.getRecords (err, records) ->
         
+        records = formatData(records)
+
         $chart = $('#chart')
 
         if not $chart.length then return
@@ -77,12 +79,14 @@ angular
         $chart.replaceWith('<div id="chart"></div>')
         $chart = $('#chart')
 
+        if not records.length then return
+
         graph = new Rickshaw.Graph(
           element: $chart[0]
           width: $('.main').width()
           height: $('.main').height()
           renderer: $scope.chartType
-          series: formatData(records)
+          series: records
           dotSize: 50
         )
 
