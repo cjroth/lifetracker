@@ -83,7 +83,7 @@ angular
           height: $('.main').height()
           renderer: $scope.chartType
           series: formatData(records)
-          dotSize: 5
+          dotSize: 50
         )
 
         graph.render()
