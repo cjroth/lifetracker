@@ -6,6 +6,7 @@ paths =
   templates: 'views/**/*.jade'
   stylesheets: 'styles.less'
   index: 'index.jade'
+  website: 'website/index.jade'
 
 gulp.task 'build:scripts', ->
   gulp
@@ -18,6 +19,12 @@ gulp.task 'build:templates', ->
     .src paths.templates
     .pipe $.jade(pretty: true)
     .pipe gulp.dest('dist/templates')
+
+gulp.task 'build:website', ->
+  gulp
+    .src paths.website
+    .pipe $.jade(pretty: true)
+    .pipe gulp.dest('website')
 
 gulp.task 'build:stylesheets', ->
   gulp
@@ -44,6 +51,7 @@ gulp.task 'build:watch', ['build'], ->
       paths.templates
       paths.stylesheets
       paths.index
+      paths.website
     ], ['build']
 
-gulp.task 'build', ['build:stylesheets', 'build:templates', 'build:index']
+gulp.task 'build', ['build:stylesheets', 'build:templates', 'build:index', 'build:website']
