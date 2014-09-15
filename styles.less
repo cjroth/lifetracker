@@ -310,11 +310,28 @@ footer {
   .x_label {
     border-radius: 0;
   }
+  .rickshaw_graph .detail .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+    margin-top: -5px;
+    margin-left: -5px;
+  }
 }
 
 .popover,
 .tooltip {
   z-index: 30000;
+}
+
+.tooltip {
+  opacity: 1 !important;
+  & > &-arrow {
+    border-bottom-color: rgba(0, 0, 0, .8);
+  }
+  & > &-inner {
+    background-color: rgba(0, 0, 0, .8);
+  }
 }
 
 h2 {
