@@ -12,6 +12,7 @@
     data-container='body'
   ): i.glyphicon.glyphicon-signal
   a.btn.btn-link.navbar-btn(
+    name='nav-record-data'
     ng-click='goToWizard()'
     ng-class='{ active: $state.includes("wizard"), disabled: !variables.length }'
     bs-tooltip=''
