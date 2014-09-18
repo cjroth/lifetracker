@@ -200,9 +200,9 @@ nav {
 
 .create-variable-popover {
   display: block;
-  left: 287px;
-  top: 27px;
-  position: fixed;
+  top: 27px !important;
+  position: fixed !important;
+  width: 250px;
   & > .arrow {
     top: 60px !important;
   }
@@ -368,4 +368,8 @@ h2 {
     background-color: #3BAFDA;
     border-color: #3BAFDA;
   }
+}
+
+.has-feedback .form-control-feedback {
+  top: 0;
 }

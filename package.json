@@ -5,7 +5,7 @@
   "main": "dist/index.html",
   "window": {
     "show": true,
-    "toolbar": false,
+    "toolbar": true,
     "frame": true,
     "position": "center",
     "width": 1000,

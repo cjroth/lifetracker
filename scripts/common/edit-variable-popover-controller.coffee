@@ -2,11 +2,12 @@ angular
   .module 'lifetracker'
   .controller 'EditVariablePopoverController', ($rootScope, $scope, store, variableSorter) ->
 
-    $scope.form = angular.copy($scope.variable)
+    $scope.inputs = angular.copy($scope.variable)
 
     $scope.save = ->
-
-      store.updateVariable $scope.form.id, $scope.form, (err) ->
+      $scope.submitted = true
+      if $scope.form.$invalid then return
+      store.updateVariable $scope.inputs.id, $scope.inputs, (err) ->
         if err then throw err
         $rootScope.reloadVariables()
         $scope.$hide()

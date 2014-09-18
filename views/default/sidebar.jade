@@ -1,9 +1,12 @@
 .list-group
-  a.btn.btn-primary.btn-block(ng-click='CreateVariablePopover.visible = !CreateVariablePopover.visible')
+  a.btn.btn-primary.btn-block(
+      bs-popover
+      data-container='body'
+      data-template='templates/create-variable-popover.html'
+      data-animation=''
+  )
     i.fa.fa-bar-chart-o
     |  New Variable
-
-  include ../create-variable-popover
 
 ul.list-group.sidebar-variables
 

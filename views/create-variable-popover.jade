@@ -1,22 +1,29 @@
-.popover.right.create-variable-popover(ng-controller='CreateVariablePopoverController', ng-show='CreateVariablePopover.visible')
+.popover.right.create-variable-popover(ng-controller='CreateVariablePopoverController')
   .arrow
   .popover-content
     
-    form(ng-submit='save()')
+    form(ng-submit='save()', name='form', novalidate)
 
       .row
         .col-xs-12
-          input.form-control(
-            ng-model='variable.name'
-            type='text'
-            placeholder='Variable (ex: "Sleep")'
-          )
+          .form-group(ng-class='(submitted && form.name.$invalid) ? "has-error has-feedback" : ""')
+            input.form-control(
+              name='name'
+              maxlength=30
+              ng-model='variable.name'
+              type='text'
+              placeholder='Variable Name'
+              autocomplete='off'
+              required
+            )
+            span.glyphicon.glyphicon-remove.form-control-feedback(ng-show='(submitted && form.name.$invalid)')
 
       .row
         .col-xs-12
           textarea.form-control(
             ng-model='variable.question'
-            placeholder='Question (ex: "How much sleep did you get last night?")'
+            maxlength=150
+            placeholder='Question'
           )
 
       .row
@@ -32,14 +39,16 @@
             ng-model='variable.min'
             name='min'
             type='text'
-            placeholder='Min (ex: "0")'
+            numbers-only
+            placeholder='Min'
           )
         .col-xs-6
           input.form-control(
             ng-model='variable.max'
             name='max'
             type='text'
-            placeholder='Max (ex: "24")'
+            numbers-only
+            placeholder='Max'
           )
 
       .row(ng-show='variable.type == "number"')
@@ -48,11 +57,12 @@
             ng-model='variable.units'
             name='units'
             type='text'
-            placeholder='Units (ex: "hours")'
+            maxlength=10
+            placeholder='Units'
           )
 
       .row
         .col-xs-6
-          button.btn.btn-default.btn-block(type='button', ng-click='CreateVariablePopover.visible = false') Cancel
+          button.btn.btn-default.btn-block(type='button', ng-click='$hide()') Cancel
         .col-xs-6
           button.btn.btn-primary.btn-block(type='submit') Save
