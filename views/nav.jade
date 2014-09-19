@@ -12,6 +12,15 @@
     data-container='body'
   ): i.glyphicon.glyphicon-signal
   a.btn.btn-link.navbar-btn(
+    ui-sref='insights'
+    ng-class='{ active: $state.includes("insights") }'
+    bs-tooltip=''
+    data-title='Find Correlations'
+    data-placement='bottom'
+    data-animation='none'
+    data-container='body'
+  ): i.glyphicon.glyphicon-eye-open
+  a.btn.btn-link.navbar-btn(
     ng-click='goToWizard()'
     ng-class='{ active: $state.includes("wizard"), disabled: !variables.length }'
     bs-tooltip=''

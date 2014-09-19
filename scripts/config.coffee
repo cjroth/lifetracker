@@ -78,6 +78,19 @@ angular
             templateUrl: 'templates/wizard/sidebar.html'
             controller: 'WizardSidebarController'
 
+      .state 'insights',
+        parent: 'root'
+        url: '/insights'
+        views:
+          'body@':
+            templateUrl: 'templates/insights/insights.html'
+          'main@body':
+            templateUrl: 'templates/insights/main.html'
+            controller: 'InsightsMainController'
+          'sidebar@body':
+            templateUrl: 'templates/insights/sidebar.html'
+            controller: 'InsightsSidebarController'
+
       .state 'settings',
         parent: 'root'
         url: '/settings'
@@ -91,7 +104,8 @@ angular
     # fixtures()
 
     db.add settings.dataLocation, ->
-      $state.go('default')
+      # $state.go('default')
+      $state.go('insights')
 
     $rootScope.reloadVariables = (done) ->
       store.getVariables (err, variables) ->

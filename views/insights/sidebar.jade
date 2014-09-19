@@ -1,0 +1,7 @@
+.list-group
+  a.list-group-item(
+    ng-repeat='correlation in correlations'
+    ng-class='correlation.type === "positive" ? "list-group-item-primary" : "list-group-item-warning"'
+  )
+    | {{correlation.variables[0].name}} {{correlation.type === 'positive' ? '&amp;' : 'vs'}} {{correlation.variables[1].name}}
+    span.badge(ng-class='correlation.type === "positive" ? "badge-primary" : "badge-warning"') {{correlation.pretty}}
