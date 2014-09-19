@@ -5,6 +5,17 @@ angular
     start = null
     end = null
 
+    # Rickshaw.namespace('Rickshaw.Graph.Renderer.UnstackedArea')
+    # Rickshaw.Graph.Renderer.UnstackedArea = Rickshaw.Class.create(Rickshaw.Graph.Renderer.Area, {
+    #   name: 'unstackedarea'
+    #   defaults: ($super) ->
+    #     return Rickshaw.extend($super(), {
+    #       unstack: true
+    #       fill: false
+    #       stroke: false
+    #     })
+    # })
+
     $scope.chartTypes = ['line', 'stack', 'scatterplot']
     $scope.chartTypeIconClasses =
       line: 'fa fa-line-chart'
@@ -15,6 +26,7 @@ angular
       stack: 'Area'
       scatterplot: 'Dots'
     $scope.chartType = settings.chartType || $scope.chartTypes[0]
+    $scope.chartType = $scope.chartTypes[0]
 
     graph = {}
 
@@ -31,32 +43,36 @@ angular
       for variable in variables
         seriesData[variable.id] = []
 
-      for record in records
+      firstDataDate = null
+      oneBefore = start.clone().subtract(1, 'days')
+      oneAfter = end.clone().add(1, 'days')
+      date = start.clone()
 
-        if moment(record.date).isBefore(start) then continue
-        if moment(record.date).isAfter(end) then continue
+      while date.isAfter(oneBefore) and date.isBefore(oneAfter)
+        
+        recordsForDate = _.where(records, date: date.format('YYYY-MM-DD'))
 
-        seriesData[record.variable_id]?.push(x: moment(record.date).valueOf(), y: record.value)
+        if firstDataDate is null
+          if recordsForDate.length is 0
+            date.add(1, 'days')
+            continue
+          else
+            firstDataDate = date
 
-        if !minimums[record.variable_id] or record.value < minimums[record.variable_id]
-         minimums[record.variable_id] = record.value
-        if !maximums[record.variable_id] or record.value > maximums[record.variable_id]
-         maximums[record.variable_id] = record.value
+        for variable in variables
+          record = _.findWhere(recordsForDate, variable_id: variable.id)
+          value = if record? then record.value else null
+          seriesData[variable.id].push(x: date.valueOf(), y: value)
+
+        date.add(1, 'days')
 
       for variable, i in variables
         scale = 'linear'
-        # if variable.type is 'scale'
-        #   minimums[variable.id] = 0
-        #   maximums[variable.id] = 10
         series.push(
           name: variable.name
           variable: variable
           color: variable.color
           data: seriesData[variable.id]
-          scale: d3
-            .scale.linear()
-            # .range([minimums[variable.id], maximums[variable.id]])
-            .nice()
         )
 
       return series
@@ -87,7 +103,8 @@ angular
           height: $('.main').height()
           renderer: $scope.chartType
           series: records
-          dotSize: 50
+          dotSize: 5
+          interpolation: 'cardinal'
         )
 
         graph.render()
