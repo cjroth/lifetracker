@@ -1,6 +1,6 @@
 @import "bower_components/bootstrap/less/bootstrap.less";
-@import "../../bower_components/font-awesome/css/font-awesome.css";
 @import (inline) "bower_components/bootflat/bootflat/css/bootflat.css";
+@import "../../bower_components/font-awesome/css/font-awesome.css";
 
 @icon-font-path: "../../bower_components/bootstrap/fonts/";
 
@@ -273,8 +273,6 @@ footer {
 .chart-buttons {
   position: absolute;
   z-index: 20000;
-  right: 10px;
-  bottom: 10px;
   opacity: .25;
   &:hover,
   &.active {
@@ -283,6 +281,14 @@ footer {
   [name="button-chart-type-toggle"] i {
     width: 16px;
     text-align: center;
+  }
+  &-right {
+    right: 10px;
+    bottom: 10px;
+  }
+  &-left {
+    left: 10px;
+    bottom: 10px;
   }
 }
 

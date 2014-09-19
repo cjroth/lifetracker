@@ -5,28 +5,33 @@ angular
     start = null
     end = null
 
-    # Rickshaw.namespace('Rickshaw.Graph.Renderer.UnstackedArea')
-    # Rickshaw.Graph.Renderer.UnstackedArea = Rickshaw.Class.create(Rickshaw.Graph.Renderer.Area, {
-    #   name: 'unstackedarea'
-    #   defaults: ($super) ->
-    #     return Rickshaw.extend($super(), {
-    #       unstack: true
-    #       fill: false
-    #       stroke: false
-    #     })
-    # })
+    charts = [
+      {
+        name: 'line'
+        label: 'Lines'
+        class: 'fa fa-line-chart'
+      }
+      {
+        name: 'stack'
+        label: 'Area'
+        class: 'fa fa-area-chart'
+        stackable: true
+      }
+      {
+        name: 'bar'
+        label: 'Bars'
+        class: 'fa fa-bar-chart'
+        stackable: true
+      }
+      {
+        name: 'scatterplot'
+        label: 'Dots'
+        class: 'fa fa-circle'
+      }
+    ]
 
-    $scope.chartTypes = ['line', 'stack', 'scatterplot']
-    $scope.chartTypeIconClasses =
-      line: 'fa fa-line-chart'
-      stack: 'fa fa-area-chart'
-      scatterplot: 'fa fa-circle'
-    $scope.chartTypeLabels =
-      line: 'Lines'
-      stack: 'Area'
-      scatterplot: 'Dots'
-    $scope.chartType = settings.chartType || $scope.chartTypes[0]
-    $scope.chartType = $scope.chartTypes[0]
+    $scope.chart = _.findWhere(charts, name: settings.chartName) or charts[0]
+    $scope.stacked = settings.chartStacked
 
     graph = {}
 
@@ -48,16 +53,19 @@ angular
       oneAfter = end.clone().add(1, 'days')
       date = start.clone()
 
+      maximums = {}
+      minimums = {}
+
       while date.isAfter(oneBefore) and date.isBefore(oneAfter)
         
         recordsForDate = _.where(records, date: date.format('YYYY-MM-DD'))
 
-        if firstDataDate is null
-          if recordsForDate.length is 0
-            date.add(1, 'days')
-            continue
-          else
-            firstDataDate = date
+        # if firstDataDate is null
+        #   if recordsForDate.length is 0
+        #     date.add(1, 'days')
+        #     continue
+        #   else
+        #     firstDataDate = date
 
         for variable in variables
           record = _.findWhere(recordsForDate, variable_id: variable.id)
@@ -67,11 +75,19 @@ angular
         date.add(1, 'days')
 
       for variable, i in variables
+
+        rgb = d3.rgb(variable.color)
+        alpha = 1
+
+        if $scope.chart.name is 'stack' and $scope.stacked is false
+          alpha = 1 / variables.length
+
         scale = 'linear'
         series.push(
           name: variable.name
           variable: variable
-          color: variable.color
+          color: 'rgba(' + [rgb.r, rgb.g, rgb.b, alpha].join(',') + ')'
+          stroke: 'rgba(' + [rgb.r, rgb.g, rgb.b, 1].join(',') + ')'
           data: seriesData[variable.id]
         )
 
@@ -97,14 +113,18 @@ angular
 
         if not records.length then return
 
+        if $scope.chart.stackable
+          unstack = !$scope.stacked
+
         graph = new Rickshaw.Graph(
           element: $chart[0]
           width: $('.main').width()
           height: $('.main').height()
-          renderer: $scope.chartType
+          renderer: $scope.chart.name
           series: records
           dotSize: 5
           interpolation: 'cardinal'
+          unstack: unstack
         )
 
         graph.render()
@@ -115,7 +135,7 @@ angular
             value = Math.round(y * 100) / 100 # round to 2 decimal places
             return series.name + ': ' + value + ' ' + units
           xFormatter: (x) ->
-            return moment(x).format('dddd, MMMM DD, YYYY')
+            return moment(x).format('dddd, MMMM D, YYYY')
           graph: graph
         )
         new Rickshaw.Graph.Axis.Time(
@@ -127,16 +147,21 @@ angular
       return start.format('MMM D') + ' - ' + end.format('MMM D')
 
     $scope.cycleChartType = ->
-      $scope.chartType = $scope.chartTypes[$scope.chartTypes.indexOf($scope.chartType) + 1] || $scope.chartTypes[0]
-      settings.chartType = $scope.chartType
-      settings.save()
+      $scope.chart = charts[charts.indexOf($scope.chart) + 1] || charts[0]
       renderChart()
+      settings.chartName = $scope.chart.name
+      settings.save()
+
+    $scope.toggleStacked = ->
+      $scope.stacked = !$scope.stacked
+      renderChart()
+      settings.chartStacked = $scope.stacked
+      settings.save()
 
     $scope.toggleDatePicker = ->
       $scope.showDatepicker = not $scope.showDatepicker
 
-    $datepicker = $('.datepicker').datepicker
-      inputs: $('.range-start, .range-end')
+    $datepicker = $('.datepicker').datepicker(inputs: $('.range-start, .range-end'))
 
     # show one month ago until today as default date range
     

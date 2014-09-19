@@ -1,4 +1,9 @@
 {
   "dataLocation": "data.sqlite",
+  "dateRangeSize": 7,
+  "chart": {
+    "name": "line",
+    "stacked": "true"
+  },
   "selected": []
 }

@@ -1,4 +1,4 @@
-.chart-buttons.btn-group(ng-class='{ active: showDatepicker }')
+.chart-buttons.chart-buttons-right.btn-group(ng-class='{ active: showDatepicker }')
   button.btn.btn-primary(
     type='button'
     ng-click='toggleDatePicker()'
@@ -14,10 +14,22 @@
     ng-click='cycleChartType()'
     bs-tooltip=''
     data-container='body'
-    data-title='{{chartTypeLabels[chartType]}}'
+    data-title='{{chart.label}}'
     data-placement='top'
     data-animation='none'
-  ): i(ng-class='chartTypeIconClasses[chartType]')
+  ): i(ng-class='chart.class')
+
+.chart-buttons.chart-buttons-left.btn-group(ng-show='chart.stackable')
+  button.btn.btn-primary(
+    type='button'
+    ng-click='toggleStacked()'
+    bs-tooltip=''
+    data-container='body'
+    data-title='{{ stacked ? "Unstack" : "Stack" }}'
+    data-placement='top'
+    data-animation='none'
+  ): i.fa(ng-class='stacked ? "fa-th-large" : "fa-square"')
+
 .popover.left.datepicker-popover(ng-show='showDatepicker')
   .arrow
   .popover-content
