@@ -11,13 +11,8 @@ angular
         resolve:
           variables: ($rootScope, store, $q, variableSorter, settings) ->
             deferred = $q.defer()
-            store.getVariables (err, variables) ->
-              $rootScope.palette = new Rickshaw.Color.Palette(scheme: 'colorwheel')
-              for variable in variables
-                variable.selected = _.contains(settings.selected, variable.id)
-                variable.color = $rootScope.palette.color()
-              $rootScope.variables = variables.sort(variableSorter)
-              deferred.resolve(variables)
+            $rootScope.reloadVariables ->
+              deferred.resolve($rootScope.variables)
             return deferred.promise
         views:
           'nav@':
