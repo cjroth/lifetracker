@@ -1,6 +1,7 @@
 {
   "dataLocation": "data.sqlite",
   "dateRangeSize": 7,
+  "newDayOffsetHours": 4,
   "chart": {
     "name": "line",
     "stacked": "true"
