@@ -131,3 +131,9 @@ angular
         $rootScope.variables = variables.sort(variableSorter)
         $rootScope.$digest()
         done?()
+
+    $rootScope.$on "$stateChangeSuccess", (event, toState, toParams, fromState, fromParams) ->
+      states = []
+      $state.current.name.split(".").forEach (name, i) ->
+        states.push(if i then states[i - 1] + "." + name else name)
+      $rootScope.stateClasses = states.map (state) -> "state-" + state.replace(/\./g, "-")

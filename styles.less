@@ -352,24 +352,7 @@ h2 {
   }
 }
 
-// h2 {
-//   font-size: 30px;
-//   color: #fff;
-//   border: none;
-//   height: 60px;
-//   padding: 10px 20px;
-//   text-shadow: 1px 1px 1px #9c9c9c;
-//   font-weight: bold;
-//   background-color: #3bafda;
-//   border-radius: 4px;
-//   i {
-//     top: 5px !important;
-//     margin-right: 10px;
-//   }
-// }
-
 .list-group-item {
-  padding-right: 70px;
   &.active {
     &,
     &:hover,
@@ -378,10 +361,16 @@ h2 {
       border-color: #3BAFDA;
     }
   }
-  .badge {
-    position: absolute;
-    right: 15px;
-    top: 10px;
+}
+
+.state-insights {
+  .list-group-item {
+    padding-right: 70px;
+    .badge {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+    }
   }
 }
 
