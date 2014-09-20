@@ -13,15 +13,18 @@ angular
 
     console.debug('using settings file: ' + settingsFilePath)
 
+    defaults = {}
     settings = {}
+
+    settings.defaults = ->
+        json = fs.readFileSync(defaultsFilePath)
+        data = JSON.parse(json)
+        settings = _.defaults(settings, data)
 
     settings.setup = ->
       if fs.existsSync(settingsFilePath)
         settings.load()
-      else
-        json = fs.readFileSync(defaultsFilePath)
-        data = JSON.parse(json)
-        settings = _.defaults(settings, data)
+      settings.defaults()
       return settings
 
     settings.save = ->
