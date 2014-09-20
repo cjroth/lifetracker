@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'DefaultMainController', ($scope, $rootScope, store, $window, gui, moment, settings) ->
+  .controller 'DefaultMainController', ($scope, $rootScope, store, $window, gui, moment, settings, showToday) ->
 
     start = null
     end = null
@@ -164,10 +164,13 @@ angular
     $datepicker = $('.datepicker').datepicker(inputs: $('.range-start, .range-end'))
 
     # show one month ago until today as default date range
-    
-    console.log('settings.newDayOffsetHours', settings.newDayOffsetHours)
-
-    end = moment().subtract(settings.newDayOffsetHours, 'hours').set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0) #.set({ h: 0, m: 0, s: 0, ms: 0 })
+    end = moment()
+      .subtract(settings.newDayOffsetHours, 'hours')
+      .set('hour', 0)
+      .set('minute', 0)
+      .set('second', 0)
+      .set('millisecond', 0)
+    if not showToday then end.subtract(1, 'days')
     start = end.clone().subtract(settings.dateRangeSize, 'days')
 
     $('.range-start').datepicker('setDate', new Date(start))

@@ -40,8 +40,19 @@ angular
       if err then throw err
       record.id ?= @lastID
 
+    onDeleteComplete = (err) ->
+      if err then throw err
+      delete record.id
+
     $scope.onInputLoaded = ->
-      $('[name="record"]').on('change slideStop', save)
+      $('[name="record"]').on 'change slideStop', ->
+        record.value = parseFloat(record.value) || null
+        if record.value?
+          save()
+          $scope.$digest()
+        else
+          console.info('deleting ' + variable.name + ' record (' + record.id + ')')
+          if record.id? then store.deleteRecord(record.id, onDeleteComplete)
       return
 
     save = ->

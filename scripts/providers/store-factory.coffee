@@ -45,6 +45,12 @@ angular
           $value: value
         db(settings.dataLocation).run(statement, params, done)
 
+      deleteRecord: (id, done) ->
+        statement = 'delete from records where rowid = $id'
+        params =
+          $id: id
+        db(settings.dataLocation).run(statement, params, done)
+
       getVariables: (done) ->
         db(settings.dataLocation).all 'select rowid id, * from variables where deleted_at is null order by lower(name) asc', (err, variables) ->
           done(err, variables or [])

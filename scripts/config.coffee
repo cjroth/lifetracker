@@ -31,6 +31,14 @@ angular
           'sidebar@body':
             templateUrl: 'templates/default/sidebar.html'
             controller: 'DefaultSidebarController'
+        resolve:
+          showToday: ($q, store, moment) ->
+            deferred = $q.defer()
+            today = moment().format('YYYY-MM-DD')
+            store.getRecordsForDate today, (err, records) ->
+              if err then throw err
+              deferred.resolve(records.length > 0)
+            return deferred.promise
 
       .state 'wizard',
         abstract: true
