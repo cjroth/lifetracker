@@ -123,7 +123,7 @@ angular
 
     renderChart = ->
       
-      console.log 'test'
+      console.debug('rendering insights chart')
 
       points = formatDataForChart(records)
 
@@ -163,9 +163,17 @@ angular
         timeUnit: name: '2 hour', seconds: 3600 * 2, formatter: (d) -> moment(d).format('h:mm a')
       )
 
-    $scope.$watch 'selected', renderChart
+    onSomeEventThatRequiresTheChartToBeReRendered = -> renderChart()
 
-    # @todo figure out how to de-register these events when leaving this state!
-    gui.Window.get().on 'resize', -> renderChart()
-    gui.Window.get().on 'enterFullscreen', -> renderChart()
-    gui.Window.get().on 'leaveFullscreen', -> renderChart()
+    gui.Window.get().addListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
+    gui.Window.get().addListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
+    gui.Window.get().addListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
+
+    $rootScope.$watch 'variables', onSomeEventThatRequiresTheChartToBeReRendered, true
+    $scope.$watch 'selected', onSomeEventThatRequiresTheChartToBeReRendered
+
+    $rootScope.$on "$stateChangeStart", (event, toState, toParams, fromState, fromParams) ->
+      if fromState.name is not "default" then return
+      gui.Window.get().removeListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
+      gui.Window.get().removeListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
+      gui.Window.get().removeListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
