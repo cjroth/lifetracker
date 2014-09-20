@@ -60,13 +60,6 @@ angular
         
         recordsForDate = _.where(records, date: date.format('YYYY-MM-DD'))
 
-        # if firstDataDate is null
-        #   if recordsForDate.length is 0
-        #     date.add(1, 'days')
-        #     continue
-        #   else
-        #     firstDataDate = date
-
         for variable in variables
           record = _.findWhere(recordsForDate, variable_id: variable.id)
           value = if record? then record.value else null
@@ -103,13 +96,13 @@ angular
         
         records = formatData(records)
 
-        $chart = $('#chart')
+        $chart = $('[name="chart"]')
 
         if not $chart.length then return
 
         $chart.empty()
-        $chart.replaceWith('<div id="chart"></div>')
-        $chart = $('#chart')
+        $chart.replaceWith('<div name="chart"></div>')
+        $chart = $('[name="chart"]')
 
         if not records.length then return
 
