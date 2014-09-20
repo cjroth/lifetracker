@@ -170,9 +170,6 @@ angular
     end = moment().subtract(settings.newDayOffsetHours, 'hours').set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0) #.set({ h: 0, m: 0, s: 0, ms: 0 })
     start = end.clone().subtract(settings.dateRangeSize, 'days')
 
-    console.log('end', end.format('YYYY-MM-DD'))
-    console.log('start', start.format('YYYY-MM-DD'))
-
     $('.range-start').datepicker('setDate', new Date(start))
     $('.range-end').datepicker('setDate', new Date(end))
 
