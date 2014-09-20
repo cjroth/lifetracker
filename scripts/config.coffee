@@ -92,12 +92,11 @@ angular
         views:
           'body@':
             templateUrl: 'templates/insights/insights.html'
+            controller: 'InsightsController'
           'main@body':
             templateUrl: 'templates/insights/main.html'
-            controller: 'InsightsMainController'
           'sidebar@body':
             templateUrl: 'templates/insights/sidebar.html'
-            controller: 'InsightsSidebarController'
         resolve:
           records: ($q, store) ->
             deferred = $q.defer()

@@ -1,10 +1,31 @@
 angular
   .module 'lifetracker'
-  .controller 'InsightsSidebarController', ($scope, $rootScope, store, pearsonCorrelation, moment, variables, records, settings, gui) ->
+  .controller 'InsightsController', ($scope, $rootScope, store, pearsonCorrelation, moment, variables, records, settings, gui) ->
 
     start = moment().subtract(1, 'years')
     end = moment()
     firstDataDate = null
+
+    charts = [
+      {
+        name: 'line'
+        label: 'Lines'
+        class: 'fa fa-line-chart'
+      }
+      {
+        name: 'scatterplot'
+        label: 'Dots'
+        class: 'fa fa-circle'
+      }
+    ]
+
+    $scope.chart = charts[0]
+
+    $scope.cycleChartType = ->
+      $scope.chart = charts[charts.indexOf($scope.chart) + 1] || charts[0]
+      renderChart()
+      # settings.chartName = $scope.chart.name
+      # settings.save()
 
     removeVariablesThatDontHaveEnoughData = (variables, records, minimumRecordsThreshold) ->
       variablesWithEnoughData = []
@@ -86,7 +107,7 @@ angular
       $scope.selected = correlation
       renderChart()
 
-    formatDataForChart = (records) ->
+    formatDataForLineChart = (records) ->
 
       seriesData = {}
       series = []
@@ -121,11 +142,51 @@ angular
 
       return series
 
+    formatDataForScatterplotChart = (records) ->
+
+      seriesData = {}
+      series = []
+      timezoneOffset = (new Date).getTimezoneOffset() * 60
+
+      for variable in $scope.selected.variables
+        seriesData[variable.id] = []
+
+      date = firstDataDate.clone() or start.clone().subtract(1, 'days')
+      endDate = end.clone()
+
+      while date.isBefore(endDate)
+        
+        recordsForDate = _.where(records, date: date.format('YYYY-MM-DD'))
+
+        point = {}
+        x = _.findWhere(recordsForDate, variable_id: $scope.selected.variables[0].id)?.value
+        y = _.findWhere(recordsForDate, variable_id: $scope.selected.variables[1].id)?.value
+        seriesData[variable.id].push(x: x, y: y)
+
+        date.add(1, 'days')
+
+      for variable, i in $scope.selected.variables
+
+        scale = 'linear'
+        series.push(
+          name: variable.name
+          variable: variable
+          color: variable.color
+          data: seriesData[variable.id]
+        )
+
+      return series
+
     renderChart = ->
       
       console.debug('rendering insights chart')
 
-      points = formatDataForChart(records)
+      if $scope.chart.name is 'line'
+        points = formatDataForLineChart(records)
+      else
+        points = formatDataForScatterplotChart(records)
+
+      console.log(points)
 
       $chart = $('[name="chart"]')
 
@@ -141,7 +202,7 @@ angular
         element: $chart[0]
         width: $('.main').width()
         height: $('.main').height()
-        renderer: 'line'
+        renderer: $scope.chart.name
         series: points
         dotSize: 5
         interpolation: 'cardinal'
@@ -149,19 +210,22 @@ angular
 
       graph.render()
 
-      new Rickshaw.Graph.HoverDetail(
-        formatter: (series, x, y) ->
-          units = if series.variable.type is 'scale' then '/ 10' else series.variable.units
-          value = Math.round(y * 100) / 100 # round to 2 decimal places
-          return series.name + ': ' + value + ' ' + units
-        xFormatter: (x) ->
-          return moment(x).format('dddd, MMMM D, YYYY')
-        graph: graph
-      )
-      new Rickshaw.Graph.Axis.Time(
-        graph: graph
-        timeUnit: name: '2 hour', seconds: 3600 * 2, formatter: (d) -> moment(d).format('h:mm a')
-      )
+      if $scope.chart.name is 'line'
+
+        new Rickshaw.Graph.HoverDetail(
+          formatter: (series, x, y) ->
+            units = if series.variable.type is 'scale' then '/ 10' else series.variable.units
+            value = Math.round(y * 100) / 100 # round to 2 decimal places
+            return series.name + ': ' + value + ' ' + units
+          xFormatter: (x) ->
+            return moment(x).format('dddd, MMMM D, YYYY')
+          graph: graph
+        )
+
+        new Rickshaw.Graph.Axis.Time(
+          graph: graph
+          timeUnit: name: '2 hour', seconds: 3600 * 2, formatter: (d) -> moment(d).format('h:mm a')
+        )
 
     onSomeEventThatRequiresTheChartToBeReRendered = -> renderChart()
 
