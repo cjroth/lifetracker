@@ -368,12 +368,20 @@ h2 {
 //   }
 // }
 
-.list-group-item.active {
-  &,
-  &:hover,
-  &:focus {
-    background-color: #3BAFDA;
-    border-color: #3BAFDA;
+.list-group-item {
+  padding-right: 70px;
+  &.active {
+    &,
+    &:hover,
+    &:focus {
+      background-color: #3BAFDA;
+      border-color: #3BAFDA;
+    }
+  }
+  .badge {
+    position: absolute;
+    right: 15px;
+    top: 10px;
   }
 }
 

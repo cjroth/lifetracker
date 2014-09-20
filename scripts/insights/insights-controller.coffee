@@ -1,9 +1,17 @@
 angular
   .module 'lifetracker'
-  .controller 'InsightsSidebarController', ($scope, $rootScope, store, pearsonCorrelation, moment, variables) ->
+  .controller 'InsightsSidebarController', ($scope, $rootScope, store, pearsonCorrelation, moment, variables, records, settings) ->
 
     start = moment().subtract(1, 'years')
     end = moment()
+
+    removeVariablesThatDontHaveEnoughData = (variables, records, minimumRecordsThreshold) ->
+      variablesWithEnoughData = []
+      for variable in variables
+        recordsForVariable = _.where(records, variable_id: variable.id)
+        if recordsForVariable.length >= minimumRecordsThreshold
+          variablesWithEnoughData.push(variable)
+      return variablesWithEnoughData
 
     formatData = (records, variables) ->
 
@@ -55,13 +63,11 @@ angular
         formatted.push(correlation)
       return formatted
 
-    store.getRecords (err, records) ->
-      if err then throw err
-      dataset = formatData(records, variables)
-      correlations = calculateCorrelations(dataset, variables)
-      for correlation in correlations
-        correlation.pretty = Math.round(correlation.value * 100) + '%'
-        correlation.type = if correlation.value > 0 then 'positive' else 'negative'
-      $scope.correlations = correlations.sort (a, b) -> Math.abs(a.value) < Math.abs(b.value)
-      $scope.$digest()
+    variables = removeVariablesThatDontHaveEnoughData(variables, records, settings.minimumRecordsThreshold)
+    dataset = formatData(records, variables)
+    correlations = calculateCorrelations(dataset, variables)
+    for correlation in correlations
+      correlation.pretty = Math.round(correlation.value * 100) + '%'
+      correlation.type = if correlation.value > 0 then 'positive' else 'negative'
+    $scope.correlations = correlations.sort (a, b) -> Math.abs(a.value) < Math.abs(b.value)
 

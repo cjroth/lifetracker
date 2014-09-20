@@ -98,6 +98,13 @@ angular
           'sidebar@body':
             templateUrl: 'templates/insights/sidebar.html'
             controller: 'InsightsSidebarController'
+        resolve:
+          records: ($q, store) ->
+            deferred = $q.defer()
+            store.getRecords (err, records) ->
+              if err then throw err
+              deferred.resolve(records)
+            return deferred.promise
 
       .state 'settings',
         parent: 'root'
