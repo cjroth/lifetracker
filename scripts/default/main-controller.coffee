@@ -23,11 +23,6 @@ angular
         class: 'fa fa-bar-chart'
         stackable: true
       }
-      {
-        name: 'scatterplot'
-        label: 'Dots'
-        class: 'fa fa-circle'
-      }
     ]
 
     $scope.chart = _.findWhere(charts, name: settings.chartName) or charts[0]
@@ -38,8 +33,6 @@ angular
     formatData = (records) ->
 
       seriesData = {}
-      maximums = {}
-      minimums = {}
       series = []
       timezoneOffset = (new Date).getTimezoneOffset() * 60
 
@@ -52,9 +45,6 @@ angular
       oneBefore = start.clone().subtract(1, 'days')
       oneAfter = end.clone().add(1, 'days')
       date = start.clone()
-
-      maximums = {}
-      minimums = {}
 
       while date.isAfter(oneBefore) and date.isBefore(oneAfter)
         
@@ -75,7 +65,6 @@ angular
         if $scope.chart.name is 'stack' and $scope.stacked is false
           alpha = 1 / variables.length
 
-        scale = 'linear'
         series.push(
           name: variable.name
           variable: variable

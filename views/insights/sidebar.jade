@@ -2,7 +2,7 @@
   a.list-group-item(
     ng-repeat='correlation in correlations'
     ng-click='select(correlation)'
-    ng-class='{ "list-group-item-primary": isPositive(correlation), "list-group-item-warning": isNegative(correlation), "active": isSelected(correlation) }'
+    ng-class='{ "list-group-item-success": isPositive(correlation), "list-group-item-warning": isNegative(correlation), "active": isSelected(correlation) }'
   )
-    | {{correlation.variables[0].name}} {{correlation.type === 'positive' ? '&amp;' : 'vs'}} {{correlation.variables[1].name}}
-    span.badge(ng-class='correlation.type === "positive" ? "badge-primary" : "badge-warning"') {{correlation.pretty}}
+    | {{correlation.name}}
+    span.badge(ng-class='isPositive(correlation) ? "badge-success" : "badge-warning"') {{correlation.pretty}}

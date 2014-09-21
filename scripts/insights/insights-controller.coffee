@@ -89,19 +89,14 @@ angular
     correlations = calculateCorrelations(dataset, variables)
     for correlation in correlations
       correlation.pretty = Math.round(correlation.value * 100) + '%'
-      correlation.type = if correlation.value > 0 then 'positive' else 'negative'
+      correlation.name = correlation.variables[0].name + ' ' + (if correlation.value > 0 then '&' else 'vs') + ' ' + correlation.variables[1].name
     $scope.correlations = correlations.sort (a, b) -> Math.abs(a.value) < Math.abs(b.value)
 
     $scope.selected = correlations[0]
 
-    $scope.isSelected = (correlation) ->
-      return correlation is $scope.selected
-
-    $scope.isPositive = (correlation) ->
-      return correlation.type is 'positive'
-
-    $scope.isNegative = (correlation) ->
-      return correlation.type is 'negative'
+    $scope.isSelected = (correlation) -> correlation is $scope.selected
+    $scope.isPositive = (correlation) -> correlation.value > 0
+    $scope.isNegative = (correlation) -> correlation.value < 0
 
     $scope.select = (correlation) ->
       $scope.selected = correlation
@@ -132,50 +127,51 @@ angular
 
       for variable, i in $scope.selected.variables
 
-        scale = 'linear'
         series.push(
           name: variable.name
           variable: variable
           color: variable.color
           data: seriesData[variable.id]
+          renderer: 'line'
         )
 
       return series
 
     formatDataForScatterplotChart = (records) ->
 
-      seriesData = {}
-      series = []
+      data = []
       timezoneOffset = (new Date).getTimezoneOffset() * 60
-
-      for variable in $scope.selected.variables
-        seriesData[variable.id] = []
 
       date = firstDataDate.clone() or start.clone().subtract(1, 'days')
       endDate = end.clone()
 
       while date.isBefore(endDate)
-        
         recordsForDate = _.where(records, date: date.format('YYYY-MM-DD'))
-
-        point = {}
         x = _.findWhere(recordsForDate, variable_id: $scope.selected.variables[0].id)?.value
         y = _.findWhere(recordsForDate, variable_id: $scope.selected.variables[1].id)?.value
-        seriesData[variable.id].push(x: x, y: y)
-
+        if x? and y? then data.push(x: x, y: y)
         date.add(1, 'days')
 
-      for variable, i in $scope.selected.variables
+      data = data.sort (a, b) ->
+        return a.x - b.x
 
-        scale = 'linear'
-        series.push(
-          name: variable.name
-          variable: variable
-          color: variable.color
-          data: seriesData[variable.id]
-        )
+      line = calculateLineOfBestFit(data)
 
-      return series
+      return [
+        {
+          name: $scope.selected.name
+          data: data
+          renderer: 'scatterplot'
+          color: '#4A89DC'
+          variables: $scope.selected.variables
+        }
+        {
+          name: $scope.selected.name
+          renderer: 'line'
+          data: line
+          color: '#CCD1D9'
+        }
+      ]
 
     renderChart = ->
       
@@ -186,15 +182,13 @@ angular
       else
         points = formatDataForScatterplotChart(records)
 
-      console.log(points)
-
-      $chart = $('[name="chart"]')
+      $chart = $('[name="chart-insights"]')
 
       if not $chart.length then return
 
       $chart.empty()
-      $chart.replaceWith('<div name="chart"></div>')
-      $chart = $('[name="chart"]')
+      $chart.replaceWith('<div name="chart-insights"></div>')
+      $chart = $('[name="chart-insights"]')
 
       if not points.length then return
 
@@ -202,7 +196,7 @@ angular
         element: $chart[0]
         width: $('.main').width()
         height: $('.main').height()
-        renderer: $scope.chart.name
+        renderer: 'multi'
         series: points
         dotSize: 5
         interpolation: 'cardinal'
@@ -222,9 +216,29 @@ angular
           graph: graph
         )
 
+        console.log('wtf')
+
         new Rickshaw.Graph.Axis.Time(
           graph: graph
           timeUnit: name: '2 hour', seconds: 3600 * 2, formatter: (d) -> moment(d).format('h:mm a')
+        )
+
+      round = (value) -> Math.round(value * 10) / 10 # round to 1 decimal place
+      units = (variable) -> if variable.type is 'scale' then '' else variable.units
+
+      if $scope.chart.name is 'scatterplot'
+
+        new Rickshaw.Graph.HoverDetail(
+          formatter: (series, x, y) ->
+            if series.variables?
+              variable = $scope.selected.variables[1]
+              return variable.name + ': ' + round(y) + ' ' + units(variable)
+            else
+              return series.name
+          xFormatter: (x) ->
+            variable = $scope.selected.variables[0]
+            return variable.name + ': ' + round(x) + ' ' + units(variable)
+          graph: graph
         )
 
     onSomeEventThatRequiresTheChartToBeReRendered = -> renderChart()
@@ -241,3 +255,34 @@ angular
       gui.Window.get().removeListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
+
+    calculateLineOfBestFit = (points) ->
+    
+        if points.length < 1 then return (x: 0, y:0)
+        
+        n = 0
+        sumX = 0
+        sumY = 0
+        sumXY = 0
+        sumXX = 0
+        minX = false
+        maxX = false
+
+        for point in points
+          sumX += point.x
+          sumY += point.y
+          sumXY += point.x * point.y
+          sumXX += point.x * point.x
+          minX = if minX is false or minX > point.x then point.x else minX
+          maxX = if maxX is false or maxX < point.x then point.x else maxX
+          n++
+
+        m = (sumXY - sumX * sumY / n) / (sumXX - sumX * sumX / n)
+        b = (sumY - m * sumX) / n
+        y1 = b + m * minX
+        y2 = b + m * maxX
+
+        return [
+          { x: minX, y: y1 }
+          { x: maxX, y: y2 }
+        ] 
