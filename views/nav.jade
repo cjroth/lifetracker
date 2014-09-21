@@ -4,7 +4,7 @@
 .navbar-header.pull-right
   a.btn.btn-link.navbar-btn(
     ui-sref='default'
-    ng-class='{ active: $state.includes("default") }'
+    ng-class='{ active: $state.includes("default") || $state.includes("insights") }'
     bs-tooltip=''
     data-title='View Charts'
     data-placement='bottom'
