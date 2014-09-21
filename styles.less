@@ -29,6 +29,39 @@ body {
   width: 100%;
   height: 100%;
   display: flex;
+  padding-top: 53px;
+}
+
+.navbar {
+  margin: 0;
+}
+
+nav {
+
+  padding-right: 20px;
+
+  .navbar-header > a {
+
+    margin: 0;
+    padding: 15px;
+
+    &.active,
+    &:hover,
+    &:focus {
+      background-color: #000 !important;
+    }
+
+  }
+
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+
+  .datepicker input {
+    width: auto !important;
+    padding-left: 10px;
+  }
+
 }
 
 .sidebar {
