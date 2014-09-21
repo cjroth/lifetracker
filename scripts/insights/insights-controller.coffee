@@ -1,6 +1,8 @@
 angular
   .module 'lifetracker'
-  .controller 'InsightsController', ($scope, $rootScope, store, pearsonCorrelation, moment, variables, records, settings, gui) ->
+  .controller 'InsightsController', ($scope, $rootScope, store, pearsonCorrelation, moment, records, settings, gui) ->
+
+    variables = angular.copy($rootScope.variables)
 
     start = moment().subtract(1, 'years')
     end = moment()
@@ -85,6 +87,11 @@ angular
       return formatted
 
     variables = removeVariablesThatDontHaveEnoughData(variables, records, settings.minimumRecordsThreshold)
+
+    if variables.length is 0
+      # @todo show useful message here...
+      return
+
     dataset = formatDataForPearsonCorrelations(records, variables)
     correlations = calculateCorrelations(dataset, variables)
     for correlation in correlations
