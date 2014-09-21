@@ -1,8 +1,6 @@
 angular
   .module 'lifetracker'
   .controller 'NavController', ($rootScope, $scope, $state, moment, settings) ->
-
-    $scope.$state = $state
     
     $scope.goToWizard = ->
       $state.go('wizard.step',

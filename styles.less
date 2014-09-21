@@ -29,11 +29,6 @@ body {
   width: 100%;
   height: 100%;
   display: flex;
-  padding-top: 53px;
-}
-
-.navbar {
-  margin: 0;
 }
 
 .sidebar {
@@ -73,34 +68,6 @@ body {
       margin: 25px 0;
     }
   }
-}
-
-nav {
-
-  padding-right: 20px;
-
-  .navbar-header > a {
-
-    margin: 0;
-    padding: 15px;
-
-    &.active,
-    &:hover,
-    &:focus {
-      background-color: #000 !important;
-    }
-
-  }
-
-  .dropdown:hover .dropdown-menu {
-    display: block;
-  }
-
-  .datepicker input {
-    width: auto !important;
-    padding-left: 10px;
-  }
-
 }
 
 .variable-toggle {
@@ -387,4 +354,15 @@ h2 {
 
 .has-feedback .form-control-feedback {
   top: 0;
+}
+
+.nav.nav-tabs {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  z-index: 100;
+  &.nav-justified > li > a {
+    border-radius: 0 !important;
+  }
 }

@@ -118,8 +118,9 @@ angular
     # fixtures()
 
     db.add settings.dataLocation, ->
-      # $state.go('default')
-      $state.go('insights')
+      $state.go('default')
+
+    $rootScope.$state = $state
 
     $rootScope.reloadVariables = (done) ->
       store.getVariables (err, variables) ->

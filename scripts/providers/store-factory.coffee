@@ -5,7 +5,7 @@ angular
     store =
 
       createVariable: (data, done) ->
-        statement = 'insert into variables values ($name, $type, $question, $units, null)'
+        statement = 'insert into variables (name, type, question, units) values ($name, $type, $question, $units)'
         params =
           $name: data.name
           $question: data.question

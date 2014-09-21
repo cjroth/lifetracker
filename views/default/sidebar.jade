@@ -40,3 +40,7 @@ ul.list-group.sidebar-variables
 
     span.badge.badge-primary {{variable.records.length}}
     span.name {{variable.name}}
+
+ul.nav.nav-tabs.nav-justified
+  li(ng-class='{ active: $state.includes("default") }'): a(ui-sref='default') Variables
+  li(ng-class='{ active: $state.includes("insights") }'): a(ui-sref='insights') Correlations

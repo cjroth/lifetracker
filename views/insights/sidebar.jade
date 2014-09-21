@@ -6,3 +6,7 @@
   )
     | {{correlation.name}}
     span.badge(ng-class='isPositive(correlation) ? "badge-success" : "badge-warning"') {{correlation.pretty}}
+
+ul.nav.nav-tabs.nav-justified
+  li(ng-class='{ active: $state.includes("default") }'): a(ui-sref='default') Variables
+  li(ng-class='{ active: $state.includes("insights") }'): a(ui-sref='insights') Correlations
