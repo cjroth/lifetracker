@@ -223,8 +223,6 @@ angular
           graph: graph
         )
 
-        console.log('wtf')
-
         new Rickshaw.Graph.Axis.Time(
           graph: graph
           timeUnit: name: '2 hour', seconds: 3600 * 2, formatter: (d) -> moment(d).format('h:mm a')
