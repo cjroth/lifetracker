@@ -5,13 +5,11 @@ angular
     store =
 
       createVariable: (data, done) ->
-        statement = 'insert into variables values ($name, $type, $min, $max, $question, $units, null)'
+        statement = 'insert into variables values ($name, $type, $question, $units, null)'
         params =
           $name: data.name
           $question: data.question
           $type: data.type
-          $min: data.min
-          $max: data.max
           $units: data.units
         db(settings.dataLocation).run(statement, params, done)
 

@@ -15,18 +15,10 @@ angular
         name: 'stack'
         label: 'Area'
         class: 'fa fa-area-chart'
-        stackable: true
-      }
-      {
-        name: 'bar'
-        label: 'Bars'
-        class: 'fa fa-bar-chart'
-        stackable: true
       }
     ]
 
     $scope.chart = _.findWhere(charts, name: settings.chartName) or charts[0]
-    $scope.stacked = settings.chartStacked
 
     graph = {}
 
@@ -62,7 +54,7 @@ angular
         rgb = d3.rgb(variable.color)
         alpha = 1
 
-        if $scope.chart.name is 'stack' and $scope.stacked is false
+        if $scope.chart.name is 'stack'
           alpha = 1 / variables.length
 
         series.push(
@@ -93,9 +85,6 @@ angular
 
         if not records.length then return
 
-        if $scope.chart.stackable
-          unstack = !$scope.stacked
-
         graph = new Rickshaw.Graph(
           element: $chart[0]
           width: $('.main').width()
@@ -104,7 +93,7 @@ angular
           series: records
           dotSize: 5
           interpolation: 'cardinal'
-          unstack: unstack
+          unstack: true
         )
 
         graph.render()
@@ -130,12 +119,6 @@ angular
       $scope.chart = charts[charts.indexOf($scope.chart) + 1] || charts[0]
       renderChart()
       settings.chartName = $scope.chart.name
-      settings.save()
-
-    $scope.toggleStacked = ->
-      $scope.stacked = !$scope.stacked
-      renderChart()
-      settings.chartStacked = $scope.stacked
       settings.save()
 
     $scope.toggleDatePicker = ->

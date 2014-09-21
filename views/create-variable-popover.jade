@@ -30,26 +30,7 @@
         .col-xs-12
           select.form-control(ng-model='variable.type', name='type')
             option(value='scale') Scale
-            //- option(value='boolean') Yes/No
             option(value='number') Number
-
-      .row(ng-show='variable.type == "number"')
-        .col-xs-6
-          input.form-control(
-            ng-model='variable.min'
-            name='min'
-            type='text'
-            numbers-only
-            placeholder='Min'
-          )
-        .col-xs-6
-          input.form-control(
-            ng-model='variable.max'
-            name='max'
-            type='text'
-            numbers-only
-            placeholder='Max'
-          )
 
       .row(ng-show='variable.type == "number"')
         .col-xs-12

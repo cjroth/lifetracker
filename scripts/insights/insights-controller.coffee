@@ -285,4 +285,4 @@ angular
         return [
           { x: minX, y: y1 }
           { x: maxX, y: y2 }
-        ] 
+        ]
