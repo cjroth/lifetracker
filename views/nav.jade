@@ -28,14 +28,5 @@
     data-animation='none'
     data-container='body'
   ): i.fa.fa-mail-forward
-  a.btn.btn-link.navbar-btn(
-    ui-sref='settings'
-    ng-class='{ active: $state.includes("settings") }'
-    bs-tooltip=''
-    data-title='Settings'
-    data-placement='bottom'
-    data-animation='none'
-    data-container='body'
-  ): i.glyphicon.glyphicon-cog
 
-input.hidden(type='file', name='settings-export-csv', nwsaveas='lifetracker.csv')
+input.hidden(type='file', name='export-csv', nwsaveas='lifetracker.csv')

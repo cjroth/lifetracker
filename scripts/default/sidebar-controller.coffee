@@ -1,16 +1,11 @@
 angular
   .module 'lifetracker'
-  .controller 'DefaultSidebarController', ($rootScope, $scope, store, settings) ->
-
-    $scope.CreateVariablePopover = visible: false
+  .controller 'DefaultSidebarController', ($rootScope, $scope, settings) ->
 
     $scope.select = (variable) ->
       variable.selected = !variable.selected
       selected = []
       for variable in $rootScope.variables
-        if variable.selected then selected.push(variable.id)
+        if variable.selected then selected.push(variable._id)
       settings.selected = selected
       settings.save()
-
-    $scope.toggleCreateVariablePopover = ->
-      $scope.CreateVariablePopover.visible = !$scope.CreateVariablePopover.visible

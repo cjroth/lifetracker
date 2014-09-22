@@ -1,10 +1,12 @@
 angular
   .module 'lifetracker'
-  .controller 'WizardSidebarController', ($state, $scope, variable, moment, $stateParams) ->
+  .controller 'WizardSidebarController', ($state, $scope, moment, $stateParams, $rootScope) ->
+
+    variable = _.findWhere($rootScope.variables, _id: $stateParams.variable_id)
 
     $scope.goTo = (variable) ->
       $state.go('wizard.step',
-        variable_id: variable.id
+        variable_id: variable._id
         date: $stateParams.date
       )
 

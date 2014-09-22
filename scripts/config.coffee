@@ -9,7 +9,7 @@ angular
       .state 'root',
         abstract: true
         resolve:
-          variables: ($rootScope, store, $q, variableSorter, settings) ->
+          variables: ($rootScope, $q, settings) ->
             deferred = $q.defer()
             $rootScope.reloadVariables ->
               deferred.resolve($rootScope.variables)
@@ -32,13 +32,15 @@ angular
             templateUrl: 'templates/default/sidebar.html'
             controller: 'DefaultSidebarController'
         resolve:
-          showToday: ($q, store, moment) ->
-            deferred = $q.defer()
-            today = moment().format('YYYY-MM-DD')
-            store.getRecordsForDate today, (err, records) ->
-              if err then throw err
-              deferred.resolve(records.length > 0)
-            return deferred.promise
+          showToday: ($q, moment, db) ->
+            # @todo @nedb
+            # deferred = $q.defer()
+            # today = moment().format('YYYY-MM-DD')
+            # store.getRecordsForDate today, (err, records) ->
+            #   if err then throw err
+            #   deferred.resolve(records.length > 0)
+            # return deferred.promise
+            return true
 
       .state 'wizard',
         abstract: true
@@ -55,29 +57,12 @@ angular
         views:
           'main@body':
             templateUrl: 'templates/wizard/done.html'
-            controller: 'WizardDoneController'
           'sidebar@body':
             templateUrl: 'templates/wizard/sidebar.html'
             controller: 'WizardSidebarController'
 
       .state 'wizard.step',
         url: '/:date/:variable_id'
-        resolve:
-          variable: ($state, $rootScope, $stateParams) ->
-            return _.findWhere($rootScope.variables, id: ~~$stateParams.variable_id)
-          records: (store, $q, $stateParams) ->
-            deferred = $q.defer()
-            store.getRecordsForDate $stateParams.date, (err, records) ->
-              if err then throw err
-              deferred.resolve(records)
-            return deferred.promise
-          record: (records, variable, store, $q, $stateParams) ->
-            record = _.findWhere(records, variable_id: variable.id)
-            if not record
-              record =
-                variable_id: variable.id
-                date: $stateParams.date
-            return record
         views:
           'main@body':
             templateUrl: 'templates/wizard/main.html'
@@ -97,13 +82,6 @@ angular
             templateUrl: 'templates/insights/main.html'
           'sidebar@body':
             templateUrl: 'templates/insights/sidebar.html'
-        resolve:
-          records: ($q, store) ->
-            deferred = $q.defer()
-            store.getRecords (err, records) ->
-              if err then throw err
-              deferred.resolve(records)
-            return deferred.promise
 
       .state 'settings',
         parent: 'root'
@@ -113,27 +91,26 @@ angular
             templateUrl: 'templates/settings/settings.html'
             controller: 'SettingsController'
 
-  .run ($rootScope, $state, store, fixtures, variableSorter, settings, db) ->
-
-    # fixtures()
-
-    db.add settings.dataLocation, ->
-      $state.go('default')
+  .run ($rootScope, $state, settings, db) ->
 
     $rootScope.$state = $state
 
     $rootScope.reloadVariables = (done) ->
-      store.getVariables (err, variables) ->
+      db.find({}).sort(name: 1).exec (err, variables) ->
+        if err then throw err
         $rootScope.palette = new Rickshaw.Color.Palette(scheme: 'colorwheel')
         for variable in variables
-          variable.selected = _.contains(settings.selected, variable.id)
+          variable.selected = _.contains(settings.selected, variable._id)
           variable.color = $rootScope.palette.color()
-        $rootScope.variables = variables.sort(variableSorter)
+        $rootScope.variables = variables
         $rootScope.$digest()
         done?()
+
+    $state.go('default')
 
     $rootScope.$on "$stateChangeSuccess", (event, toState, toParams, fromState, fromParams) ->
       states = []
       $state.current.name.split(".").forEach (name, i) ->
         states.push(if i then states[i - 1] + "." + name else name)
       $rootScope.stateClasses = states.map (state) -> "state-" + state.replace(/\./g, "-")
+

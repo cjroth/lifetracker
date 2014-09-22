@@ -1,12 +1,9 @@
 angular
   .module 'lifetracker'
-  .controller 'InsightsController', ($scope, $rootScope, store, pearsonCorrelation, moment, records, settings, gui) ->
-
-    variables = angular.copy($rootScope.variables)
+  .controller 'InsightsController', ($scope, $rootScope, db, pearsonCorrelation, moment, settings, gui) ->
 
     start = moment().subtract(1, 'years')
     end = moment()
-    firstDataDate = null
 
     charts = [
       {
@@ -29,54 +26,42 @@ angular
       # settings.chartName = $scope.chart.name
       # settings.save()
 
-    removeVariablesThatDontHaveEnoughData = (variables, records, minimumRecordsThreshold) ->
-      variablesWithEnoughData = []
+    removeVariablesThatDontHaveEnoughRecords = (variables, minimumRecordsThreshold) ->
+      variablesWithEnoughRecords = []
       for variable in variables
-        recordsForVariable = _.where(records, variable_id: variable.id)
-        if recordsForVariable.length >= minimumRecordsThreshold
-          variablesWithEnoughData.push(variable)
-      return variablesWithEnoughData
+        if variable.records?.length >= minimumRecordsThreshold then variablesWithEnoughRecords.push(variable)
+      return variablesWithEnoughRecords
 
-    formatDataForPearsonCorrelations = (records, variables) ->
+    formatDataForPearsonCorrelations = (variables) ->
 
-      seriesData = {}
-      series = []
-      timezoneOffset = (new Date).getTimezoneOffset() * 60
+      data = {}
 
       for variable in variables
-        seriesData[variable.id] = []
+        data[variable._id] = []
 
       oneBefore = start.clone().subtract(1, 'days')
       oneAfter = end.clone().add(1, 'days')
       date = start.clone()
 
       while date.isAfter(oneBefore) and date.isBefore(oneAfter)
-        
-        recordsForDate = _.where(records, date: date.format('YYYY-MM-DD'))
-
-        if firstDataDate is null
-          if recordsForDate.length is 0
-            date.add(1, 'days')
-            continue
-          else
-            firstDataDate = date.clone()
 
         for variable in variables
-          record = _.findWhere(recordsForDate, variable_id: variable.id)
+          record = _.findWhere(variable.records, date: date.format('YYYY-MM-DD'))
           value = if record? then record.value else null
-          seriesData[variable.id].push(value)
+          data[variable._id].push(value)
 
         date.add(1, 'days')
 
-      return seriesData
+      return data
 
     calculateCorrelations = (dataset, variables) ->
       correlations = {}
       for a in variables
         for b in variables
-          correlation = pearsonCorrelation(dataset, a.id, b.id)
-          if correlation != 1 and Math.abs(correlation) > 0.5
-            index = [a.id, b.id].sort().join('-')
+          if a is b then continue
+          correlation = pearsonCorrelation(dataset, a._id, b._id)
+          if Math.abs(correlation) > 0.5
+            index = [a._id, b._id].sort().join('-')
             if !correlations[index]? or correlation > correlations[index].correlation
               correlations[index] = 
                 value: correlation
@@ -86,14 +71,21 @@ angular
         formatted.push(correlation)
       return formatted
 
-    variables = removeVariablesThatDontHaveEnoughData(variables, records, settings.minimumRecordsThreshold)
+    variables = removeVariablesThatDontHaveEnoughRecords($rootScope.variables, settings.minimumRecordsThreshold)
 
-    if variables.length is 0
+    if variables.length < 2
       # @todo show useful message here...
+      console.debug('not enough variables with enough records to find correlations')
       return
 
-    dataset = formatDataForPearsonCorrelations(records, variables)
+    dataset = formatDataForPearsonCorrelations(variables)
     correlations = calculateCorrelations(dataset, variables)
+
+    if correlations.length is 0
+      # @todo show useful message here...
+      console.debug('no correlations found')
+      return
+
     for correlation in correlations
       correlation.pretty = Math.round(correlation.value * 100) + '%'
       correlation.name = correlation.variables[0].name + ' ' + (if correlation.value > 0 then '&' else 'vs') + ' ' + correlation.variables[1].name
@@ -109,53 +101,46 @@ angular
       $scope.selected = correlation
       renderChart()
 
-    formatDataForLineChart = (records) ->
+    formatDataForLineChart = (variables) ->
 
-      seriesData = {}
+      data = {}
       series = []
-      timezoneOffset = (new Date).getTimezoneOffset() * 60
 
-      for variable in $scope.selected.variables
-        seriesData[variable.id] = []
+      for variable in variables
+        data[variable._id] = []
 
-      date = firstDataDate.clone() or start.clone().subtract(1, 'days')
+      date = start.clone().subtract(1, 'days')
       endDate = end.clone()
 
       while date.isBefore(endDate)
-        
-        recordsForDate = _.where(records, date: date.format('YYYY-MM-DD'))
-
-        for variable in $scope.selected.variables
-          record = _.findWhere(recordsForDate, variable_id: variable.id)
-          value = if record? then record.value else null
-          seriesData[variable.id].push(x: date.valueOf(), y: value)
-
+        y1 = _.findWhere(variables[0].records, date: date.format('YYYY-MM-DD'))?.value
+        y2 = _.findWhere(variables[1].records, date: date.format('YYYY-MM-DD'))?.value
+        if y1? and y2?
+          data[variables[0]._id].push(x: date.valueOf(), y: y1)
+          data[variables[1]._id].push(x: date.valueOf(), y: y2)
         date.add(1, 'days')
 
       for variable, i in $scope.selected.variables
-
         series.push(
           name: variable.name
           variable: variable
           color: variable.color
-          data: seriesData[variable.id]
+          data: data[variable._id]
           renderer: 'line'
         )
 
       return series
 
-    formatDataForScatterplotChart = (records) ->
+    formatDataForScatterplotChart = (variables) ->
 
       data = []
-      timezoneOffset = (new Date).getTimezoneOffset() * 60
 
-      date = firstDataDate.clone() or start.clone().subtract(1, 'days')
+      date = start.clone().subtract(1, 'days')
       endDate = end.clone()
 
       while date.isBefore(endDate)
-        recordsForDate = _.where(records, date: date.format('YYYY-MM-DD'))
-        x = _.findWhere(recordsForDate, variable_id: $scope.selected.variables[0].id)?.value
-        y = _.findWhere(recordsForDate, variable_id: $scope.selected.variables[1].id)?.value
+        x = _.findWhere(variables[0].records, date: date.format('YYYY-MM-DD'))?.value
+        y = _.findWhere(variables[1].records, date: date.format('YYYY-MM-DD'))?.value
         if x? and y? then data.push(x: x, y: y)
         date.add(1, 'days')
 
@@ -185,9 +170,9 @@ angular
       console.debug('rendering insights chart')
 
       if $scope.chart.name is 'line'
-        points = formatDataForLineChart(records)
+        points = formatDataForLineChart($scope.selected.variables)
       else
-        points = formatDataForScatterplotChart(records)
+        points = formatDataForScatterplotChart($scope.selected.variables)
 
       $chart = $('[name="chart-insights"]')
 

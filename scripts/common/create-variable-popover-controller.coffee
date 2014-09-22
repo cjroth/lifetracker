@@ -1,20 +1,15 @@
 angular
   .module 'lifetracker'
-  .controller 'CreateVariablePopoverController', ($rootScope, $scope, store, variableSorter, palette, settings) ->
+  .controller 'CreateVariablePopoverController', ($rootScope, $scope, db, settings) ->
 
-    defaults = type: 'scale'
-    $scope.variable = angular.copy(defaults)
+    $scope.variable = type: 'scale'
 
     $scope.save = ->
       $scope.submitted = true
       if $scope.form.$invalid then return
-      variable = angular.copy($scope.variable)
-      variable.selected = true
-      variable.color = $rootScope.palette.color()
-      store.createVariable variable, (err) ->
+      db.insert $scope.variable, (err, variable) ->
         if err then throw err
-        $scope.CreateVariablePopover.visible = false
-        settings.selected.push(@lastID)
+        settings.selected.push(variable._id)
         settings.save()
         $rootScope.reloadVariables()
         $scope.$hide()

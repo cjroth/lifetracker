@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'DefaultMainController', ($scope, $rootScope, store, $window, gui, moment, settings, showToday) ->
+  .controller 'DefaultMainController', ($scope, $rootScope, $window, gui, moment, settings, showToday) ->
 
     start = null
     end = null
@@ -22,16 +22,16 @@ angular
 
     graph = {}
 
-    formatData = (records) ->
+    formatData = (variables) ->
 
       seriesData = {}
       series = []
       timezoneOffset = (new Date).getTimezoneOffset() * 60
 
-      variables = $rootScope.variables.filter (variable) -> variable.selected
+      variables = variables.filter (variable) -> variable.selected
 
       for variable in variables
-        seriesData[variable.id] = []
+        seriesData[variable._id] = []
 
       firstDataDate = null
       oneBefore = start.clone().subtract(1, 'days')
@@ -40,12 +40,10 @@ angular
 
       while date.isAfter(oneBefore) and date.isBefore(oneAfter)
         
-        recordsForDate = _.where(records, date: date.format('YYYY-MM-DD'))
-
         for variable in variables
-          record = _.findWhere(recordsForDate, variable_id: variable.id)
+          record = _.findWhere(variable.records, date: date.format('YYYY-MM-DD'))
           value = if record? then record.value else null
-          seriesData[variable.id].push(x: date.valueOf(), y: value)
+          seriesData[variable._id].push(x: date.valueOf(), y: value)
 
         date.add(1, 'days')
 
@@ -62,7 +60,7 @@ angular
           variable: variable
           color: 'rgba(' + [rgb.r, rgb.g, rgb.b, alpha].join(',') + ')'
           stroke: 'rgba(' + [rgb.r, rgb.g, rgb.b, 1].join(',') + ')'
-          data: seriesData[variable.id]
+          data: seriesData[variable._id]
         )
 
       return series
@@ -71,46 +69,46 @@ angular
 
       console.debug('rendering main chart')
 
-      store.getRecords (err, records) ->
+      if $rootScope.variables.length is 0 then return
         
-        records = formatData(records)
+      series = formatData($rootScope.variables)
 
-        $chart = $('[name="chart"]')
+      $chart = $('[name="chart"]')
 
-        if not $chart.length then return
+      if not $chart.length then return
 
-        $chart.empty()
-        $chart.replaceWith('<div name="chart"></div>')
-        $chart = $('[name="chart"]')
+      $chart.empty()
+      $chart.replaceWith('<div name="chart"></div>')
+      $chart = $('[name="chart"]')
 
-        if not records.length then return
+      if not series.length then return
 
-        graph = new Rickshaw.Graph(
-          element: $chart[0]
-          width: $('.main').width()
-          height: $('.main').height()
-          renderer: $scope.chart.name
-          series: records
-          dotSize: 5
-          interpolation: 'cardinal'
-          unstack: true
-        )
+      graph = new Rickshaw.Graph(
+        element: $chart[0]
+        width: $('.main').width()
+        height: $('.main').height()
+        renderer: $scope.chart.name
+        series: series
+        dotSize: 5
+        interpolation: 'cardinal'
+        unstack: true
+      )
 
-        graph.render()
+      graph.render()
 
-        new Rickshaw.Graph.HoverDetail(
-          formatter: (series, x, y) ->
-            units = if series.variable.type is 'scale' then '/ 10' else series.variable.units
-            value = Math.round(y * 100) / 100 # round to 2 decimal places
-            return series.name + ': ' + value + ' ' + units
-          xFormatter: (x) ->
-            return moment(x).format('dddd, MMMM D, YYYY')
-          graph: graph
-        )
-        new Rickshaw.Graph.Axis.Time(
-          graph: graph
-          timeUnit: name: '2 hour', seconds: 3600 * 2, formatter: (d) -> moment(d).format('h:mm a')
-        )
+      new Rickshaw.Graph.HoverDetail(
+        formatter: (series, x, y) ->
+          units = if series.variable.type is 'scale' then '/ 10' else series.variable.units
+          value = Math.round(y * 100) / 100 # round to 2 decimal places
+          return series.name + ': ' + value + ' ' + units
+        xFormatter: (x) ->
+          return moment(x).format('dddd, MMMM D, YYYY')
+        graph: graph
+      )
+      new Rickshaw.Graph.Axis.Time(
+        graph: graph
+        timeUnit: name: '2 hour', seconds: 3600 * 2, formatter: (d) -> moment(d).format('h:mm a')
+      )
 
     $scope.getPrettyDateRange = ->
       return start.format('MMM D') + ' - ' + end.format('MMM D')
