@@ -1,8 +1,10 @@
 angular
   .module 'lifetracker'
-  .controller 'SelectDatePopoverController', ($state, moment) ->
+  .controller 'SelectDatePopoverController', ($state, moment, $stateParams) ->
 
-    $datepicker = $('.select-date-popover .datepicker').datepicker('show')
+    $datepicker = $('.select-date-popover .datepicker')
+      .datepicker(format: 'yyyy-mm-dd')
+      .datepicker('setDate', $stateParams.date)
 
     $datepicker.on 'changeDate', (event) ->
 

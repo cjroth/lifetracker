@@ -105,10 +105,6 @@ angular
           return moment(x).format('dddd, MMMM D, YYYY')
         graph: graph
       )
-      new Rickshaw.Graph.Axis.Time(
-        graph: graph
-        timeUnit: name: '2 hour', seconds: 3600 * 2, formatter: (d) -> moment(d).format('h:mm a')
-      )
 
     $scope.getPrettyDateRange = ->
       return start.format('MMM D') + ' - ' + end.format('MMM D')
@@ -122,7 +118,7 @@ angular
     $scope.toggleDatePicker = ->
       $scope.showDatepicker = not $scope.showDatepicker
 
-    $datepicker = $('.datepicker').datepicker(inputs: $('.range-start, .range-end'))
+    $datepicker = $('.datepicker').datepicker(inputs: $('.range-start, .range-end'), format: 'yyyy-mm-dd')
 
     # show one month ago until today as default date range
     end = moment()
@@ -134,8 +130,8 @@ angular
     if not showToday then end.subtract(1, 'days')
     start = end.clone().subtract(settings.dateRangeSize, 'days')
 
-    $('.range-start').datepicker('setDate', new Date(start))
-    $('.range-end').datepicker('setDate', new Date(end))
+    $('.range-start').datepicker('setDate', start.format('YYYY-MM-DD'))
+    $('.range-end').datepicker('setDate', end.format('YYYY-MM-DD'))
 
     $datepicker.on 'changeDate', (event) ->
       start = moment($('.range-start').datepicker('getDate'))
