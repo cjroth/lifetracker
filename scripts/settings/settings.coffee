@@ -1,6 +1,8 @@
 angular
   .module 'lifetracker'
-  .controller 'SettingsController', ($scope, settings, $rootScope, db) ->
+  .controller 'SettingsController', ($scope, settings, $rootScope, db, store) ->
+
+    fs = require('fs')
 
     $scope.settings = settings
 

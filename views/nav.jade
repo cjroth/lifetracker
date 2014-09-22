@@ -21,6 +21,14 @@
     data-container='body'
   ): i.glyphicon.glyphicon-plus
   a.btn.btn-link.navbar-btn(
+    ng-click='openExportToCSVFileManager()'
+    bs-tooltip=''
+    data-title='Export'
+    data-placement='bottom'
+    data-animation='none'
+    data-container='body'
+  ): i.fa.fa-mail-forward
+  a.btn.btn-link.navbar-btn(
     ui-sref='settings'
     ng-class='{ active: $state.includes("settings") }'
     bs-tooltip=''
@@ -29,3 +37,5 @@
     data-animation='none'
     data-container='body'
   ): i.glyphicon.glyphicon-cog
+
+input.hidden(type='file', name='settings-export-csv', nwsaveas='lifetracker.csv')
