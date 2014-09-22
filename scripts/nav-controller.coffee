@@ -3,7 +3,7 @@ angular
   .controller 'NavController', ($rootScope, $scope, $state, moment, db, settings) ->
     
     fs = require('fs')
-    csv = require('csv-stringify')()
+    stringifier = require('csv-stringify')()
     parser = require('csv-parse')()
 
     $scope.goToWizard = ->
@@ -40,9 +40,25 @@ angular
         importCSVData(data)
 
     importCSVData = (csv) ->
+      rows = []
       parser.write(csv)
-      rows = parser.read()
-      console.log 'rows'
+      variables = parser.read().splice(1)
+      while row = parser.read()
+        rows.push(row)
+      for variable, i in variables
+        units = /\ \((.*?)\)$/
+        data =
+          name: variable.replace(units, '').trim()
+          units: variable.match(units)?[1]
+          records: []
+        data.type = if data.units? then 'number' else 'scale'
+        for row in rows
+          if row[i + 1].length then data.records.push(date: row[0], value: parseFloat(row[i + 1]))
+        db.insert data, (err, variable) ->
+          if err then throw err
+          settings.selected.push(variable._id)
+      $rootScope.reloadVariables()
+      settings.save()
 
     exportToCSV = (file) ->
       csv = generateCSV($rootScope.variables)
@@ -66,12 +82,12 @@ angular
         label = variable.name
         if variable.units? then label += ' (' + variable.units + ')'
         header.push(label)
-      csv.write(header)
+      stringifier.write(header)
 
       for date, recordsForDate of recordsByDate
         row = [date]
         for variable in $rootScope.variables
           row.push(_.findWhere(recordsForDate, variable: variable)?.value)
-        csv.write(row)
+        stringifier.write(row)
 
-      return csv.read().toString()
+      return stringifier.read().toString()
