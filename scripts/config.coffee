@@ -52,8 +52,6 @@ angular
 
       .state 'wizard.done',
         url: '/:date/done'
-        resolve:
-          variable: -> null
         views:
           'main@body':
             templateUrl: 'templates/wizard/done.html'

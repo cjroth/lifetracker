@@ -237,15 +237,17 @@ angular
     gui.Window.get().addListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
     gui.Window.get().addListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
 
-    $rootScope.$watch 'variables', onSomeEventThatRequiresTheChartToBeReRendered, true
-    $scope.$watch 'selected', onSomeEventThatRequiresTheChartToBeReRendered
+    unwatchVariables = $rootScope.$watch 'variables', onSomeEventThatRequiresTheChartToBeReRendered, true
+    unwatchSelected = $scope.$watch 'selected', onSomeEventThatRequiresTheChartToBeReRendered
 
     $rootScope.$on "$stateChangeStart", (event, toState, toParams, fromState, fromParams) ->
       if fromState.name is not "default" then return
       gui.Window.get().removeListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
-
+      unwatchVariables()
+      unwatchSelected()
+      
     calculateLineOfBestFit = (points) ->
     
         if points.length < 1 then return (x: 0, y:0)

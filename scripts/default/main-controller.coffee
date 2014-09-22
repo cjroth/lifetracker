@@ -147,10 +147,11 @@ angular
     gui.Window.get().addListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
     gui.Window.get().addListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
 
-    $rootScope.$watch 'variables', onSomeEventThatRequiresTheChartToBeReRendered, true
+    unwatchVariables = $rootScope.$watch 'variables', onSomeEventThatRequiresTheChartToBeReRendered, true
 
     $rootScope.$on "$stateChangeStart", (event, toState, toParams, fromState, fromParams) ->
       if fromState.name is not "default" then return
       gui.Window.get().removeListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
+      unwatchVariables()
