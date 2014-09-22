@@ -28,5 +28,3 @@ angular
     $scope.currentVariable = variable
 
     $scope.date = pretty: moment($stateParams.date).format('ddd, MMM D')
-
-    return

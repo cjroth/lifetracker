@@ -7,8 +7,5 @@ angular
       .datepicker('setDate', $stateParams.date)
 
     $datepicker.on 'changeDate', (event) ->
-
       date = moment($datepicker.datepicker('getDate').getTime()).format('YYYY-MM-DD')
-      $state.go('wizard.step',
-        date: date
-      )
+      $state.go('wizard.step', date: date)
