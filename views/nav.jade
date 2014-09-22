@@ -1,7 +1,7 @@
 .navbar-header.pull-left
   .navbar-brand Lifetracker
 
-.navbar-header.pull-right
+.navbar-header.pull-right(ng-class='{ "import-export-popover-active": importExportPopover.show }')
   a.btn.btn-link.navbar-btn(
     ui-sref='default'
     ng-class='{ active: $state.includes("default") || $state.includes("insights") }'
@@ -9,7 +9,6 @@
     data-title='View Charts'
     data-placement='bottom'
     data-animation='none'
-    data-container='body'
   ): i.glyphicon.glyphicon-signal
   a.btn.btn-link.navbar-btn(
     ng-click='goToWizard()'
@@ -18,8 +17,14 @@
     data-title='Record Data'
     data-placement='bottom'
     data-animation='none'
-    data-container='body'
   ): i.glyphicon.glyphicon-plus
-  a.btn.btn-link.navbar-btn(ng-click='importExportPopover.toggle()'): i.glyphicon.glyphicon-sort
+  a.btn.btn-link.navbar-btn(
+    ng-click='importExportPopover.toggle()'
+    ng-class='{ active: $state.includes("wizard"), disabled: !variables.length }'
+    bs-tooltip=''
+    data-title='Import/Export'
+    data-placement='bottom'
+    data-animation='none'
+  ): i.glyphicon.glyphicon-sort
 
   ng-include(src='"templates/import-export-popover.html"')
