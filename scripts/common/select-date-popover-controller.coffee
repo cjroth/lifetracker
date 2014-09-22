@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'SelectDatePopoverController', ($rootScope, $scope, $state, $stateParams, moment) ->
+  .controller 'SelectDatePopoverController', ($state, moment) ->
 
     $datepicker = $('.select-date-popover .datepicker').datepicker('show')
 

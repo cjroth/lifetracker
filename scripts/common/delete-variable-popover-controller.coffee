@@ -1,10 +1,11 @@
 angular
   .module 'lifetracker'
-  .controller 'DeleteVariablePopoverController', ($rootScope, $scope, store) ->
+  .controller 'DeleteVariablePopoverController', ($rootScope, $scope, db) ->
 
     $scope.delete = ->
-
-      store.deleteVariable $scope.variable.id, (err) ->
+      query = _id: $scope.variable._id
+      options = {}
+      db.remove query, options, (err) ->
         if err then throw err
         $rootScope.reloadVariables()
         $scope.$hide()

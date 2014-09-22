@@ -12,7 +12,7 @@ ul.list-group.sidebar-variables
 
   li.list-group-item.variable-toggle(
     ng-repeat='variable in variables | orderBy: "name"'
-    data-var='{{variable.id}}'
+    data-var='{{variable._id}}'
     ng-click='select(variable)'
     ng-class='variable.selected ? "active" : ""'
     style='background-color: {{variable.color}};'
@@ -24,7 +24,7 @@ ul.list-group.sidebar-variables
       a.btn.btn-default(
         bs-popover
         data-container='body'
-        data-target='[data-var="{{variable.id}}"]'
+        data-target='[data-var="{{variable._id}}"]'
         data-template='templates/edit-variable-popover.html'
         data-animation=''
         ng-click='$event.stopPropagation()'
@@ -32,7 +32,7 @@ ul.list-group.sidebar-variables
       a.btn.btn-default(
         bs-popover
         data-container='body'
-        data-target='[data-var="{{variable.id}}"]'
+        data-target='[data-var="{{variable._id}}"]'
         data-template='templates/delete-variable-popover.html'
         data-animation=''
         ng-click='$event.stopPropagation()'
