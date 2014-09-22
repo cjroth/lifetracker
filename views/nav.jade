@@ -28,5 +28,13 @@
     data-animation='none'
     data-container='body'
   ): i.fa.fa-mail-forward
-
+  a.btn.btn-link.navbar-btn(
+    ng-click='openImportFromCSVFileManager()'
+    bs-tooltip=''
+    data-title='Import'
+    data-placement='bottom'
+    data-animation='none'
+    data-container='body'
+  ): i.fa.fa-mail-forward
 input.hidden(type='file', name='export-csv', nwsaveas='lifetracker.csv')
+input.hidden(type='file', name='import-csv', accept='.csv')

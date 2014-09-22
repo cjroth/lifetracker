@@ -3,6 +3,8 @@ angular
   .controller 'NavController', ($rootScope, $scope, $state, moment, db, settings) ->
     
     fs = require('fs')
+    csv = require('csv-stringify')()
+    parser = require('csv-parse')()
 
     $scope.goToWizard = ->
       $state.go('wizard.step',
@@ -19,10 +21,28 @@ angular
     $('[name="export-csv"]').on 'change', ->
       exportToCSV(@value)
 
+    $scope.openImportFromCSVFileManager = ->
+      $('[name="import-csv"]').click()
+      return
+
+    $('[name="import-csv"]').on 'change', ->
+      importFromCSV(@value)
+
     # exportToJSON = (file) ->
     #   json = JSON.stringify($rootScope.variables, null, '  ')
     #   fs.writeFile file, json, (err) ->
     #     if err then throw err
+
+    importFromCSV = (file) ->
+      csv = generateCSV($rootScope.variables)
+      fs.readFile file, (err, data) ->
+        if err then throw err
+        importCSVData(data)
+
+    importCSVData = (csv) ->
+      parser.write(csv)
+      rows = parser.read()
+      console.log 'rows'
 
     exportToCSV = (file) ->
       csv = generateCSV($rootScope.variables)
@@ -30,8 +50,6 @@ angular
         if err then throw err
 
     generateCSV = (variables) ->
-
-      csv = require('csv-stringify')()
 
       records = []
       for variable in $rootScope.variables
