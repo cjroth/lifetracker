@@ -2,8 +2,6 @@ angular
   .module 'lifetracker'
   .controller 'WizardMainController', ($rootScope, $scope, $state, db, $stateParams) ->
 
-    console.log 'wtf here'
-
     variable = _.findWhere($rootScope.variables, _id: $stateParams.variable_id)
 
     $scope.record = _.findWhere(variable.records, date: $stateParams.date) or date: $stateParams.date

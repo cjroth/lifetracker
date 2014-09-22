@@ -96,7 +96,6 @@ angular
     $rootScope.reloadVariables = (done) ->
       db.find({}).sort(name: 1).exec (err, variables) ->
         if err then throw err
-        console.log 'shit', variables
         $rootScope.palette = new Rickshaw.Color.Palette(scheme: 'colorwheel')
         for variable in variables
           variable.selected = _.contains(settings.selected, variable._id)

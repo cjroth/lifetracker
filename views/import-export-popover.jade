@@ -1,0 +1,15 @@
+.popover.bottom(name='import-export-popover', ng-show='importExportPopover.show', ng-controller='ImportExportPopoverController')
+  .arrow
+  .popover-content
+    .row
+      .col-xs-6
+        a.btn.btn-primary.btn-block(ng-click='openFileManager("import-csv")')
+          i.glyphicon.glyphicon-open
+          |  Import
+      .col-xs-6
+        a.btn.btn-primary.btn-block(ng-click='openFileManager("export-csv")')
+          i.glyphicon.glyphicon-save
+          |  Export
+
+  input.hidden(type='file', name='import-csv', accept='.csv')
+  input.hidden(type='file', name='export-csv', nwsaveas='lifetracker.csv')
