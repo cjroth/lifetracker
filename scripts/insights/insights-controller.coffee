@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'InsightsController', ($scope, $rootScope, db, pearsonCorrelation, moment, settings, gui) ->
+  .controller 'InsightsController', ($scope, $rootScope, db, pearsonCorrelation, moment, settings, gui, $timeout) ->
 
     start = moment().subtract(1, 'years')
     end = moment()
@@ -278,3 +278,6 @@ angular
           { x: minX, y: y1 }
           { x: maxX, y: y2 }
         ]
+
+    $timeout -> renderChart()
+

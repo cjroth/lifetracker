@@ -37,6 +37,7 @@
     "moment": "~2.8.3",
     "jquery": "~2.1.1",
     "bootstrap": "~3.2.0",
-    "bootflat": "bootflat/bootflat.github.io#v2.0.4"
+    "bootflat": "bootflat/bootflat.github.io#v2.0.4",
+    "ui-router-extras": "~0.0.10"
   }
 }

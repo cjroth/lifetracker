@@ -8,6 +8,7 @@ angular
 
       .state 'root',
         abstract: true
+        sticky: true
         resolve:
           variables: ($rootScope, $q, settings) ->
             deferred = $q.defer()
@@ -81,13 +82,22 @@ angular
           'sidebar@body':
             templateUrl: 'templates/insights/sidebar.html'
 
-      .state 'settings',
-        parent: 'root'
-        url: '/settings'
+      .state 'record',
+        url: '/record/:date/:variable'
         views:
-          'body@':
-            templateUrl: 'templates/settings/settings.html'
-            controller: 'SettingsController'
+          'record@':
+            templateUrl: 'templates/record/record.html'
+            controller: 'RecordController'
+        onEnter: ($previousState, $stateParams, moment, $rootScope) ->
+          if not $stateParams.date then $stateParams.date = moment().format('YYYY-MM-DD')
+          if not $stateParams.variable then $stateParams.variable = $rootScope.variables[0]._id
+          $previousState.memo('before record')
+          # $scope.close = ->
+          #   $previousState.go('the state before record')
+          # $scope.$on('$stateChangeStart', function(evt, toState) {
+          #   if (!toState.$$state().includes['modal1']) {
+          #     $modalInstance.dismiss('close');
+          #   }
 
   .run ($rootScope, $state, settings, db) ->
 

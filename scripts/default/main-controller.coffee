@@ -1,6 +1,8 @@
 angular
   .module 'lifetracker'
-  .controller 'DefaultMainController', ($scope, $rootScope, $window, gui, moment, settings, showToday) ->
+  .controller 'DefaultMainController', ($scope, $rootScope, $window, gui, moment, settings, showToday, $timeout) ->
+
+    console.log 'entering main'
 
     start = null
     end = null
@@ -141,6 +143,8 @@ angular
       renderChart()
       $scope.$digest()
 
+    $timeout -> renderChart()
+
     onSomeEventThatRequiresTheChartToBeReRendered = -> renderChart()
 
     gui.Window.get().addListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
@@ -150,7 +154,9 @@ angular
     unwatchVariables = $rootScope.$watch 'variables', onSomeEventThatRequiresTheChartToBeReRendered, true
 
     $rootScope.$on "$stateChangeStart", (event, toState, toParams, fromState, fromParams) ->
-      if fromState.name is not "default" then return
+      if fromState.name isnt "default" then return
+      if toState.name is "record" then return
+      console.log 'removing events', fromState.name, toState.name
       gui.Window.get().removeListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
