@@ -27,6 +27,7 @@ ul.list-group.sidebar-variables
         data-target='[data-var="{{variable._id}}"]'
         data-template='templates/edit-variable-popover.html'
         data-animation=''
+        data-placement='left'
         ng-click='$event.stopPropagation()'
       ): i.glyphicon.glyphicon-pencil
       a.btn.btn-default(
@@ -35,6 +36,7 @@ ul.list-group.sidebar-variables
         data-target='[data-var="{{variable._id}}"]'
         data-template='templates/delete-variable-popover.html'
         data-animation=''
+        data-placement='left'
         ng-click='$event.stopPropagation()'
       ): i.glyphicon.glyphicon-remove
 
