@@ -1,6 +1,3 @@
-.navbar-header.pull-left
-  .navbar-brand Lifetracker
-
 .navbar-header.pull-right(ng-class='{ "import-export-popover-active": importExportPopover.show }')
   a.btn.btn-link.navbar-btn(
     ui-sref='default'
@@ -25,6 +22,6 @@
     data-title='Import/Export'
     data-placement='bottom'
     data-animation='none'
-  ): i.glyphicon.glyphicon-sort
+  ): i.fa.fa-table
 
   ng-include(src='"templates/import-export-popover.html"')

@@ -29,7 +29,7 @@ body {
   min-width: 600px;
   overflow: hidden;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .app {
@@ -46,10 +46,11 @@ nav {
 
   flex-shrink: 0;
   position: static !important;
-  padding-right: 20px;
+  width: 50px;
 
   .navbar-header > a {
 
+    width: 100%;
     margin: 0;
     padding: 15px;
 
@@ -97,6 +98,7 @@ nav {
 
 .main {
   flex-grow: 1;
+  position: relative;
   .wizard {
     padding: 20px;
     .progress {
@@ -407,7 +409,7 @@ h2 {
 }
 
 .nav.nav-tabs {
-  position: fixed;
+  position: absolute;
   left: 0;
   bottom: 0;
   width: 300px;
