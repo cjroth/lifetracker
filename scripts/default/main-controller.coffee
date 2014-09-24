@@ -2,8 +2,7 @@ angular
   .module 'lifetracker'
   .controller 'DefaultMainController', ($scope, $rootScope, $window, gui, moment, settings, showToday, $timeout) ->
 
-    console.log 'entering main'
-
+    readyToRender = false
     start = null
     end = null
 
@@ -68,6 +67,8 @@ angular
       return series
 
     renderChart = ->
+
+      if not readyToRender then return
 
       console.debug('rendering main chart')
 
@@ -143,7 +144,9 @@ angular
       renderChart()
       $scope.$digest()
 
-    $timeout -> renderChart()
+    $timeout ->
+      readyToRender = true
+      renderChart()
 
     onSomeEventThatRequiresTheChartToBeReRendered = -> renderChart()
 

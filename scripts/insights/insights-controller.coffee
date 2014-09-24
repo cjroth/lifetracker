@@ -2,6 +2,7 @@ angular
   .module 'lifetracker'
   .controller 'InsightsController', ($scope, $rootScope, db, pearsonCorrelation, moment, settings, gui, $timeout) ->
 
+    readyToRender = false
     start = moment().subtract(1, 'years')
     end = moment()
 
@@ -167,6 +168,8 @@ angular
 
     renderChart = ->
       
+      if not readyToRender then return
+
       console.debug('rendering insights chart')
 
       if $scope.chart.name is 'line'
@@ -279,5 +282,7 @@ angular
           { x: maxX, y: y2 }
         ]
 
-    $timeout -> renderChart()
+    $timeout ->
+      readyToRender = true
+      renderChart()
 
