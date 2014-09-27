@@ -11,8 +11,8 @@
     data-animation='none'
   ): i.glyphicon.glyphicon-signal
   a.btn.btn-link.navbar-btn(
-    ng-click='goToWizard()'
-    ng-class='{ active: $state.includes("wizard"), disabled: !variables.length }'
+    ui-sref='record'
+    ng-class='{ active: $state.includes("record"), disabled: !variables.length }'
     bs-tooltip=''
     data-title='Record Data'
     data-placement='bottom'
@@ -20,7 +20,6 @@
   ): i.glyphicon.glyphicon-plus
   a.btn.btn-link.navbar-btn(
     ng-click='importExportPopover.toggle()'
-    ng-class='{ active: $state.includes("wizard"), disabled: !variables.length }'
     bs-tooltip=''
     data-title='Import/Export'
     data-placement='bottom'

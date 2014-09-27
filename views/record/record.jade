@@ -1,12 +1,36 @@
 .popover-container
   .popover.bottom.show
     .arrow
-    .popover-content
-      
-      p test
+    .popover-content.wizard
+      .row
+
+        .col-xs-6
+          .btn-group.btn-group-justified.date-buttons.date-selector
+            a.btn.btn-primary.date-buttons-previous(ng-click='date.subtract(1, "days")'): i.glyphicon.glyphicon-chevron-left
+            a.btn.btn-primary.text-center.date-buttons-date(
+              type='button'
+              ng-click='toggleSelectDatePopover()'
+            ) {{date.format('ddd, MMM D')}}
+            a.btn.btn-primary.date-buttons-next(ng-click='date.add(1, "days")'): i.glyphicon.glyphicon-chevron-right
+
+        .col-xs-6
+          .btn-group.btn-group-justified.date-buttons.date-selector
+            a.btn.btn-primary.date-buttons-previous(ng-click='goToVariable(previous)'): i.glyphicon.glyphicon-chevron-left
+            .btn.btn-primary.text-center.date-buttons-date.progress
+              .progress-bar.progress-bar-striped(style='width: {{progress}}%;')
+              .title {{variable.name}}
+            a.btn.btn-primary.date-buttons-next(ng-click='goToVariable(next)'): i.glyphicon.glyphicon-chevron-right
 
       .row
-        .col-xs-6
-          button.btn.btn-default.btn-block(type='button', ng-click='$hide()') Cancel
-        .col-xs-6
-          button.btn.btn-primary.btn-block(type='submit') Save
+        .col-xs-12
+          .list-group.input-form(ng-show='!done')
+            .list-group-item.question(ng-if='variable.question') {{variable.question}}
+            .list-group-item.record-input
+              ng-include(src='"templates/" + inputType + ".html"', onload='onInputLoaded()')
+            .list-group-item.clearfix
+              button.btn.btn-primary.pull-left(ng-show='previous', ng-click='goToVariable(previous)') Previous 
+              button.btn.btn-primary.pull-right(ng-show='next', ng-click='goToVariable(next)') Continue 
+          .list-group.input-form(ng-show='done')
+            .list-group-item.done You are done.
+            .list-group-item.clearfix
+              button.btn.btn-primary.pull-right(ui-sref='default') Done 

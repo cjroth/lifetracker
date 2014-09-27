@@ -4,6 +4,11 @@
 
 @icon-font-path: "../../bower_components/bootstrap/fonts/";
 
+@aqua-2: #3BAFDA;
+
+@dark-gray-1: #656D78;
+@dark-gray-2: #434A54;
+
 * {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -97,27 +102,6 @@ nav {
 
 .main {
   flex-grow: 1;
-  .wizard {
-    padding: 20px;
-    .progress {
-      height: 60px !important;
-      &-bar {
-        line-height: 60px;
-        text-align: left;
-      }
-      .title {
-        position: absolute;
-        font-size: 30px;
-        margin-left: 20px;
-        font-weight: bold;
-        text-shadow: 1px 1px 1px #9c9c9c;
-      }
-    }
-    p {
-      font-size: 25px;
-      margin: 25px 0;
-    }
-  }
 }
 
 .variable-toggle {
@@ -141,8 +125,8 @@ nav {
 
 .popover {
   .row {
-    margin-left: -10px;
-    margin-right: -10px;
+    margin-left: -5px;
+    margin-right: -5px;
     & [class^='col-'] {
       padding-left: 5px;
       padding-right: 5px;
@@ -157,13 +141,15 @@ nav {
       margin-bottom: 0;
     }
   }
-  // this is the selecter thingy.
-  // .selecter {
-  //   color: #333;
-  //   &.cover &-options {
-  //     border: none;
-  //   }
-  // }
+  &-content {
+    padding: 10px;
+  }
+  &-footer {
+    padding: 10px 20px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
 }
 
 .datepicker-popover {
@@ -241,7 +227,6 @@ nav {
 
   width: 100%;
   height: 40px;
-  margin-bottom: 10px;
 
   .slider-track {
 
@@ -310,13 +295,7 @@ footer {
   }
 }
 
-.progress {
-  height: 34px !important;
-}
-
 .date-buttons {
-
-  margin-bottom: 20px;
 
   &-previous,
   &-next {
@@ -448,22 +427,61 @@ h2 {
   padding-bottom: 53px;
   .popover-container {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 66.66%;
     z-index: 1000000;
     padding: 10px;
     top: 0;
-    .popover {
+    right: 0;
+    & > .popover {
       margin: 0;
-      position: static; 
+      position: relative; 
       max-width: none;
       width: 100%;
       height: 100%;
-      .arrow {
-        top: 0;
+      & > .arrow {
+        top: -10px;
         left: auto;
-        right: 77px;
+        right: 67px;
       }
+    }
+  }
+  .wizard {
+    .progress {
+      height: 40px !important;
+      padding: 0;
+      background-color: @aqua-2;
+      .title {
+        position: absolute;
+        width: 100%;
+        font-size: 16px;
+        line-height: 38px;
+      }
+    }
+    .list-group-item {
+      background-color: @dark-gray-1;
+      color: #fff;
+      border-color: @dark-gray-2;
+    }
+    .input-form {
+      margin-bottom: 0;
+    }
+    .date-selector {
+      a {
+        line-height: 26px;
+      }
+    }
+    .btn {
+      font-size: 16px;
+    }
+    .question {
+      font-size: 18px;
+    }
+    .question, .record-input {
+      min-height: 70px;
+    }
+    .slider {
+      position: relative;
+      top: 4px;
     }
   }
 }
