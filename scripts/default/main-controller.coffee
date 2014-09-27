@@ -154,7 +154,7 @@ angular
     gui.Window.get().addListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
     gui.Window.get().addListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
 
-    unwatchVariables = $rootScope.$watch 'variables', onSomeEventThatRequiresTheChartToBeReRendered, true
+    # unwatchVariables = $rootScope.$watch 'variables', onSomeEventThatRequiresTheChartToBeReRendered, true
 
     $rootScope.$on "$stateChangeStart", (event, toState, toParams, fromState, fromParams) ->
       if fromState.name isnt "default" then return
@@ -163,4 +163,15 @@ angular
       gui.Window.get().removeListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
-      unwatchVariables()
+      # unwatchVariables()
+
+    $scope.select = (variable) ->
+      variable.selected = !variable.selected
+      selected = []
+      for variable in $rootScope.variables
+        if variable.selected then selected.push(variable._id)
+      settings.selected = selected
+      settings.save()
+      renderChart()
+
+    $scope.$on 'reload', onSomeEventThatRequiresTheChartToBeReRendered

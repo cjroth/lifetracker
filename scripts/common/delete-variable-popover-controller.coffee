@@ -9,3 +9,4 @@ angular
         if err then throw err
         $rootScope.reloadVariables()
         $scope.$hide()
+        $scope.renderChart()

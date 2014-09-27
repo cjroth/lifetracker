@@ -26,12 +26,13 @@ angular
         views:
           'body@':
             templateUrl: 'templates/default/default.html'
+            controller: 'DefaultMainController'
           'main@body':
             templateUrl: 'templates/default/main.html'
-            controller: 'DefaultMainController'
+            # controller: 'DefaultMainController'
           'sidebar@body':
             templateUrl: 'templates/default/sidebar.html'
-            controller: 'DefaultSidebarController'
+            # controller: 'DefaultSidebarController'
         resolve:
           showToday: ($q, moment, db) ->
             # @todo @nedb
@@ -42,33 +43,6 @@ angular
             #   deferred.resolve(records.length > 0)
             # return deferred.promise
             return true
-
-      .state 'wizard',
-        abstract: true
-        parent: 'root'
-        url: '/wizard'
-        views:
-          'body@':
-            templateUrl: 'templates/wizard/wizard.html'
-
-      .state 'wizard.done',
-        url: '/:date/done'
-        views:
-          'main@body':
-            templateUrl: 'templates/wizard/done.html'
-          'sidebar@body':
-            templateUrl: 'templates/wizard/sidebar.html'
-            controller: 'WizardSidebarController'
-
-      .state 'wizard.step',
-        url: '/:date/:variable_id'
-        views:
-          'main@body':
-            templateUrl: 'templates/wizard/main.html'
-            controller: 'WizardMainController'
-          'sidebar@body':
-            templateUrl: 'templates/wizard/sidebar.html'
-            controller: 'WizardSidebarController'
 
       .state 'insights',
         parent: 'root'
@@ -92,6 +66,8 @@ angular
           if not $stateParams.date then $stateParams.date = moment().format('YYYY-MM-DD')
           if not $stateParams.variable then $stateParams.variable = $rootScope.variables[0]._id
           $previousState.memo('before record')
+        onExit: ($rootScope) ->
+          $rootScope.$broadcast 'reload'
           # $scope.close = ->
           #   $previousState.go('the state before record')
           # $scope.$on('$stateChangeStart', function(evt, toState) {
@@ -116,9 +92,9 @@ angular
 
     $state.go('default')
 
-    $rootScope.$on "$stateChangeSuccess", (event, toState, toParams, fromState, fromParams) ->
+    $rootScope.$on '$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) ->
       states = []
-      $state.current.name.split(".").forEach (name, i) ->
-        states.push(if i then states[i - 1] + "." + name else name)
-      $rootScope.stateClasses = states.map (state) -> "state-" + state.replace(/\./g, "-")
+      $state.current.name.split('.').forEach (name, i) ->
+        states.push(if i then states[i - 1] + '.' + name else name)
+      $rootScope.stateClasses = states.map (state) -> 'state-' + state.replace(/\./g, '-')
 
