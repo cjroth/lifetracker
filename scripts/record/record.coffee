@@ -26,12 +26,13 @@ angular
       console.info('saving ' + $scope.variable.name + ' record: ' + $scope.record.value)
       query = _id: $scope.variable._id
       $scope.record.date ?= $scope.date.format('YYYY-MM-DD')
+      if $scope.variable.records.indexOf($scope.record) < 1
+        $scope.variable.records.push($scope.record)
       update = $addToSet: records: $scope.record
       options = {}
       db.update query, update, options, (err) ->
         if err then throw err
         $rootScope.reloadVariables()
-        $scope.variables = $rootScope.variables
 
     $scope.goToDone = ->
       $scope.done = true
@@ -43,21 +44,19 @@ angular
       $scope.inputType = null
 
     $scope.goTo = (variable, date) ->
-      if variable is 'done'
-        $scope.goToDone()
-        return
-      params =
-        date: date?.format('YYYY-MM-DD')
-        variable: variable?._id
-      options = reload: true
-      $state.go('record', params, options)
+      if variable is 'done' then return $scope.goToDone()
+      if not variable? then return
+      $scope.done = false
+      $scope.date = date
+      $scope.variable = variable
+      $scope.index = $scope.variables.indexOf($scope.variable)
+      $scope.previous = $scope.variables[$scope.index - 1]
+      $scope.next = $scope.variables[$scope.index + 1] or 'done'
+      $scope.progress = $scope.index / $scope.variables.length * 100
+      $scope.record = _.findWhere($scope.variable.records, date: date.format('YYYY-MM-DD')) or {}
+      $scope.inputType = if $scope.variable.units? then 'number-input-with-units' else $scope.variable.type + '-input'
 
-    $scope.index = $scope.variables.indexOf($scope.variable)
-    $scope.previous = $scope.variables[$scope.index - 1]
-    $scope.next = $scope.variables[$scope.index + 1] or 'done'
-    $scope.progress = $scope.index / $scope.variables.length * 100
-    $scope.record = _.findWhere($scope.variable.records, date: $scope.date.format('YYYY-MM-DD')) or {}
-    $scope.inputType = if $scope.variable.units? then 'number-input-with-units' else $scope.variable.type + '-input'
+      if $scope.variable.type is 'scale' and not $scope.record.value?
+        $scope.record.value = 5
 
-    if $scope.variable.type is 'scale' and not $scope.record.value?
-      $scope.record.value = 5
+    $scope.goTo($scope.variable, $scope.date)
