@@ -73,8 +73,6 @@ angular
       if not readyToRender then return
 
       console.debug('rendering main chart')
-
-      if $rootScope.variables.length is 0 then return
         
       series = formatData($rootScope.variables)
 

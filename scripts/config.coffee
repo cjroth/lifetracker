@@ -27,12 +27,6 @@ angular
           'body@':
             templateUrl: 'templates/default/default.html'
             controller: 'DefaultMainController'
-          'main@body':
-            templateUrl: 'templates/default/main.html'
-            # controller: 'DefaultMainController'
-          'sidebar@body':
-            templateUrl: 'templates/default/sidebar.html'
-            # controller: 'DefaultSidebarController'
         resolve:
           showToday: ($q, moment, db) ->
             # @todo @nedb
