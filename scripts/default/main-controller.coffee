@@ -34,7 +34,7 @@ angular
       for variable in variables
         seriesData[variable._id] = []
         max = d3.max variable.records, (record) -> record.value
-        variable.scale = d3.scale.linear().domain([0, max])
+        variable.scale = d3.scale.linear().domain([0, max]).range([0.1, 0.9])
 
       firstDataDate = null
       oneBefore = start.clone().subtract(1, 'days')
@@ -95,8 +95,8 @@ angular
         dotSize: 5
         interpolation: 'cardinal'
         unstack: true
-        min: -0.05
-        max: 1.05
+        min: 0
+        max: 1
       )
 
       graph.render()
