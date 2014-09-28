@@ -33,6 +33,8 @@ angular
 
       for variable in variables
         seriesData[variable._id] = []
+        max = d3.max variable.records, (record) -> record.value
+        variable.scale = d3.scale.linear().domain([0, max])
 
       firstDataDate = null
       oneBefore = start.clone().subtract(1, 'days')
@@ -40,10 +42,9 @@ angular
       date = start.clone()
 
       while date.isAfter(oneBefore) and date.isBefore(oneAfter)
-        
         for variable in variables
           record = _.findWhere(variable.records, date: date.format('YYYY-MM-DD'))
-          value = if record? then record.value else null
+          value = if record? then variable.scale(record.value) else null
           seriesData[variable._id].push(x: date.valueOf(), y: value)
 
         date.add(1, 'days')
@@ -59,6 +60,7 @@ angular
         series.push(
           name: variable.name
           variable: variable
+          renderer: $scope.chart.name
           color: 'rgba(' + [rgb.r, rgb.g, rgb.b, alpha].join(',') + ')'
           stroke: 'rgba(' + [rgb.r, rgb.g, rgb.b, 1].join(',') + ')'
           data: seriesData[variable._id]
@@ -90,11 +92,13 @@ angular
         element: $chart[0]
         width: $('.main').width()
         height: $('.main').height()
-        renderer: $scope.chart.name
+        renderer: 'multi'
         series: series
         dotSize: 5
         interpolation: 'cardinal'
         unstack: true
+        min: -0.05
+        max: 1.05
       )
 
       graph.render()
@@ -102,6 +106,7 @@ angular
       new Rickshaw.Graph.HoverDetail(
         formatter: (series, x, y) ->
           units = if series.variable.type is 'scale' then '/ 10' else series.variable.units
+          y = series.variable.scale.invert(y)
           value = Math.round(y * 100) / 100 # round to 2 decimal places
           return series.name + ': ' + value + ' ' + units
         xFormatter: (x) ->

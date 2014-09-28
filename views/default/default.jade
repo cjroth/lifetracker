@@ -1,2 +1,90 @@
-.sidebar(ui-view='sidebar@body')
-.main(ui-view='main@body')
+.sidebar
+  .list-group
+    a.btn.btn-primary.btn-block(
+        bs-popover
+        data-container='body'
+        data-template='templates/create-variable-popover.html'
+        data-animation=''
+    )
+      i.fa.fa-bar-chart-o
+      |  New Variable
+
+  ul.list-group.sidebar-variables
+
+    li.list-group-item.variable-toggle(
+      ng-repeat='variable in variables | orderBy: "name"'
+      data-var='{{variable._id}}'
+      ng-click='select(variable)'
+      ng-class='variable.selected ? "active" : ""'
+      style='background-color: {{variable.color}};'
+    )
+
+      .overlay
+
+      .btn-group.btn-group-xs.pull-right
+        a.btn.btn-default(
+          bs-popover
+          data-container='body'
+          data-target='[data-var="{{variable._id}}"]'
+          data-template='templates/edit-variable-popover.html'
+          data-animation=''
+          ng-click='$event.stopPropagation()'
+        ): i.glyphicon.glyphicon-pencil
+        a.btn.btn-default(
+          bs-popover
+          data-container='body'
+          data-target='[data-var="{{variable._id}}"]'
+          data-template='templates/delete-variable-popover.html'
+          data-animation=''
+          ng-click='$event.stopPropagation()'
+        ): i.glyphicon.glyphicon-remove
+
+      span.name {{variable.name}}
+
+  ul.nav.nav-tabs.nav-justified
+    li(ng-class='{ active: $state.includes("default") }'): a(ui-sref='default') Variables
+    li(ng-class='{ active: $state.includes("insights") }'): a(ui-sref='insights') Correlations
+
+.main
+
+  .chart(name='chart')
+
+  .chart-buttons.chart-buttons-right.btn-group(ng-class='{ active: showDatepicker }')
+    button.btn.btn-primary(
+      type='button'
+      ng-click='toggleDatePicker()'
+      bs-tooltip=''
+      data-container='body'
+      data-title='{{getPrettyDateRange()}}'
+      data-placement='top'
+      data-animation='none'
+    ): i.glyphicon.glyphicon-calendar
+    button.btn.btn-primary(
+      name='button-chart-type-toggle'
+      type='button'
+      ng-click='cycleChartType()'
+      bs-tooltip=''
+      data-container='body'
+      data-title='{{chart.label}}'
+      data-placement='top'
+      data-animation='none'
+    ): i(ng-class='chart.class')
+
+  //- .chart-buttons.chart-buttons-left.btn-group(ng-show='chart.stackable')
+  //-   button.btn.btn-primary(
+  //-     type='button'
+  //-     ng-click='toggleStacked()'
+  //-     bs-tooltip=''
+  //-     data-container='body'
+  //-     data-title='{{ stacked ? "Unstack" : "Stack" }}'
+  //-     data-placement='top'
+  //-     data-animation='none'
+  //-   ): i.fa(ng-class='stacked ? "fa-square" : "fa-th-large"')
+
+  .popover.left.datepicker-popover(ng-show='showDatepicker')
+    .arrow
+    .popover-content
+      .row
+        .datepicker
+          .range-start
+          .range-end

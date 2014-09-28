@@ -31,6 +31,7 @@ angular
       db.update query, update, options, (err) ->
         if err then throw err
         $rootScope.reloadVariables()
+        $scope.variables = $rootScope.variables
 
     $scope.goToDone = ->
       $scope.done = true

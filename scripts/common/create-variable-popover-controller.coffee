@@ -7,7 +7,13 @@ angular
     $scope.save = ->
       $scope.submitted = true
       if $scope.form.$invalid then return
-      db.insert $scope.variable, (err, variable) ->
+      variable =
+        name: $scope.variable.name
+        question: $scope.variable.question
+        type: $scope.variable.type
+        units: $scope.variable.units
+        records: []
+      db.insert variable, (err, variable) ->
         if err then throw err
         settings.selected.push(variable._id)
         settings.save()
