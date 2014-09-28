@@ -34,7 +34,19 @@ angular
       for variable in variables
         seriesData[variable._id] = []
         max = d3.max variable.records, (record) -> record.value
-        variable.scale = d3.scale.linear().domain([0, max]).range([0.1, 0.9])
+        if variable.type is 'scale'
+          variable.scale = d3.scale.linear().domain([0, max]).range([0.1, 0.9])
+        else
+          variable.scale = d3.scale.linear().domain([0, 1]).range([0.1, 0.9])
+
+        variable.convert = (x) ->
+          # return @scale(x)
+          if this.scale is 'number' then return x
+          c = Math.abs(x-5)
+          y = Math.exp(c) / Math.exp(5)
+          if x-5 < 0
+            y = -y
+          return y / 2 + .5
 
       firstDataDate = null
       oneBefore = start.clone().subtract(1, 'days')
@@ -44,7 +56,8 @@ angular
       while date.isAfter(oneBefore) and date.isBefore(oneAfter)
         for variable in variables
           record = _.findWhere(variable.records, date: date.format('YYYY-MM-DD'))
-          value = if record? then variable.scale(record.value) else null
+          value = if record? then variable.convert(record.value) else null
+          console.log 'fuck', value
           seriesData[variable._id].push(x: date.valueOf(), y: value)
 
         date.add(1, 'days')
