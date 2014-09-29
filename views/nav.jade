@@ -1,18 +1,40 @@
-.navbar-header.pull-left
-  .navbar-brand Lifetracker
-
 .navbar-header.pull-right(ng-class='{ "import-export-popover-active": importExportPopover.show }')
-  a.btn.btn-link.navbar-btn(
-    bs-popover
-    data-container='body'
-    data-template='templates/common/record-popover.html'
-    data-animation=''
-    data-placement='bottom'
-  ): i.glyphicon.glyphicon-plus
-  a.btn.btn-link.navbar-btn(
-    bs-popover
-    data-container='body'
-    data-template='templates/common/import-export-popover.html'
-    data-animation=''
-    data-placement='bottom'
-  ): i.glyphicon.glyphicon-sort
+  //- a.btn.btn-link.navbar-btn(
+  //-   bs-popover
+  //-   data-container='body'
+  //-   data-template='templates/common/record-popover.html'
+  //-   data-animation=''
+  //-   data-placement='bottom'
+  //- ): i.glyphicon.glyphicon-plus
+  //- a.btn.btn-link.navbar-btn(
+  //-   bs-popover
+  //-   data-container='body'
+  //-   data-template='templates/common/import-export-popover.html'
+  //-   data-animation=''
+  //-   data-placement='bottom'
+  //- ): i.glyphicon.glyphicon-sort
+
+ul.nav.nav-stacked
+  li(
+    ui-sref-active='active'
+    bs-tooltip=''
+    data-title='Variables'
+    data-placement='right'
+    data-animation='none'
+  ): a(ui-sref='variables'): i.fa.fa-area-chart
+  li(
+    ui-sref-active='active'
+    bs-tooltip=''
+    data-title='Correlations'
+    data-placement='right'
+    data-animation='none'
+  ): a(ui-sref='correlations'): i.fa.fa-eye
+  //- li#import-export-nav-item
+  //-   a(
+  //-     bs-popover
+  //-     data-container='body'
+  //-     data-template='templates/common/import-export-popover.html'
+  //-     data-animation=''
+  //-     data-placement='right'
+  //-   ): i.glyphicon.glyphicon-sort
+

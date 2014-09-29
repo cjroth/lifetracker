@@ -41,10 +41,6 @@
 
       span.name {{variable.name}}
 
-ul.nav.nav-tabs.nav-justified
-  li(ng-class='{ active: $state.includes("variables") }'): a(ui-sref='variables') Variables
-  li(ng-class='{ active: $state.includes("correlations") }'): a(ui-sref='correlations') Correlations
-
 .main
   .chart(name='chart')
   .chart-buttons.chart-buttons-right.btn-group(ng-class='{ active: showDatepicker }')

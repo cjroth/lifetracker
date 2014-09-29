@@ -9,10 +9,6 @@
       | {{correlation.name}}
       span.badge(ng-class='isPositive(correlation) ? "badge-success" : "badge-warning"') {{correlation.pretty}}
 
-  ul.nav.nav-tabs.nav-justified
-    li(ng-class='{ active: $state.includes("variables") }'): a(ui-sref='variables') Variables
-    li(ng-class='{ active: $state.includes("correlations") }'): a(ui-sref='correlations') Correlations
-
 .main
 
   .chart(name='chart-insights')

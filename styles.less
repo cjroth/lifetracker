@@ -34,7 +34,7 @@ body {
   min-width: 600px;
   overflow: hidden;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .app {
@@ -51,10 +51,28 @@ nav {
 
   flex-shrink: 0;
   position: static !important;
-  padding-right: 20px;
+  width: 50px;
+
+  ul.nav {
+    li {
+      margin: 0;
+      &:hover,
+      &.active {
+        a {
+          background-color: #000;
+        }
+      }
+      a {
+        text-align: center;
+        color: #fff;
+        line-height: 30px;
+      }
+    }
+  }
 
   .navbar-header > a {
 
+    width: 100%;
     margin: 0;
     padding: 15px;
 
@@ -200,9 +218,9 @@ nav {
   }
 }
 
-.create-variable-popover {
+#create-variable-popover {
   display: block;
-  top: 63px !important;
+  top: 10px !important;
   position: fixed !important;
   width: 250px;
   & > .arrow {
@@ -293,6 +311,15 @@ footer {
   }
 }
 
+.record-button {
+  top: 10px;
+  right: 10px;
+  .btn {
+    height: 50px;
+    width: 50px;
+  }
+}
+
 .date-buttons {
 
   &-previous,
@@ -306,19 +333,26 @@ footer {
 
 }
 
-// .chart {
-//   z-index: 10000;
-//   .x_label {
-//     border-radius: 0;
-//   }
-//   .rickshaw_graph .detail .dot {
-//     width: 8px;
-//     height: 8px;
-//     border-radius: 8px;
-//     margin-top: -6px;
-//     margin-left: -6px;
-//   }
-// }
+[name='chart'] {
+  .x_label {
+    top: 10px;
+    &.left {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    &.right {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+  .rickshaw_graph .detail .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+    margin-top: -6px;
+    margin-left: -6px;
+  }
+}
 
 .popover,
 .tooltip {
@@ -327,11 +361,23 @@ footer {
 
 .tooltip {
   opacity: 1 !important;
-  & > &-arrow {
+  &.bottom > &-arrow {
     border-bottom-color: rgba(0, 0, 0, .8);
+  }
+  &.right > &-arrow {
+    border-right-color: rgba(0, 0, 0, .8);
+  }
+  &.top > &-arrow {
+    border-top-color: rgba(0, 0, 0, .8);
+  }
+  &.left > &-arrow {
+    border-left-color: rgba(0, 0, 0, .8);
   }
   & > &-inner {
     background-color: rgba(0, 0, 0, .8);
+  }
+  .tooltip-inner {
+    white-space: nowrap;
   }
 }
 
@@ -383,17 +429,6 @@ h2 {
   top: 0;
 }
 
-.nav.nav-tabs {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 300px;
-  z-index: 100;
-  &.nav-justified > li > a {
-    border-radius: 0 !important;
-  }
-}
-
 #import-export-popover {
   display: block;
   top: 53px;
@@ -417,15 +452,15 @@ h2 {
 
 #record-popover {
   position: absolute;
-  top: 53px !important;
+  top: 10px !important;
   left: auto !important;
-  right: 10px !important;
+  right: 70px !important;
   width: 50%;
   max-width: none;
+  min-width: 470px;
+  margin: 0;
   & > .arrow {
-    top: -10px;
-    left: auto;
-    right: 67px;
+    top: 24px;
   }
   .wizard {
     .progress {
@@ -466,4 +501,10 @@ h2 {
       top: 4px;
     }
   }
+}
+
+#import-export-nav-item {
+  position: absolute;
+  bottom: -2px;
+  width: 100%;
 }
