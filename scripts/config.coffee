@@ -50,25 +50,6 @@ angular
           'sidebar@body':
             templateUrl: 'templates/insights/sidebar.html'
 
-      .state 'record',
-        url: '/record/:date/:variable'
-        views:
-          'record@':
-            templateUrl: 'templates/record/record.html'
-            controller: 'RecordController'
-        onEnter: ($previousState, $stateParams, moment, $rootScope) ->
-          if not $stateParams.date then $stateParams.date = moment().format('YYYY-MM-DD')
-          if not $stateParams.variable then $stateParams.variable = $rootScope.variables[0]._id
-          $previousState.memo('before record')
-        onExit: ($rootScope) ->
-          $rootScope.$broadcast 'reload'
-          # $scope.close = ->
-          #   $previousState.go('the state before record')
-          # $scope.$on('$stateChangeStart', function(evt, toState) {
-          #   if (!toState.$$state().includes['modal1']) {
-          #     $modalInstance.dismiss('close');
-          #   }
-
   .run ($rootScope, $state, settings, db) ->
 
     $rootScope.$state = $state
@@ -91,28 +72,5 @@ angular
       $state.current.name.split('.').forEach (name, i) ->
         states.push(if i then states[i - 1] + '.' + name else name)
       $rootScope.stateClasses = states.map (state) -> 'state-' + state.replace(/\./g, '-')
-
-    # $("body").on "click", (eve) ->
-    #   popoverArea = $(".popover-area, .dropdown")
-    #   popovers = angular.element(".popover")
-    #   if not popoverArea.is(eve.target) and popoverArea.has(eve.target).length is 0
-    #     angular.forEach popovers, (val) ->
-    #       popover = angular.element(val).scope()
-    #       if popover # variable only defined when popover is shown
-    #         popover.$hide()
-    #         $scope.$apply()
-    #       return
-
-    #   return
-
-
-    # $('html').on 'click', (e) ->
-    #   $('.popover').each ->
-    #     if $(e.target).get(0) isnt $(this).prev().get(0)
-    #       # console.log this
-    #       # $(this).popover('hide')
-    #       return
-    #     return
-    #   return
 
     return

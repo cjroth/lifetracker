@@ -1,14 +1,16 @@
 angular
   .module 'lifetracker'
-  .controller 'RecordController', ($scope, $state, $rootScope, $stateParams, moment, db) ->
+  .controller 'RecordPopoverController', ($scope, $rootScope, moment, db) ->
 
     $scope.toggleSelectDatePopover = ->
       $scope.showSelectDatePopover = not $scope.showSelectDatePopover
 
     $scope.variables = $rootScope.variables
-    $scope.variable = _.findWhere($scope.variables, _id: $stateParams.variable)
-    $scope.date = moment($stateParams.date)
+    $scope.variable = $scope.variables[0]
+    $scope.date = moment()
     $scope.done = false
+
+    console.log 'fuck', $scope
 
     $scope.onInputLoaded = ->
       $('[name="record"]').on 'change slideStop', ->

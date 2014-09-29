@@ -15,11 +15,9 @@
     data-animation='none'
   ): i.glyphicon.glyphicon-signal
   a.btn.btn-link.navbar-btn(
-    ui-sref='record'
-    ng-class='{ active: $state.includes("record"), disabled: !variables.length }'
     bs-popover
     data-container='body'
-    data-template='templates/record/record.html'
+    data-template='templates/record-popover.html'
     data-animation=''
     data-placement='bottom'
   ): i.glyphicon.glyphicon-plus
