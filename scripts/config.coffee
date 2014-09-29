@@ -92,3 +92,27 @@ angular
         states.push(if i then states[i - 1] + '.' + name else name)
       $rootScope.stateClasses = states.map (state) -> 'state-' + state.replace(/\./g, '-')
 
+    # $("body").on "click", (eve) ->
+    #   popoverArea = $(".popover-area, .dropdown")
+    #   popovers = angular.element(".popover")
+    #   if not popoverArea.is(eve.target) and popoverArea.has(eve.target).length is 0
+    #     angular.forEach popovers, (val) ->
+    #       popover = angular.element(val).scope()
+    #       if popover # variable only defined when popover is shown
+    #         popover.$hide()
+    #         $scope.$apply()
+    #       return
+
+    #   return
+
+
+    # $('html').on 'click', (e) ->
+    #   $('.popover').each ->
+    #     if $(e.target).get(0) isnt $(this).prev().get(0)
+    #       # console.log this
+    #       # $(this).popover('hide')
+    #       return
+    #     return
+    #   return
+
+    return

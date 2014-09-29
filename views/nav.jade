@@ -1,5 +1,9 @@
 .navbar-header.pull-left
-  .navbar-brand Lifetracker
+  .navbar-brand(
+    bs-popover
+    data-trigger='click'
+    data-content='{{"bleh"}}'
+  ) Lifetracker
 
 .navbar-header.pull-right(ng-class='{ "import-export-popover-active": importExportPopover.show }')
   a.btn.btn-link.navbar-btn(
@@ -13,17 +17,16 @@
   a.btn.btn-link.navbar-btn(
     ui-sref='record'
     ng-class='{ active: $state.includes("record"), disabled: !variables.length }'
-    bs-tooltip=''
-    data-title='Record Data'
+    bs-popover
+    data-container='body'
+    data-template='templates/record/record.html'
+    data-animation=''
     data-placement='bottom'
-    data-animation='none'
   ): i.glyphicon.glyphicon-plus
   a.btn.btn-link.navbar-btn(
-    ng-click='importExportPopover.toggle()'
-    bs-tooltip=''
-    data-title='Import/Export'
+    bs-popover
+    data-container='body'
+    data-template='templates/import-export-popover.html'
+    data-animation=''
     data-placement='bottom'
-    data-animation='none'
   ): i.glyphicon.glyphicon-sort
-
-  ng-include(src='"templates/import-export-popover.html"')
