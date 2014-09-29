@@ -121,11 +121,6 @@ angular
       settings.chartName = $scope.chart.name
       settings.save()
 
-    $scope.toggleDatePicker = ->
-      $scope.showDatepicker = not $scope.showDatepicker
-
-    $datepicker = $('.datepicker').datepicker(inputs: $('.range-start, .range-end'), format: 'yyyy-mm-dd')
-
     # show one month ago until today as default date range
     end = moment()
       .subtract(settings.newDayOffsetHours, 'hours')
@@ -136,12 +131,11 @@ angular
     if not showToday then end.subtract(1, 'days')
     start = end.clone().subtract(settings.dateRangeSize, 'days')
 
-    $('.range-start').datepicker('setDate', start.format('YYYY-MM-DD'))
-    $('.range-end').datepicker('setDate', end.format('YYYY-MM-DD'))
+    $rootScope.daterange = start: start, end: end
 
-    $datepicker.on 'changeDate', (event) ->
-      start = moment($('.range-start').datepicker('getDate'))
-      end = moment($('.range-end').datepicker('getDate'))
+    $scope.$on 'date changed', ($event, newStart, newEnd) ->
+      start = newStart
+      end = newEnd
       settings.dateRangeSize = end.diff(start, 'days')
       settings.save()
       renderChart()
@@ -162,7 +156,6 @@ angular
     $rootScope.$on "$stateChangeStart", (event, toState, toParams, fromState, fromParams) ->
       if fromState.name isnt "default" then return
       if toState.name is "record" then return
-      console.log 'removing events', fromState.name, toState.name
       gui.Window.get().removeListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered

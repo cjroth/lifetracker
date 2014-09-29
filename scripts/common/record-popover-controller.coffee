@@ -10,8 +10,6 @@ angular
     $scope.date = moment()
     $scope.done = false
 
-    console.log 'fuck', $scope
-
     $scope.onInputLoaded = ->
       $('[name="record"]').on 'change slideStop', ->
         $scope.record.value = parseFloat($scope.record.value) || null

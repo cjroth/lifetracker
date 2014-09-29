@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'ImportExportPopoverController', ($scope, $rootScope, db, settings) ->
+  .controller 'ImportExportPopoverController', ($scope, $rootScope, db, settings, $timeout) ->
 
     fs = require('fs')
     csv = require('csv')
@@ -10,8 +10,9 @@ angular
       $scope.importExportPopover.toggle(false)
       return
 
-    $('[name="import-csv"]').on 'change', -> importFromCSV(@value)
-    $('[name="export-csv"]').on 'change', -> exportToCSV(@value)
+    $timeout ->
+      $('[name="import-csv"]').on 'change', -> importFromCSV(@value)
+      $('[name="export-csv"]').on 'change', -> exportToCSV(@value)
 
     importFromCSV = (file) ->
       $('[name="import-csv"]').val('')
