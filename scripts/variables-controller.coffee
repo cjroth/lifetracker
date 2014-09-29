@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'DefaultMainController', ($popover, $scope, $rootScope, $window, gui, moment, settings, showToday, $timeout) ->
+  .controller 'VariablesController', ($popover, $scope, $rootScope, $window, gui, moment, settings, showToday, $timeout) ->
 
     readyToRender = false
     start = null

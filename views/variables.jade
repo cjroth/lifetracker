@@ -3,7 +3,7 @@
     a.btn.btn-primary.btn-block(
         bs-popover
         data-container='body'
-        data-template='templates/create-variable-popover.html'
+        data-template='templates/common/create-variable-popover.html'
         data-animation=''
     )
       i.fa.fa-bar-chart-o
@@ -26,7 +26,7 @@
           bs-popover
           data-container='body'
           data-target='[data-var="{{variable._id}}"]'
-          data-template='templates/edit-variable-popover.html'
+          data-template='templates/common/edit-variable-popover.html'
           data-animation=''
           ng-click='$event.stopPropagation()'
         ): i.glyphicon.glyphicon-pencil
@@ -34,33 +34,24 @@
           bs-popover
           data-container='body'
           data-target='[data-var="{{variable._id}}"]'
-          data-template='templates/delete-variable-popover.html'
+          data-template='templates/common/delete-variable-popover.html'
           data-animation=''
           ng-click='$event.stopPropagation()'
         ): i.glyphicon.glyphicon-remove
 
       span.name {{variable.name}}
 
-  ul.nav.nav-tabs.nav-justified
-    li(ng-class='{ active: $state.includes("default") }'): a(ui-sref='default') Variables
-    li(ng-class='{ active: $state.includes("insights") }'): a(ui-sref='insights') Correlations
+ul.nav.nav-tabs.nav-justified
+  li(ng-class='{ active: $state.includes("variables") }'): a(ui-sref='variables') Variables
+  li(ng-class='{ active: $state.includes("correlations") }'): a(ui-sref='correlations') Correlations
 
 .main
   .chart(name='chart')
   .chart-buttons.chart-buttons-right.btn-group(ng-class='{ active: showDatepicker }')
-    //- button.btn.btn-primary(
-    //-   type='button'
-    //-   ng-click='toggleDatePicker()'
-    //-   bs-tooltip=''
-    //-   data-container='body'
-    //-   data-title='{{getPrettyDateRange()}}'
-    //-   data-placement='top'
-    //-   data-animation='none'
-    //- ): i.glyphicon.glyphicon-calendar
     button.btn.btn-primary(
       bs-popover
       data-container='body'
-      data-template='templates/datepicker-popover.html'
+      data-template='templates/common/datepicker-popover.html'
       data-animation=''
       data-placement='top'
     ): i.glyphicon.glyphicon-calendar

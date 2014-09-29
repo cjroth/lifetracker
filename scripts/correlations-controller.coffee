@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'InsightsController', ($scope, $rootScope, db, pearsonCorrelation, moment, settings, gui, $timeout) ->
+  .controller 'CorrelationsController', ($scope, $rootScope, db, pearsonCorrelation, moment, settings, gui, $timeout) ->
 
     readyToRender = false
     start = moment().subtract(1, 'years')

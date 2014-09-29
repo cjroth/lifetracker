@@ -1,0 +1,30 @@
+.sidebar
+
+  .list-group.correlation-list
+    a.list-group-item(
+      ng-repeat='correlation in correlations'
+      ng-click='select(correlation)'
+      ng-class='{ "list-group-item-success": isPositive(correlation), "list-group-item-warning": isNegative(correlation), "active": isSelected(correlation) }'
+    )
+      | {{correlation.name}}
+      span.badge(ng-class='isPositive(correlation) ? "badge-success" : "badge-warning"') {{correlation.pretty}}
+
+  ul.nav.nav-tabs.nav-justified
+    li(ng-class='{ active: $state.includes("variables") }'): a(ui-sref='variables') Variables
+    li(ng-class='{ active: $state.includes("correlations") }'): a(ui-sref='correlations') Correlations
+
+.main
+
+  .chart(name='chart-insights')
+
+  .chart-buttons.chart-buttons-right.btn-group
+    button.btn.btn-primary(
+      name='button-chart-type-toggle'
+      type='button'
+      ng-click='cycleChartType()'
+      bs-tooltip=''
+      data-container='body'
+      data-title='{{chart.label}}'
+      data-placement='top'
+      data-animation='none'
+    ): i(ng-class='chart.class')

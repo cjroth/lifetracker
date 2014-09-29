@@ -8,7 +8,6 @@ angular
 
       .state 'root',
         abstract: true
-        sticky: true
         resolve:
           variables: ($rootScope, $q, settings) ->
             deferred = $q.defer()
@@ -20,13 +19,13 @@ angular
             templateUrl: 'templates/nav.html'
             controller: 'NavController'
 
-      .state 'default',
+      .state 'variables',
         parent: 'root'
         url: '/'
         views:
           'body@':
-            templateUrl: 'templates/default/default.html'
-            controller: 'DefaultMainController'
+            templateUrl: 'templates/variables.html'
+            controller: 'VariablesController'
         resolve:
           showToday: ($q, moment, db) ->
             # @todo @nedb
@@ -38,17 +37,13 @@ angular
             # return deferred.promise
             return true
 
-      .state 'insights',
+      .state 'correlations',
         parent: 'root'
-        url: '/insights'
+        url: '/correlations'
         views:
           'body@':
-            templateUrl: 'templates/insights/insights.html'
-            controller: 'InsightsController'
-          'main@body':
-            templateUrl: 'templates/insights/main.html'
-          'sidebar@body':
-            templateUrl: 'templates/insights/sidebar.html'
+            templateUrl: 'templates/correlations.html'
+            controller: 'CorrelationsController'
 
   .run ($rootScope, $state, settings, db) ->
 
@@ -65,7 +60,7 @@ angular
         $rootScope.$digest()
         done?()
 
-    $state.go('default')
+    $state.go('variables')
 
     $rootScope.$on '$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) ->
       states = []

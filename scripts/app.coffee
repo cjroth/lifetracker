@@ -5,5 +5,4 @@ angular.module 'lifetracker', [
   'ct.ui.router.extras'
   'mgcrea.ngStrap'
   'ui.bootstrap-slider'
-  'toggle-switch'
 ]
