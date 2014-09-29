@@ -7,12 +7,17 @@ angular
 
     $scope.openFileManager = (name)->
       $('[name="' + name + '"]').click()
-      $scope.importExportPopover.toggle(false)
       return
 
     $timeout ->
-      $('[name="import-csv"]').on 'change', -> importFromCSV(@value)
-      $('[name="export-csv"]').on 'change', -> exportToCSV(@value)
+      $('[name="import-csv"]').on 'change', ->
+        importFromCSV(@value)
+        $scope.$hide()
+
+      $('[name="export-csv"]').on 'change', ->
+        exportToCSV(@value)
+        $scope.$hide()
+
 
     importFromCSV = (file) ->
       $('[name="import-csv"]').val('')

@@ -1,15 +1,25 @@
 .sidebar
-  .list-group
-    a.btn.btn-primary.btn-block(
-        bs-popover
-        data-container='body'
-        data-template='templates/common/create-variable-popover.html'
-        data-animation=''
-    )
-      i.fa.fa-bar-chart-o
-      |  New Variable
+  //- .list-group
+  //-   a.btn.btn-primary.btn-block(
+  //-       bs-popover
+  //-       data-container='body'
+  //-       data-template='templates/common/create-variable-popover.html'
+  //-       data-animation=''
+  //-   )
+  //-     i.fa.fa-bar-chart-o
+  //-     |  New Variable
 
   ul.list-group.sidebar-variables
+
+    li#new-variable-button.list-group-item(
+      bs-popover
+      data-container='body'
+      data-template='templates/common/create-variable-popover.html'
+      data-animation=''
+    )
+      span.name New Variable
+      .pull-right
+        i.glyphicon.glyphicon-chevron-right
 
     li.list-group-item.variable-toggle(
       ng-repeat='variable in variables | orderBy: "name"'

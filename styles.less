@@ -30,7 +30,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  min-height: 500px;
+  min-height: 400px;
   min-width: 600px;
   overflow: hidden;
   display: flex;
@@ -51,7 +51,7 @@ nav {
 
   flex-shrink: 0;
   position: static !important;
-  width: 50px;
+  width: 60px;
 
   ul.nav {
     li {
@@ -64,8 +64,8 @@ nav {
       }
       a {
         text-align: center;
-        color: #fff;
-        line-height: 30px;
+        color: #c8c8c8;
+        line-height: 40px;
       }
     }
   }
@@ -96,10 +96,10 @@ nav {
 }
 
 .sidebar {
-  width: 300px;
+  width: 280px;
   background: #eee;
   flex-shrink: 0;
-  padding: 20px;
+  padding: 15px;
   overflow: scroll;
   position: relative;
 }
@@ -431,13 +431,13 @@ h2 {
 
 #import-export-popover {
   display: block;
-  top: 53px;
-  left: auto !important;
-  right: 10px;
-  width: 200px;
+  top: auto !important;
+  bottom: 10px;
+  left: 60px !important;
+  width: 260px;
   .arrow {
-    left: auto !important;
-    right: 20px;
+    top: auto;
+    bottom: 10px;
   }
 }
 
@@ -507,4 +507,9 @@ h2 {
   position: absolute;
   bottom: -2px;
   width: 100%;
+}
+
+#new-variable-button {
+  background-color: #b1b1b1;
+  color: #fff;
 }

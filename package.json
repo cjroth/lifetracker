@@ -9,9 +9,9 @@
     "frame": true,
     "position": "center",
     "width": 1000,
-    "height": 560,
+    "height": 500,
     "min_width": 600,
-    "min_height": 500
+    "min_height": 400
   },
   "dependencies": {
     "coffee-script": "^1.8.0",

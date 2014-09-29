@@ -29,12 +29,18 @@ ul.nav.nav-stacked
     data-placement='right'
     data-animation='none'
   ): a(ui-sref='correlations'): i.fa.fa-eye
-  //- li#import-export-nav-item
-  //-   a(
-  //-     bs-popover
-  //-     data-container='body'
-  //-     data-template='templates/common/import-export-popover.html'
-  //-     data-animation=''
-  //-     data-placement='right'
-  //-   ): i.glyphicon.glyphicon-sort
+  li#import-export-nav-item(
+    ui-sref-active='active'
+    bs-tooltip=''
+    data-title='Import/Export'
+    data-placement='right'
+    data-animation='none'
+  )
+    a(
+      bs-popover
+      data-container='body'
+      data-template='templates/common/import-export-popover.html'
+      data-animation=''
+      data-placement='right'
+    ): i.glyphicon.glyphicon-sort
 
