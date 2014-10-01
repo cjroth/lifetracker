@@ -4,6 +4,7 @@
 
 @icon-font-path: "../../bower_components/bootstrap/fonts/";
 
+@aqua-1: #4FC1E9;
 @aqua-2: #3BAFDA;
 
 @dark-gray-1: #656D78;
@@ -102,6 +103,9 @@ nav {
   padding: 15px;
   overflow: scroll;
   position: relative;
+  .list-group {
+    margin-bottom: 0;
+  }
 }
 
 .sidebar .popover .row {
@@ -410,6 +414,10 @@ h2 {
     &:focus {
       background-color: #4FC1E9;
       border-color: #4FC1E9;
+      .badge {
+        background-color: #3BAFDA;
+        color: #fff;
+      }
     }
   }
 }
@@ -510,6 +518,6 @@ h2 {
 }
 
 #new-variable-button {
-  background-color: #b1b1b1;
+  background-color: @aqua-1;
   color: #fff;
 }
