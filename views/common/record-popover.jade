@@ -24,7 +24,7 @@
         .list-group.input-form(ng-show='!done')
           .list-group-item.question(ng-if='variable.question') {{variable.question}}
           .list-group-item.record-input
-            ng-include(src='"templates/" + inputType + ".html"', onload='onInputLoaded()')
+            ng-include(src='inputTemplate', onload='onInputLoaded()')
           .list-group-item.clearfix
             button.btn.btn-primary.pull-left(ng-show='previous', ng-click='goTo(previous, date)') Back 
             button.btn.btn-primary.pull-right(ng-show='next', ng-click='goTo(next, date)') Continue 

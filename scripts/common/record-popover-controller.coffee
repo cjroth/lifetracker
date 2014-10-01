@@ -54,7 +54,7 @@ angular
       $scope.next = $scope.variables[$scope.index + 1] or 'done'
       $scope.progress = $scope.index / $scope.variables.length * 100
       $scope.record = _.findWhere($scope.variable.records, date: date.format('YYYY-MM-DD')) or {}
-      $scope.inputType = if $scope.variable.units? then 'number-input-with-units' else $scope.variable.type + '-input'
+      $scope.inputTemplate = 'templates/inputs/' + (if $scope.variable.units? then 'number-with-units' else $scope.variable.type) + '-input.html'
 
       if $scope.variable.type is 'scale' and not $scope.record.value?
         $scope.record.value = 5
