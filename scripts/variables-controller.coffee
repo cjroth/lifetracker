@@ -118,18 +118,25 @@ angular
       settings.chartName = $scope.chart.name
       settings.save()
 
+    saveSelectedVariablesToSettings = ->
+      selected = []
+      for variable in $rootScope.variables
+        if variable.selected then selected.push(variable._id)
+      settings.selected = selected
+      settings.save()
+
     $scope.selectAll = ->
       $rootScope.variables.forEach (variable) ->
         variable.selected = true
+        saveSelectedVariablesToSettings()
 
     $scope.deselectAll = ->
       $rootScope.variables.forEach (variable) ->
         variable.selected = false
+        saveSelectedVariablesToSettings()
 
     $scope.$on 'date changed', ->
       renderChart()
-      $scope.$digest()
-      console.log 'i might be a memory leak'
 
     $timeout ->
       readyToRender = true

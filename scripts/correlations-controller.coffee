@@ -23,9 +23,6 @@ angular
       $scope.chart = charts[charts.indexOf($scope.chart) + 1] || charts[0]
       renderChart()
 
-      # settings.chartName = $scope.chart.name
-      # settings.save()
-
     removeVariablesThatDontHaveEnoughRecords = (variables, minimumRecordsThreshold) ->
       variablesWithEnoughRecords = []
       for variable in variables
