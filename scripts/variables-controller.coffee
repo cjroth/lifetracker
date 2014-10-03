@@ -35,12 +35,9 @@ angular
         max = d3.max variable.records, (record) -> record.value
         variable.scale = d3.scale.linear().domain([min, max]).range([0.05, 0.95])
 
-      firstDataDate = null
-      oneBefore = $rootScope.start.clone().subtract(1, 'days')
-      oneAfter = $rootScope.end.clone().add(1, 'days')
       date = $rootScope.start.clone()
 
-      while date.isAfter(oneBefore) and date.isBefore(oneAfter)
+      while date.isAfter($rootScope.start.inclusive) and date.isBefore($rootScope.end.inclusive)
         for variable in variables
           record = _.findWhere(variable.records, date: date.format('YYYY-MM-DD'))
           value = if record? then variable.scale(record.value) else null
