@@ -73,3 +73,45 @@ reminders would be growl reminders perhaps. user could set a specific time for t
 
 social:
 compare data with friends or let friends be accountability partners with each other.
+
+dashboard with gauges:
+add a little slider on the create/edit variable popovers to define how good or bad a variable is. then we
+factor this into a wellness index. for each day, or over time, we can show you how well you are. i'm picturing
+a screen full of little gauges with a needle (like a speedometer or gas gauge) that let you see how you are doing.
+it could show values for the last data entry or perhaps a 7 day average. maybe there is a toggle somewhere on this
+page to tell it how many days the gauge should reflect.
+
+good/bad day or streak index:
+once we define if a variable is good or bad, we can show a good or bad day index. instead of the default
+screen showing a bunch of lines overlapping each other, which is messy, we can show a line and a gauge
+that shows exactly how you are doing, and perhaps a summary of which variables are going up or down the quickest.
+maybe it could also show little messages like "new correlation: blah blah", or "looks like you are in a slump..."
+here are some ideas to get out. etc
+
+IFTT-like API:
+an api to make it easy for anybody to write modules/plugins to import and export any sort of data. for example,
+it would be great to import and export github commits, lines of code written (additions, deletions?), tweets, facebook posts,
+number of words written (in journal, medium, etc), text messages sent, etc etc. if we have a really good api, there's no limit
+to what data could be imported and coorelated.
+
+
+monetization:
+- paid app ($5-$10?) in app store
+- in-app purchase for extra features OR pro version
+  - free version could limit time recorded to one month
+  - import/export of data could be pro-only
+  - free version could limit number of variables tracked
+  - correlations could be paid only?
+- sell app to businesses in bulk package as license or subscription model:
+  - therapists (physical, psychological)
+  - personal trainers
+  - education
+  - workplace
+- team mode for workplace productivity/happiness that costs more
+- charge money to sync with cloud-based api service which provides IFTT functionality
+
+
+
+
+
+

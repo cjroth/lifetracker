@@ -3,8 +3,6 @@ angular
   .controller 'CorrelationsController', ($scope, $rootScope, db, pearsonCorrelation, moment, settings, gui, $timeout) ->
 
     readyToRender = false
-    start = moment().subtract(1, 'years')
-    end = moment()
 
     charts = [
       {
@@ -24,13 +22,16 @@ angular
     $scope.cycleChartType = ->
       $scope.chart = charts[charts.indexOf($scope.chart) + 1] || charts[0]
       renderChart()
+
       # settings.chartName = $scope.chart.name
       # settings.save()
 
     removeVariablesThatDontHaveEnoughRecords = (variables, minimumRecordsThreshold) ->
       variablesWithEnoughRecords = []
       for variable in variables
-        if variable.records?.length >= minimumRecordsThreshold then variablesWithEnoughRecords.push(variable)
+        recordsFilteredInCurrentDaterange = variable.records.filter (record) ->
+          moment(record.date).isAfter($rootScope.start.inclusive) and moment(record.date).isBefore($rootScope.end.inclusive)
+        if recordsFilteredInCurrentDaterange?.length >= minimumRecordsThreshold then variablesWithEnoughRecords.push(variable)
       return variablesWithEnoughRecords
 
     formatDataForPearsonCorrelations = (variables) ->
@@ -40,9 +41,9 @@ angular
       for variable in variables
         data[variable._id] = []
 
-      oneBefore = start.clone().subtract(1, 'days')
-      oneAfter = end.clone().add(1, 'days')
-      date = start.clone()
+      oneBefore = $rootScope.start.clone().subtract(1, 'days')
+      oneAfter = $rootScope.end.clone().add(1, 'days')
+      date = $rootScope.start.clone()
 
       while date.isAfter(oneBefore) and date.isBefore(oneAfter)
 
@@ -55,7 +56,9 @@ angular
 
       return data
 
-    calculateCorrelations = (dataset, variables) ->
+    calculateCorrelations = ->
+      variables = removeVariablesThatDontHaveEnoughRecords($rootScope.variables, settings.minimumRecordsThreshold)
+      dataset = formatDataForPearsonCorrelations(variables)
       correlations = {}
       for a in variables
         for b in variables
@@ -67,32 +70,34 @@ angular
               correlations[index] = 
                 value: correlation
                 variables: [a, b]
+
       formatted = []
+
       for index, correlation of correlations
         formatted.push(correlation)
+
+      for correlation in formatted
+        correlation.pretty = Math.round(correlation.value * 100)
+        correlation.name = correlation.variables[0].name + ' ' + (if correlation.value > 0 then '&' else 'vs') + ' ' + correlation.variables[1].name
+
+      formatted.sort (a, b) -> Math.abs(a.value) < Math.abs(b.value)
       return formatted
 
-    variables = removeVariablesThatDontHaveEnoughRecords($rootScope.variables, settings.minimumRecordsThreshold)
+    # variables = removeVariablesThatDontHaveEnoughRecords($rootScope.variables, settings.minimumRecordsThreshold)
 
-    if variables.length < 2
-      # @todo show useful message here...
-      console.debug('not enough variables with enough records to find correlations')
-      return
+    # if variables.length < 2
+    #   # @todo show useful message here...
+    #   console.debug('not enough variables with enough records to find correlations')
+    #   return
 
-    dataset = formatDataForPearsonCorrelations(variables)
-    correlations = calculateCorrelations(dataset, variables)
+    $scope.correlations = calculateCorrelations()
 
-    if correlations.length is 0
+    if $scope.correlations.length is 0
       # @todo show useful message here...
       console.debug('no correlations found')
       return
 
-    for correlation in correlations
-      correlation.pretty = Math.round(correlation.value * 100) + '%'
-      correlation.name = correlation.variables[0].name + ' ' + (if correlation.value > 0 then '&' else 'vs') + ' ' + correlation.variables[1].name
-    $scope.correlations = correlations.sort (a, b) -> Math.abs(a.value) < Math.abs(b.value)
-
-    $scope.selected = correlations[0]
+    $scope.selected = $scope.correlations[0]
 
     $scope.isSelected = (correlation) -> correlation is $scope.selected
     $scope.isPositive = (correlation) -> correlation.value > 0
@@ -109,16 +114,18 @@ angular
 
       for variable in variables
         data[variable._id] = []
+        max = d3.max variable.records, (record) -> record.value
+        min = d3.min variable.records, (record) -> record.value
+        variable.scale = d3.scale.linear().domain([min, max]).range([0.05, 0.95])
 
-      date = start.clone().subtract(1, 'days')
-      endDate = end.clone()
+      date = $rootScope.start.clone()
+      endDate = $rootScope.end.clone()
 
       while date.isBefore(endDate)
-        y1 = _.findWhere(variables[0].records, date: date.format('YYYY-MM-DD'))?.value
-        y2 = _.findWhere(variables[1].records, date: date.format('YYYY-MM-DD'))?.value
-        if y1? and y2?
-          data[variables[0]._id].push(x: date.valueOf(), y: y1)
-          data[variables[1]._id].push(x: date.valueOf(), y: y2)
+        y0 = _.findWhere(variables[0].records, date: date.format('YYYY-MM-DD'))?.value
+        y1 = _.findWhere(variables[1].records, date: date.format('YYYY-MM-DD'))?.value
+        data[variables[0]._id].push(x: date.valueOf(), y: variables[0].scale(y0) || null)
+        data[variables[1]._id].push(x: date.valueOf(), y: variables[1].scale(y1) || null)
         date.add(1, 'days')
 
       for variable, i in $scope.selected.variables
@@ -136,8 +143,8 @@ angular
 
       data = []
 
-      date = start.clone().subtract(1, 'days')
-      endDate = end.clone()
+      date = $rootScope.start.clone().subtract(1, 'days')
+      endDate = $rootScope.end.clone()
 
       while date.isBefore(endDate)
         x = _.findWhere(variables[0].records, date: date.format('YYYY-MM-DD'))?.value
@@ -177,13 +184,13 @@ angular
       else
         points = formatDataForScatterplotChart($scope.selected.variables)
 
-      $chart = $('[name="chart-insights"]')
+      $chart = $('.chart[name="chart-insights"]')
 
       if not $chart.length then return
 
       $chart.empty()
-      $chart.replaceWith('<div name="chart-insights"></div>')
-      $chart = $('[name="chart-insights"]')
+      $chart.replaceWith('<div name="chart-insights" class="chart"></div>')
+      $chart = $('.chart[name="chart-insights"]')
 
       if not points.length then return
 
@@ -195,6 +202,8 @@ angular
         series: points
         dotSize: 5
         interpolation: 'cardinal'
+        min: 0 if $scope.chart.name is 'line'
+        max: 1 if $scope.chart.name is 'line'
       )
 
       graph.render()
@@ -251,6 +260,11 @@ angular
       unwatchVariables()
       unwatchSelected()
       
+    $scope.$on 'date changed', ->
+      $scope.correlations = calculateCorrelations()
+      renderChart()
+      $scope.$digest()
+
     calculateLineOfBestFit = (points) ->
     
         if points.length < 1 then return (x: 0, y:0)
@@ -285,4 +299,3 @@ angular
     $timeout ->
       readyToRender = true
       renderChart()
-

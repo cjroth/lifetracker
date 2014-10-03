@@ -3,8 +3,6 @@ angular
   .controller 'VariablesController', ($popover, $scope, $rootScope, $window, gui, moment, settings, showToday, $timeout) ->
 
     readyToRender = false
-    start = null
-    end = null
 
     charts = [
       {
@@ -33,13 +31,14 @@ angular
 
       for variable in variables
         seriesData[variable._id] = []
+        min = d3.min variable.records, (record) -> record.value
         max = d3.max variable.records, (record) -> record.value
-        variable.scale = d3.scale.linear().domain([0, max]).range([0.1, 0.9])
+        variable.scale = d3.scale.linear().domain([min, max]).range([0.05, 0.95])
 
       firstDataDate = null
-      oneBefore = start.clone().subtract(1, 'days')
-      oneAfter = end.clone().add(1, 'days')
-      date = start.clone()
+      oneBefore = $rootScope.start.clone().subtract(1, 'days')
+      oneAfter = $rootScope.end.clone().add(1, 'days')
+      date = $rootScope.start.clone()
 
       while date.isAfter(oneBefore) and date.isBefore(oneAfter)
         for variable in variables
@@ -76,13 +75,13 @@ angular
         
       series = formatData($rootScope.variables)
 
-      $chart = $('[name="chart"]')
+      $chart = $('.chart[name="chart"]')
 
       if not $chart.length then return
 
       $chart.empty()
-      $chart.replaceWith('<div name="chart"></div>')
-      $chart = $('[name="chart"]')
+      $chart.replaceWith('<div name="chart" class="chart"></div>')
+      $chart = $('.chart[name="chart"]')
 
       if not series.length then return
 
@@ -113,7 +112,7 @@ angular
       )
 
     $scope.getPrettyDateRange = ->
-      return start.format('MMM D') + ' - ' + end.format('MMM D')
+      return $rootScope.start.format('MMM D') + ' - ' + $rootScope.end.format('MMM D')
 
     $scope.cycleChartType = ->
       $scope.chart = charts[charts.indexOf($scope.chart) + 1] || charts[0]
@@ -121,25 +120,10 @@ angular
       settings.chartName = $scope.chart.name
       settings.save()
 
-    # show one month ago until today as default date range
-    end = moment()
-      .subtract(settings.newDayOffsetHours, 'hours')
-      .set('hour', 0)
-      .set('minute', 0)
-      .set('second', 0)
-      .set('millisecond', 0)
-    if not showToday then end.subtract(1, 'days')
-    start = end.clone().subtract(settings.dateRangeSize, 'days')
-
-    $rootScope.daterange = start: start, end: end
-
-    $scope.$on 'date changed', ($event, newStart, newEnd) ->
-      start = newStart
-      end = newEnd
-      settings.dateRangeSize = end.diff(start, 'days')
-      settings.save()
+    $scope.$on 'date changed', ->
       renderChart()
       $scope.$digest()
+      console.log 'i might be a memory leak'
 
     $timeout ->
       readyToRender = true

@@ -97,7 +97,7 @@ nav {
 }
 
 .sidebar {
-  width: 280px;
+  width: 250px;
   background: #eee;
   flex-shrink: 0;
   padding: 15px;
@@ -337,7 +337,7 @@ footer {
 
 }
 
-[name='chart'] {
+.chart {
   .x_label {
     top: 10px;
     &.left {
@@ -425,10 +425,21 @@ h2 {
 .state-correlations {
   .list-group-item {
     padding-right: 70px;
+    .correlation-name {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      display: block;
+      font-size: 13px;
+    }
     .badge {
       position: absolute;
       right: 15px;
       top: 10px;
+      height: 38px;
+      line-height: 34px;
+      border-radius: 20px;
+      width: 38px;
     }
   }
 }

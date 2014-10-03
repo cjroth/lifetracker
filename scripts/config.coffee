@@ -45,7 +45,7 @@ angular
             templateUrl: 'templates/correlations.html'
             controller: 'CorrelationsController'
 
-  .run ($rootScope, $state, settings, db) ->
+  .run ($rootScope, $state, settings, db, moment) ->
 
     $rootScope.$state = $state
 
@@ -68,4 +68,13 @@ angular
         states.push(if i then states[i - 1] + '.' + name else name)
       $rootScope.stateClasses = states.map (state) -> 'state-' + state.replace(/\./g, '-')
 
-    return
+    # show one month ago until today as default date range
+    $rootScope.end = moment()
+      .subtract(settings.newDayOffsetHours, 'hours')
+      .set('hour', 0)
+      .set('minute', 0)
+      .set('second', 0)
+      .set('millisecond', 0)
+    $rootScope.start = $rootScope.end.clone().subtract(settings.dateRangeSize, 'days')
+    $rootScope.start.inclusive = $rootScope.start.clone().subtract(1, 'days')
+    $rootScope.end.inclusive = $rootScope.end.clone().add(1, 'days')

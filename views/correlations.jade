@@ -1,19 +1,24 @@
 .sidebar
-
   .list-group.correlation-list
     a.list-group-item(
       ng-repeat='correlation in correlations'
       ng-click='select(correlation)'
       ng-class='{ "list-group-item-success": isPositive(correlation), "list-group-item-warning": isNegative(correlation), "active": isSelected(correlation) }'
     )
-      | {{correlation.name}}
+      span.correlation-name {{correlation.variables[0].name}}
+      span.correlation-name {{correlation.variables[1].name}}
       span.badge(ng-class='isPositive(correlation) ? "badge-success" : "badge-warning"') {{correlation.pretty}}
 
 .main
-
   .chart(name='chart-insights')
-
   .chart-buttons.chart-buttons-right.btn-group
+    button.btn.btn-primary(
+      bs-popover
+      data-container='body'
+      data-template='templates/common/datepicker-popover.html'
+      data-animation=''
+      data-placement='top'
+    ): i.glyphicon.glyphicon-calendar
     button.btn.btn-primary(
       name='button-chart-type-toggle'
       type='button'

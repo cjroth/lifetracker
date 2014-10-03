@@ -51,9 +51,16 @@
 
       span.name {{variable.name}}
 
+  .btn-group.btn-group-justified
+    .btn-group
+      button.btn.btn-sm.btn-default(type='button') Select All
+    .btn-group
+      button.btn.btn-sm.btn-default(type='button') Deselect All
+
+
 .main
   .chart(name='chart')
-  .chart-buttons.chart-buttons-right.btn-group(ng-class='{ active: showDatepicker }')
+  .chart-buttons.chart-buttons-right.btn-group
     button.btn.btn-primary(
       bs-popover
       data-container='body'
