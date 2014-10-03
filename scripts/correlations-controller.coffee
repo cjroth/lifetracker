@@ -213,8 +213,10 @@ angular
         new Rickshaw.Graph.HoverDetail(
           formatter: (series, x, y) ->
             units = if series.variable.type is 'scale' then '/ 10' else series.variable.units
+            y = series.variable.scale.invert(y)
             value = Math.round(y * 100) / 100 # round to 2 decimal places
-            return series.name + ': ' + value + ' ' + units
+            label = series.name + ': ' + value
+            return if units? then label + ' ' + units else label
           xFormatter: (x) ->
             return moment(x).format('dddd, MMMM D, YYYY')
           graph: graph
