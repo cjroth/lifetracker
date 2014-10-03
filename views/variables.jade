@@ -51,12 +51,11 @@
 
       span.name {{variable.name}}
 
-  .btn-group.btn-group-justified
+  #select-deselect-all-button-group.btn-group.btn-group-justified
     .btn-group
-      button.btn.btn-sm.btn-default(type='button') Select All
+      a.btn.btn-default(ng-click='selectAll()') Select All
     .btn-group
-      button.btn.btn-sm.btn-default(type='button') Deselect All
-
+      a.btn.btn-default(ng-click='deselectAll()') Deselect All
 
 .main
   .chart(name='chart')

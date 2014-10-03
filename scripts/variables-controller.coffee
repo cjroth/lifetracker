@@ -120,6 +120,14 @@ angular
       settings.chartName = $scope.chart.name
       settings.save()
 
+    $scope.selectAll = ->
+      $rootScope.variables.forEach (variable) ->
+        variable.selected = true
+
+    $scope.deselectAll = ->
+      $rootScope.variables.forEach (variable) ->
+        variable.selected = false
+
     $scope.$on 'date changed', ->
       renderChart()
       $scope.$digest()
