@@ -18,7 +18,6 @@ angular
         exportToCSV(@value)
         $scope.$hide()
 
-
     importFromCSV = (file) ->
       $('[name="import-csv"]').val('')
       fs.readFile file, (err, data) ->
@@ -38,6 +37,9 @@ angular
 
       while row = parser.read()
         rows.push(row)
+
+      settings.selected ?= []
+
       for variable, i in variables
         units = /\ \((.*?)\)$/
         data =
@@ -47,11 +49,15 @@ angular
         data.type = if data.units? then 'number' else 'scale'
         for row in rows
           if row[i + 1].length then data.records.push(date: row[0], value: parseFloat(row[i + 1]))
-        db.insert data, (err, variable) ->
+        async.each variables, (variable, done) ->
+          db.insert data, (err, variable) ->
+            if err then return done(err)
+            settings.selected.push(variable._id)
+            done()
+        , (err) ->
           if err then throw err
-          settings.selected.push(variable._id)
-      $rootScope.reloadVariables()
-      settings.save()
+          settings.save()
+          $rootScope.reloadVariables()
 
     exportToCSV = (file) ->
       csv = generateCSV($rootScope.variables)
