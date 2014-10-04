@@ -1,3 +1,4 @@
+path  = require('path')
 gulp  = require('gulp')
 $     = require('gulp-load-plugins')()
 
@@ -7,6 +8,21 @@ paths =
   stylesheets: 'styles.less'
   index: 'index.jade'
   website: 'website/index.jade'
+  bower: 'bower_components'
+  node: 'node_modules'
+
+gulp.task 'build:dependencies', [
+  'build:dependencies:node'
+  'build:dependencies:bower'
+]
+
+gulp.task 'build:dependencies:bower', ->
+  gulp.src path.join(paths.bower, '**/*')
+  .pipe gulp.dest 'dist/bower_components'
+
+gulp.task 'build:dependencies:node', ->
+  gulp.src path.join(paths.node, '**/*')
+  .pipe gulp.dest 'dist/node_modules'
 
 gulp.task 'build:scripts', ->
   gulp
@@ -54,4 +70,4 @@ gulp.task 'build:watch', ['build'], ->
       paths.website
     ], ['build']
 
-gulp.task 'build', ['build:stylesheets', 'build:templates', 'build:index', 'build:website']
+gulp.task 'build', ['build:stylesheets', 'build:templates', 'build:index', 'build:website', 'build:dependencies']
