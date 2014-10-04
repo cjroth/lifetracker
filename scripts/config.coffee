@@ -45,7 +45,7 @@ angular
             templateUrl: 'templates/correlations.html'
             controller: 'CorrelationsController'
 
-  .run ($rootScope, $state, settings, db, moment) ->
+  .run ($rootScope, $state, settings, db, moment, gui) ->
 
     $rootScope.$state = $state
 
