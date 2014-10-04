@@ -4,12 +4,11 @@ angular
     return {
       require: 'ngModel'
       link: (scope, element, attrs, modelController) ->
-        modelController.$parsers.push (value) ->
-           number = parseFloat(value)
-           if _.isNaN(number) then number = null
-           transformedInput = if number? then String(number) else ''
-           if transformedInput isnt value
+        modelController.$parsers.push (inputValue) ->
+           if inputValue is undefined then return ''
+           transformedInput = inputValue.replace(/[^-.0-9]/g, '')
+           if transformedInput != inputValue
               modelController.$setViewValue(transformedInput)
               modelController.$render()
-           return number
+           return transformedInput
     }

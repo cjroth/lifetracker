@@ -21,6 +21,12 @@ angular
 
     graph = {}
 
+    getRecordValue = (record.value) ->
+      if not record? then return null
+      value = parseFloat(record.value)
+      if _.isNaN(value) then return null
+      return value
+
     formatData = (variables) ->
 
       seriesData = {}
@@ -40,7 +46,9 @@ angular
       while date.isAfter($rootScope.start.inclusive) and date.isBefore($rootScope.end.inclusive)
         for variable in variables
           record = _.findWhere(variable.records, date: date.format('YYYY-MM-DD'))
-          value = if record? and record.value? then variable.scale(record.value) else null
+          value = getRecordValue(record)
+          if value? then value = variable.scale(value)
+          console.log 'wtf', value
           seriesData[variable._id].push(x: date.valueOf(), y: value)
 
         date.add(1, 'days')

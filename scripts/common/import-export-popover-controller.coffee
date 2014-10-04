@@ -39,6 +39,7 @@ angular
         rows.push(row)
 
       settings.selected ?= []
+      dataToInsert = []
 
       for variable, i in variables
         units = /\ \((.*?)\)$/
@@ -49,15 +50,14 @@ angular
         data.type = if data.units? then 'number' else 'scale'
         for row in rows
           if row[i + 1].length then data.records.push(date: row[0], value: parseFloat(row[i + 1]))
-        async.each variables, (variable, done) ->
-          db.insert data, (err, variable) ->
-            if err then return done(err)
-            settings.selected.push(variable._id)
-            done()
-        , (err) ->
-          if err then throw err
-          settings.save()
-          $rootScope.reloadVariables()
+        dataToInsert.push(data)
+      db.insert dataToInsert, (err, variables) ->
+        if err then throw err
+        ids = variables.map (variable) -> variable._id
+        settings.selected = settings.selected.concat(ids)
+        console.log(ids, settings.selected)
+        settings.save()
+        $rootScope.reloadVariables()
 
     exportToCSV = (file) ->
       csv = generateCSV($rootScope.variables)

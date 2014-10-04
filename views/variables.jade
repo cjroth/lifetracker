@@ -51,7 +51,7 @@
 
       span.name {{variable.name}}
 
-  #select-deselect-all-button-group.btn-group.btn-group-justified
+  #select-deselect-all-button-group.btn-group.btn-group-justified(ng-show='variables.length >= 2')
     .btn-group
       a.btn.btn-default(ng-click='selectAll()') Select All
     .btn-group
