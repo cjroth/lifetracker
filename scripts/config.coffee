@@ -21,7 +21,7 @@ angular
 
       .state 'variables',
         parent: 'root'
-        url: '/'
+        url: '/variables'
         views:
           'body@':
             templateUrl: 'templates/variables.html'
@@ -78,3 +78,13 @@ angular
     $rootScope.start = $rootScope.end.clone().subtract(settings.dateRangeSize, 'days')
     $rootScope.start.inclusive = $rootScope.start.clone().subtract(1, 'days')
     $rootScope.end.inclusive = $rootScope.end.clone().add(1, 'days')
+
+    win = gui.Window.get()
+    nativeMenuBar = new gui.Menu(type: 'menubar')
+    nativeMenuBar.createMacBuiltin('Lifetracker', {
+      hideEdit: true
+      hideWindow: true
+    })
+    win.menu = nativeMenuBar
+    
+    console.log 'lifetracker version ' + gui.App.manifest.version

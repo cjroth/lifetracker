@@ -11,7 +11,8 @@
     "width": 1000,
     "height": 500,
     "min_width": 600,
-    "min_height": 400
+    "min_height": 400,
+    "icon": "icon.png"
   },
   "dependencies": {
     "coffee-script": "^1.8.0",
