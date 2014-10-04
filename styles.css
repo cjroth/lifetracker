@@ -177,3 +177,22 @@ p.copyright {
   background: none !important;
   box-shadow: 0 0 10px #3A3A3A;
 }
+
+.download-text {
+  text-align: center;
+}
+
+.alpha-link {
+  background-color: #428bca;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 40px #000;
+  margin-left: 20px;
+}
+
+.alpha-link:hover {
+  color: #fff !important;
+  text-decoration: none;
+  background-color: #2a6496;
+}
