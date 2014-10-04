@@ -12,27 +12,29 @@ angular
 
     $scope.onInputLoaded = ->
       $('[name="record"]').on 'change slideStop', ->
-        $scope.record.value = parseFloat($scope.record.value) || null
-        if $scope.record.value?
-          save()
-          $scope.$digest()
-        # else
-        #   console.info('deleting ' + variable.name + ' record (' + record.id + ')')
-        #   if record.id? then store.deleteRecord(record.id, onDeleteComplete)
-        # @todo @nedb
+        value = parseFloat($scope.record.value)
+        if _.isNaN(value) then value = null
+        $scope.record.value = value
+        save()
       return
 
     save = ->
       console.info('saving ' + $scope.variable.name + ' record: ' + $scope.record.value)
       query = _id: $scope.variable._id
-      $scope.record.date ?= $scope.date.format('YYYY-MM-DD')
-      if $scope.variable.records.indexOf($scope.record) < 1
-        $scope.variable.records.push($scope.record)
-      update = $addToSet: records: $scope.record
+      index = $scope.variable.records.indexOf($scope.record)
+      if $scope.record.value?
+        $scope.record.date ?= $scope.date.format('YYYY-MM-DD')
+        if index < 1
+          $scope.variable.records.push($scope.record)
+        update = $addToSet: records: $scope.record
+      else
+        $scope.variable.records.splice(index, 1)
+        update = $pull: records: $scope.record
       options = {}
       db.update query, update, options, (err) ->
         if err then throw err
         $rootScope.reloadVariables()
+        $scope.$digest()
 
     $scope.goToDone = ->
       $scope.done = true

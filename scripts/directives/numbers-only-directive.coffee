@@ -3,12 +3,13 @@ angular
   .directive 'numbersOnly', ->
     return {
       require: 'ngModel'
-      link: (scope, element, attrs, modelCtrl) ->
-        modelCtrl.$parsers.push (inputValue) ->
-           if inputValue is undefined then return ''
-           transformedInput = inputValue.replace(/[^-.0-9]/g, '')
-           if transformedInput != inputValue
-              modelCtrl.$setViewValue(transformedInput)
-              modelCtrl.$render()
-           return transformedInput
+      link: (scope, element, attrs, modelController) ->
+        modelController.$parsers.push (value) ->
+           number = parseFloat(value)
+           if _.isNaN(number) then number = null
+           transformedInput = if number? then String(number) else ''
+           if transformedInput isnt value
+              modelController.$setViewValue(transformedInput)
+              modelController.$render()
+           return number
     }

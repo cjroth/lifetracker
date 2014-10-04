@@ -40,7 +40,7 @@ angular
       while date.isAfter($rootScope.start.inclusive) and date.isBefore($rootScope.end.inclusive)
         for variable in variables
           record = _.findWhere(variable.records, date: date.format('YYYY-MM-DD'))
-          value = if record? then variable.scale(record.value) else null
+          value = if record? and record.value? then variable.scale(record.value) else null
           seriesData[variable._id].push(x: date.valueOf(), y: value)
 
         date.add(1, 'days')
@@ -151,8 +151,6 @@ angular
     unwatchVariables = $rootScope.$watch 'variables', onSomeEventThatRequiresTheChartToBeReRendered, true
 
     $rootScope.$on "$stateChangeStart", (event, toState, toParams, fromState, fromParams) ->
-      if fromState.name isnt "default" then return
-      if toState.name is "record" then return
       gui.Window.get().removeListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
       gui.Window.get().removeListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
