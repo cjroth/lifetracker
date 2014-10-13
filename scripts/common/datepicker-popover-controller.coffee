@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'DatepickerPopoverController', ($scope, $timeout, moment, $rootScope) ->
+  .controller 'DatepickerPopoverController', ($scope, $timeout, $rootScope) ->
 
     $timeout ->
       $datepicker = $('.datepicker').datepicker(inputs: $('.range-start, .range-end'), format: 'yyyy-mm-dd')

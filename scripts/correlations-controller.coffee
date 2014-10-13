@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'CorrelationsController', ($scope, $rootScope, db, pearsonCorrelation, moment, settings, gui, $timeout) ->
+  .controller 'CorrelationsController', ($scope, $rootScope, db, pearsonCorrelation, settings, $timeout) ->
 
     readyToRender = false
 
@@ -240,18 +240,18 @@ angular
 
     onSomeEventThatRequiresTheChartToBeReRendered = -> renderChart()
 
-    gui.Window.get().addListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
-    gui.Window.get().addListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
-    gui.Window.get().addListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
+    # gui.Window.get().addListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
+    # gui.Window.get().addListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
+    # gui.Window.get().addListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
 
     unwatchVariables = $rootScope.$watch 'variables', onSomeEventThatRequiresTheChartToBeReRendered, true
     unwatchSelected = $scope.$watch 'selected', onSomeEventThatRequiresTheChartToBeReRendered
 
     $rootScope.$on "$stateChangeStart", (event, toState, toParams, fromState, fromParams) ->
       if fromState.name is not "default" then return
-      gui.Window.get().removeListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
-      gui.Window.get().removeListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
-      gui.Window.get().removeListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
+      # gui.Window.get().removeListener 'resize', onSomeEventThatRequiresTheChartToBeReRendered
+      # gui.Window.get().removeListener 'enterFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
+      # gui.Window.get().removeListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
       unwatchVariables()
       unwatchSelected()
       

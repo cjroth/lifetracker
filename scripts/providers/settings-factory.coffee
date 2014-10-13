@@ -2,39 +2,32 @@ angular
   .module 'lifetracker'
   .provider 'settings', ->
 
-    # @todo use dependency injection for these
-    fs = require('fs')
-    path = require('path')
-    gui = require('nw.gui')
-    # also JSON, _
+    defaults = {
+      "dataLocation": "data.sqlite",
+      "dateRangeSize": 7,
+      "minimumRecordsThreshold": 7,
+      "newDayOffsetHours": 4,
+      "chart": {
+        "name": "line",
+        "stacked": "true"
+      },
+      "selected": []
+    }
 
-    defaultsFilePath = path.resolve('defaults.json')
-    settingsFilePath = path.join(gui.App.dataPath, 'settings.json')
-
-    console.debug('using settings file: ' + settingsFilePath)
-
-    defaults = {}
     settings = {}
 
     settings.defaults = ->
-        json = fs.readFileSync(defaultsFilePath)
-        data = JSON.parse(json)
-        settings = _.defaults(settings, data)
+        settings = _.defaults(settings, defaults)
 
     settings.setup = ->
-      if fs.existsSync(settingsFilePath)
-        settings.load()
       settings.defaults()
       return settings
 
     settings.save = ->
-      json = JSON.stringify(settings)
-      fs.writeFileSync(settingsFilePath, json)
+      return
 
     settings.load = ->
-        json = fs.readFileSync(settingsFilePath)
-        data = JSON.parse(json)
-        settings = _.extend(settings, data)
+      return
 
     return (
       init: settings.setup

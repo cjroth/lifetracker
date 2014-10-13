@@ -5,6 +5,12 @@ html(lang='en', ng-app='lifetracker')
 
     script(src='bower_components/jquery/dist/jquery.js')
 
+    script(src='bower_components/fastclick/lib/fastclick.js')
+    script.
+      $(function() {
+        FastClick.attach(document.body);
+      });
+
     script(src='bower_components/angular/angular.js')
     script(src='bower_components/angular-ui-router/release/angular-ui-router.js')
 
@@ -39,6 +45,9 @@ html(lang='en', ng-app='lifetracker')
     link(href='bower_components/rickshaw/rickshaw.min.css', rel='stylesheet')
 
     script(src='bower_components/underscore/underscore.js')
+
+    script(src='node_modules/nedb/browser-version/out/nedb.js')
+    script(src='bower_components/moment/moment.js')
 
     // inject:js 
     // endinject 

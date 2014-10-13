@@ -27,7 +27,7 @@ angular
             templateUrl: 'templates/variables.html'
             controller: 'VariablesController'
         resolve:
-          showToday: ($q, moment, db) ->
+          showToday: ($q, db) ->
             # @todo @nedb
             # deferred = $q.defer()
             # today = moment().format('YYYY-MM-DD')
@@ -45,7 +45,7 @@ angular
             templateUrl: 'templates/correlations.html'
             controller: 'CorrelationsController'
 
-  .run ($rootScope, $state, settings, db, moment, gui) ->
+  .run ($rootScope, $state, settings, db) ->
 
     $rootScope.$state = $state
 
@@ -78,13 +78,4 @@ angular
     $rootScope.start = $rootScope.end.clone().subtract(settings.dateRangeSize, 'days')
     $rootScope.start.inclusive = $rootScope.start.clone().subtract(1, 'days')
     $rootScope.end.inclusive = $rootScope.end.clone().add(1, 'days')
-
-    win = gui.Window.get()
-    nativeMenuBar = new gui.Menu(type: 'menubar')
-    nativeMenuBar.createMacBuiltin('Lifetracker', {
-      hideEdit: true
-      hideWindow: true
-    })
-    win.menu = nativeMenuBar
     
-    console.log 'lifetracker version ' + gui.App.manifest.version
