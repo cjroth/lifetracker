@@ -1,7 +1,7 @@
 .sidebar
   .list-group.correlation-list
     a.list-group-item(
-      ng-repeat='correlation in correlations'
+      ng-repeat='correlation in correlations | orderBy: "-absoluteValue"'
       ng-click='select(correlation)'
       ng-class='{ "list-group-item-success": isPositive(correlation), "list-group-item-warning": isNegative(correlation), "active": isSelected(correlation) }'
     )

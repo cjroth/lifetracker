@@ -27,7 +27,7 @@ angular
       variablesWithEnoughRecords = []
       for variable in variables
         recordsFilteredInCurrentDaterange = variable.records.filter (record) ->
-          moment(record.date).isAfter($rootScope.start.inclusive) and moment(record.date).isBefore($rootScope.end.inclusive)
+          moment(record.date).isAfter($rootScope.start.inclusive) and moment(record.date).isBefore($rootScope.end.inclusive) and record.value > 0.1
         if recordsFilteredInCurrentDaterange?.length >= minimumRecordsThreshold then variablesWithEnoughRecords.push(variable)
       return variablesWithEnoughRecords
 
@@ -62,8 +62,9 @@ angular
           if Math.abs(correlation) > 0.5
             index = [a._id, b._id].sort().join('-')
             if !correlations[index]? or correlation > correlations[index].correlation
-              correlations[index] = 
+              correlations[index] =
                 value: correlation
+                absoluteValue: Math.abs(correlation)
                 variables: [a, b]
 
       formatted = []
@@ -167,7 +168,7 @@ angular
       ]
 
     renderChart = ->
-      
+
       if not readyToRender then return
 
       console.debug('rendering insights chart')
@@ -254,16 +255,16 @@ angular
       gui.Window.get().removeListener 'leaveFullscreen', onSomeEventThatRequiresTheChartToBeReRendered
       unwatchVariables()
       unwatchSelected()
-      
+
     $scope.$on 'date changed', ->
       $scope.correlations = calculateCorrelations()
       renderChart()
       $scope.$digest()
 
     calculateLineOfBestFit = (points) ->
-    
+
         if points.length < 1 then return (x: 0, y:0)
-        
+
         n = 0
         sumX = 0
         sumY = 0
