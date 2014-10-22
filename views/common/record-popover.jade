@@ -1,9 +1,9 @@
-#record-popover.popover(focusable-popover, ng-controller='RecordPopoverController')
-  .arrow
-  .popover-content.wizard
-    .row
-      .col-xs-6
-        .btn-group.btn-group-justified.date-buttons.date-selector
+#record.modal
+  .modal-dialog
+    .modal-content
+      .wizard(ng-controller='RecordPopoverController')
+
+        #date-selector.btn-group.btn-group-justified.date-buttons.date-selector
           a.btn.btn-primary.date-buttons-previous(ng-click='goTo(variable, date.clone().subtract(1, "days"))'): i.glyphicon.glyphicon-chevron-left
           a.btn.btn-primary.text-center.date-buttons-date(
             type='button'
@@ -11,24 +11,21 @@
           ) {{date.format('ddd, MMM D')}}
           a.btn.btn-primary.date-buttons-next(ng-click='goTo(variable, date.clone().add(1, "days"))'): i.glyphicon.glyphicon-chevron-right
 
-      .col-xs-6
-        .btn-group.btn-group-justified.date-buttons.date-selector
+        #variable-selector.btn-group.btn-group-justified.date-buttons.date-selector
           a.btn.btn-primary.date-buttons-previous(ng-click='goTo(previous, date)'): i.glyphicon.glyphicon-chevron-left
           .btn.btn-primary.text-center.date-buttons-date.progress
             .progress-bar.progress-bar-striped(style='width: {{progress}}%;')
             .title {{variable.name}}
           a.btn.btn-primary.date-buttons-next(ng-click='goTo(next, date)'): i.glyphicon.glyphicon-chevron-right
 
-    .row
-      .col-xs-12
-        .list-group.input-form(ng-show='!done')
+        #question.list-group.input-form(ng-show='!done')
           .list-group-item.question(ng-if='variable.question') {{variable.question}}
           .list-group-item.record-input
             ng-include(src='inputTemplate', onload='onInputLoaded()')
           .list-group-item.clearfix
-            button.btn.btn-primary.pull-left(ng-show='previous', ng-click='goTo(previous, date)') Back 
-            button.btn.btn-primary.pull-right(ng-show='next', ng-click='goTo(next, date)') Continue 
+            button.btn.btn-primary.pull-left(ng-show='previous', ng-click='goTo(previous, date)') Back
+            button.btn.btn-primary.pull-right(ng-show='next', ng-click='goTo(next, date)') Continue
         .list-group.input-form(ng-show='done')
           .list-group-item.done All done! See again you in 24 hours :)
           .list-group-item.clearfix
-            button.btn.btn-primary.pull-right(ng-click='$hide()') Done 
+            button.btn.btn-primary.pull-right(ng-click='$hide()') Done

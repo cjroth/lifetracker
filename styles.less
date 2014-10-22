@@ -17,8 +17,8 @@
 
 }
 
-textarea { 
-  resize: none; 
+textarea {
+  resize: none;
 }
 
 html {
@@ -459,18 +459,36 @@ h2 {
   flex-grow: 1;
 }
 
-#record-popover {
-  position: absolute;
-  top: 10px !important;
-  left: auto !important;
-  right: 70px !important;
-  width: 50%;
-  max-width: none;
-  min-width: 470px;
-  margin: 0;
-  & > .arrow {
-    top: 24px;
+#record {
+
+  .modal-dialog {
+    width: 66.66%;
   }
+
+  #date-selector,
+  #variable-selector {
+    width: 50%;
+    float: left;
+    margin-bottom: 15px;
+  }
+
+  #date-selector {
+    padding-right: 7px;
+  }
+
+  #variable-selector {
+    padding-left: 7px;
+  }
+
+  #question {
+    clear: both;
+  }
+
+  .modal-content {
+    padding: 15px;
+    background-color: @dark-gray-2;
+  }
+
   .wizard {
     .progress {
       height: 40px !important;
@@ -494,6 +512,9 @@ h2 {
     .date-selector {
       a {
         line-height: 26px;
+      }
+      .date-buttons-date {
+        border-bottom: none;
       }
     }
     .btn {

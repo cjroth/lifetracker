@@ -5,9 +5,8 @@ nav.navbar.navbar-inverse.navbar-fixed-top(ui-view='nav', role='navigation')
 
 .chart-buttons.record-button.btn-group(ng-class='{ active: showDatepicker }')
   button.btn.btn-lg.btn-primary(
-    bs-popover
+    bs-modal='modal'
     data-container='body'
+    data-placement='center'
     data-template='templates/common/record-popover.html'
-    data-animation=''
-    data-placement='left'
   ): i.glyphicon.glyphicon-plus

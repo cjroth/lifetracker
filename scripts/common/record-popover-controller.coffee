@@ -1,6 +1,6 @@
 angular
   .module 'lifetracker'
-  .controller 'RecordPopoverController', ($scope, $rootScope, moment, db) ->
+  .controller 'RecordPopoverController', ($scope, $rootScope, $timeout, moment, db) ->
 
     $scope.toggleSelectDatePopover = ->
       $scope.showSelectDatePopover = not $scope.showSelectDatePopover
