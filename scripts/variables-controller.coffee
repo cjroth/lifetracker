@@ -27,6 +27,31 @@ angular
       if _.isNaN(value) then return null
       return value
 
+    fillInMissingRecords = (records, start, end) ->
+      out = []
+      date = start.clone().add(1, 'days')
+      while date.isAfter(start) and date.isBefore(end)
+        record = _.findWhere(records, date: date.format('YYYY-MM-DD'))
+        value = getRecordValue(record)
+        out.push(date: date.valueOf(), value: value)
+        date.add(1, 'days')
+      return out
+
+    aggregateRecordsIntoWeeks = (records, start, end) ->
+
+      date = start.clone()
+
+      records = fillInMissingRecords(records, start, end)
+
+      weeks = _.groupBy records, (record) -> moment(record.date).weekYear() + '-' + moment(record.date).week()
+
+      aggregated = []
+      _.each weeks, (records, week) -> 
+        values = _.pluck(records, 'value')
+        mean = ss.mean(_.compact(values))
+        aggregated.push(week: week, value: mean)
+      return aggregated
+
     formatData = (variables) ->
 
       seriesData = {}
@@ -43,14 +68,23 @@ angular
 
       date = $rootScope.start.clone()
 
-      while date.isAfter($rootScope.start.inclusive) and date.isBefore($rootScope.end.inclusive)
-        for variable in variables
-          record = _.findWhere(variable.records, date: date.format('YYYY-MM-DD'))
-          value = getRecordValue(record)
-          if value? then value = variable.scale(value)
-          seriesData[variable._id].push(x: date.valueOf(), y: value)
+      if $rootScope.end.diff($rootScope.start, 'days') < 14
 
-        date.add(1, 'days')
+        while date.isAfter($rootScope.start.inclusive) and date.isBefore($rootScope.end.inclusive)
+          for variable in variables
+            record = _.findWhere(variable.records, date: date.format('YYYY-MM-DD'))
+            value = getRecordValue(record)
+            if value? then value = variable.scale(value)
+            seriesData[variable._id].push(x: date.valueOf(), y: value)
+          date.add(1, 'days')
+
+      else
+
+        for variable in variables
+          weeks = aggregateRecordsIntoWeeks(variable.records, $rootScope.start.inclusive, $rootScope.end.inclusive)
+          seriesData[variable._id] = weeks.map (aggregate) ->
+            week = aggregate.week.split('-')
+            return (x: moment([week[0]]).week(week[1] || 0).valueOf(), y: variable.scale(aggregate.value))
 
       for variable, i in variables
 

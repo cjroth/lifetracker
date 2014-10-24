@@ -17,9 +17,9 @@ angular
     settings = {}
 
     settings.defaults = ->
-        json = fs.readFileSync(defaultsFilePath)
-        data = JSON.parse(json)
-        settings = _.defaults(settings, data)
+      json = fs.readFileSync(defaultsFilePath)
+      data = JSON.parse(json)
+      settings = _.defaults(settings, data)
 
     settings.setup = ->
       if fs.existsSync(settingsFilePath)
